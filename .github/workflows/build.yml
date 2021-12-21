@@ -41,14 +41,14 @@ jobs:
         with:
           java-version: ${{ matrix.java }}
           distribution: 'temurin'
-          cache: gradle
+          cache: 'gradle'
 
       - name: Make Gradle wrapper executable
         if: ${{ runner.os != 'Windows' }}
         run: chmod +x ./gradlew
 
       - name: Build artifacts
-        run: ./gradlew build
+        run: ./gradlew build --no-daemon
 
       - name: Capture build artifacts
         if: ${{ runner.os == 'Linux' && matrix.java == '16' }} # Only upload artifacts built from Java 16 on one OS
