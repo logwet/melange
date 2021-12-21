@@ -1,0 +1,74 @@
+plugins {
+    id 'application'
+}
+
+group = project.maven_group
+archivesBaseName = project.archives_base_name
+version = project.base_version + project.version_suffix
+
+configurations {
+    antTask
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        url "https://www.jetbrains.com/intellij-repository/releases"
+    }
+    maven {
+        url "https://cache-redirector.jetbrains.com/intellij-dependencies"
+    }
+}
+
+dependencies {
+    testImplementation('org.junit.jupiter:junit-jupiter-api:5.8.2')
+    testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.8.2')
+
+    compileOnly("com.jetbrains.intellij.java:java-gui-forms-rt:${project.intellij_dependency_version}")
+    antTask("com.jetbrains.intellij.java:java-compiler-ant-tasks:${project.intellij_dependency_version}")
+}
+
+application {
+    mainClass = "me.logwet.melange.Main"
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.encoding = "UTF-8"
+
+    def targetVersion = 8
+
+    it.sourceCompatibility = JavaVersion.toVersion(targetVersion)
+    it.targetCompatibility = JavaVersion.toVersion(targetVersion)
+
+    if (JavaVersion.current().isJava9Compatible()) {
+        it.options.release = targetVersion
+    }
+}
+
+task compileJava(type: JavaCompile, overwrite: true, dependsOn: configurations.implementation.getTaskDependencyFromProjectDependency(true, 'jar')) {
+    doLast {
+        project.sourceSets.main.output.classesDirs.each { project.mkdir(it) }
+        ant.taskdef name: 'javac2', classname: 'com.intellij.ant.Javac2', classpath: configurations.antTask.asPath
+        ant.javac2 srcdir: project.sourceSets.main.java.srcDirs.join(':'),
+                classpath: project.sourceSets.main.compileClasspath.asPath,
+                destdir: project.sourceSets.main.output.classesDirs[0],
+                source: sourceCompatibility,
+                target: targetCompatibility,
+                includeAntRuntime: false
+    }
+}
+
+jar {
+    from("LICENSE") {}
+    from("README.md") {}
+
+    manifest {
+        attributes(
+                'Main-Class': 'me.logwet.melange.Main'
+        )
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
