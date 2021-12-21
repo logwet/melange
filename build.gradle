@@ -24,6 +24,8 @@ dependencies {
     testImplementation('org.junit.jupiter:junit-jupiter-api:5.8.2')
     testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.8.2')
 
+    implementation("com.formdev:flatlaf:${project.flatlaf_version}")
+
     compileOnly("com.jetbrains.intellij.java:java-gui-forms-rt:${project.intellij_dependency_version}")
     antTask("com.jetbrains.intellij.java:java-compiler-ant-tasks:${project.intellij_dependency_version}")
 }
