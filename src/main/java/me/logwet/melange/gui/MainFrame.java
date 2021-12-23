@@ -3,6 +3,8 @@ package me.logwet.melange.gui;
 import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -16,6 +18,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTree;
 import me.logwet.melange.Melange;
+import me.logwet.melange.renderer.RenderResult;
 
 public class MainFrame extends JFrame {
     protected JPanel mainPanel;
@@ -75,6 +78,15 @@ public class MainFrame extends JFrame {
         // TODO: place custom component creation code here
 
         divineRendererLabel = new JLabel();
-        divineRendererLabel.setIcon(Melange.getRendererImageIcon());
+        initRender();
+    }
+
+    private void initRender() {
+        RenderResult renderResult = new RenderResult();
+        addRender(renderResult.getRender());
+    }
+
+    public void addRender(BufferedImage render) {
+        divineRendererLabel.setIcon(new ImageIcon(render));
     }
 }

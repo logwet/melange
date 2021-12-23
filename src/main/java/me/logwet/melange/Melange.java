@@ -2,9 +2,7 @@ package me.logwet.melange;
 
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import java.awt.Dimension;
-import java.awt.image.BufferedImage;
 import java.util.Objects;
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import me.logwet.melange.config.Config;
 import me.logwet.melange.gui.MainFrame;
@@ -16,8 +14,6 @@ public class Melange {
     public static final Dimension MIN_WINDOW_DIMENSION = new Dimension(600, 400);
     public static final Dimension WINDOW_DIMENSION = new Dimension(800, 600);
     public static Logger LOGGER = LogManager.getLogger("melange");
-    public static BufferedImage divineImage =
-            new BufferedImage(512, 512, BufferedImage.TYPE_USHORT_GRAY);
 
     static {
         String version = Melange.class.getPackage().getImplementationVersion();
@@ -47,9 +43,5 @@ public class Melange {
 
     public static void updateConfig() {
         Config.save();
-    }
-
-    public static ImageIcon getRendererImageIcon() {
-        return new ImageIcon(divineImage);
     }
 }
