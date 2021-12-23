@@ -3,6 +3,7 @@ package me.logwet.melange.math;
 import com.github.benmanes.caffeine.cache.CacheLoader;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
+import lombok.Getter;
 import me.logwet.melange.math.RingDensity.Caches.AngleCacheLoader;
 import me.logwet.melange.math.RingDensity.Caches.CumulativeDensityCacheLoader;
 import me.logwet.melange.math.RingDensity.Caches.DensityCacheLoader;
@@ -37,6 +38,9 @@ public class RingDensity {
     /** 262144 entries */
     private static final LoadingCache<Double[], Double> ANGLE_CACHE;
 
+    @Getter(lazy = true)
+    private static final double maxProbability = genMaxProbability();
+
     static {
         DENSITY_CACHE =
                 Caffeine.newBuilder().maximumSize(MAX_CACHE_SIZE).build(new DensityCacheLoader());
@@ -56,8 +60,21 @@ public class RingDensity {
     }
 
     public static double getCumulativeDensity(double x) {
+        if (x < LOWER_BOUND) {
+            return 0D;
+        } else if (x > UPPER_BOUND) {
+            return 1D;
+        }
         //noinspection ConstantConditions
         return CUMULATIVE_DENSITY_CACHE.get(x);
+    }
+
+    public static double getProbability(double x) {
+        return getCumulativeDensity(x + 0.5D) - getCumulativeDensity(x - 0.5D);
+    }
+
+    private static double genMaxProbability() {
+        return getProbability(LOWER_BOUND);
     }
 
     public static double getMagnitude(double x, double y) {
