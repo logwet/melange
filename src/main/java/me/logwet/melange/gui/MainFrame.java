@@ -1,27 +1,52 @@
 package me.logwet.melange.gui;
 
+import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JSlider;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.JTree;
 import me.logwet.melange.Melange;
 
 public class MainFrame extends JFrame {
     protected JPanel mainPanel;
-    protected JButton button1;
-    protected JButton button2;
-    protected JButton button3;
-    protected JSlider slider1;
-    protected JComboBox comboBox1;
+    protected JTabbedPane tabbedPane;
+    protected JLabel divineRendererLabel;
+    protected JPanel divinePanel;
+    protected JPanel settingsPanel;
+    protected JSplitPane settingsSplitPane;
+    protected JCheckBox checkBox1;
+    protected JCheckBox checkBox2;
+    protected JLabel melangeMetaLabel;
+    protected JPanel divineLeftPanel;
+    protected JTextArea divineMetaTextArea;
+    protected JPanel divineRightPanel;
+    protected JPanel divineInputPanel;
+    protected JLabel divineSelectionMetaLabel;
+    protected JTextField divineSelectionTextField;
+    protected JButton divineForceRenderButton;
+    protected JButton divineResetbutton;
+    protected JScrollPane divineSelectionScrollPane;
+    protected JList divineSelectionList;
+    protected JTree divineSelectionTree;
 
     public MainFrame() {
         super("Melange");
 
+        this.addDataToUIComponents();
+
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setContentPane(mainPanel);
+        this.setMinimumSize(Melange.MIN_WINDOW_DIMENSION);
 
         this.addWindowListener(
                 new WindowAdapter() {
@@ -39,5 +64,17 @@ public class MainFrame extends JFrame {
                 });
 
         this.pack();
+        this.setMinimumSize(new Dimension(this.getWidth(), this.getHeight()));
+    }
+
+    private void addDataToUIComponents() {
+        melangeMetaLabel.setText("Melange v" + Melange.VERSION + " by logwet");
+    }
+
+    private void createUIComponents() {
+        // TODO: place custom component creation code here
+
+        divineRendererLabel = new JLabel();
+        divineRendererLabel.setIcon(Melange.getRendererImageIcon());
     }
 }

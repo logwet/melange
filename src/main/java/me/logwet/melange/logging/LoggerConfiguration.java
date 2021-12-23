@@ -26,7 +26,7 @@ public class LoggerConfiguration {
                 "pattern", "%d{yyyy-MM-dd HH:mm:ss.SSS} %level [%t] [%l] - %msg%n%throwable");
 
         FilterComponentBuilder infoLevelFilter =
-                builder.newFilter("ThresholdFilter", Result.ACCEPT, Result.DENY);
+                builder.newFilter("ThresholdFilter", Result.ACCEPT, Result.NEUTRAL);
         infoLevelFilter.addAttribute("level", Level.INFO);
 
         FilterComponentBuilder allLevelFilter =

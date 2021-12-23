@@ -2,36 +2,190 @@
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="me.logwet.melange.gui.MainFrame">
   <grid id="27dc6" binding="mainPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
     <constraints>
-      <xy x="20" y="20" width="487" height="551"/>
+      <xy x="20" y="20" width="232" height="523"/>
     </constraints>
     <properties/>
     <border type="none"/>
     <children>
-      <component id="8b279" class="javax.swing.JButton" binding="button1">
-        <constraints border-constraint="West"/>
-        <properties>
-          <text value="Button 1"/>
-        </properties>
-      </component>
-      <component id="27627" class="javax.swing.JButton" binding="button2">
+      <tabbedpane id="4c3aa" binding="tabbedPane">
         <constraints border-constraint="Center"/>
-        <properties>
-          <text value="Button 2"/>
-        </properties>
-      </component>
-      <component id="acac6" class="javax.swing.JButton" binding="button3">
-        <constraints border-constraint="East"/>
-        <properties>
-          <text value="Button 3"/>
-        </properties>
-      </component>
-      <component id="f27f4" class="javax.swing.JSlider" binding="slider1" default-binding="true">
+        <properties/>
+        <border type="none"/>
+        <children>
+          <grid id="771d7" binding="divinePanel" layout-manager="BorderLayout" hgap="0" vgap="0">
+            <constraints>
+              <tabbedpane title="Divine"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <grid id="c52bc" binding="divineLeftPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
+                <constraints border-constraint="West"/>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="b70d6" class="javax.swing.JLabel" binding="divineRendererLabel" custom-create="true">
+                    <constraints border-constraint="Center"/>
+                    <properties>
+                      <text value=""/>
+                    </properties>
+                  </component>
+                  <component id="95e4f" class="javax.swing.JTextArea" binding="divineMetaTextArea">
+                    <constraints border-constraint="South"/>
+                    <properties>
+                      <editable value="false"/>
+                      <text value="Info Area"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
+              <grid id="23ae2" binding="divineRightPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
+                <constraints border-constraint="Center"/>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <grid id="6f336" binding="divineInputPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
+                    <constraints border-constraint="South"/>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <component id="edbc5" class="javax.swing.JLabel" binding="divineSelectionMetaLabel">
+                        <constraints border-constraint="Center"/>
+                        <properties>
+                          <text value="Selection Meta"/>
+                        </properties>
+                      </component>
+                      <component id="f4112" class="javax.swing.JTextField" binding="divineSelectionTextField">
+                        <constraints border-constraint="South"/>
+                        <properties/>
+                      </component>
+                      <grid id="8bdae" layout-manager="GridBagLayout">
+                        <constraints border-constraint="North"/>
+                        <properties/>
+                        <border type="none"/>
+                        <children>
+                          <component id="c1183" class="javax.swing.JButton" binding="divineForceRenderButton">
+                            <constraints>
+                              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="2" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="1.0" weighty="1.0"/>
+                            </constraints>
+                            <properties>
+                              <text value="Rerender"/>
+                            </properties>
+                          </component>
+                          <component id="8e52b" class="javax.swing.JTree" binding="divineSelectionTree">
+                            <constraints>
+                              <grid row="0" column="0" row-span="2" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.0" weighty="0.0"/>
+                            </constraints>
+                            <properties>
+                              <rootVisible value="false"/>
+                              <scrollsOnExpand value="false"/>
+                              <showsRootHandles value="true"/>
+                            </properties>
+                          </component>
+                          <component id="606e8" class="javax.swing.JButton" binding="divineResetbutton">
+                            <constraints>
+                              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="2" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.0" weighty="0.0"/>
+                            </constraints>
+                            <properties>
+                              <text value="Reset"/>
+                            </properties>
+                          </component>
+                        </children>
+                      </grid>
+                    </children>
+                  </grid>
+                  <scrollpane id="94cf5" binding="divineSelectionScrollPane">
+                    <constraints border-constraint="Center"/>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <component id="9936e" class="javax.swing.JList" binding="divineSelectionList">
+                        <constraints/>
+                        <properties>
+                          <model>
+                            <item value="Test"/>
+                            <item value="Test"/>
+                            <item value="Test"/>
+                            <item value="Test"/>
+                            <item value="Test"/>
+                            <item value="Test"/>
+                            <item value="Test"/>
+                            <item value="Test"/>
+                            <item value="Test"/>
+                            <item value="Test"/>
+                            <item value="Test"/>
+                            <item value="Test"/>
+                            <item value="Test"/>
+                            <item value="Test"/>
+                            <item value="Test"/>
+                            <item value="Test"/>
+                            <item value="Test"/>
+                            <item value="Test"/>
+                            <item value="Test"/>
+                            <item value="Test"/>
+                            <item value="Test"/>
+                            <item value="Test"/>
+                            <item value="Test"/>
+                            <item value="Test"/>
+                            <item value="Test"/>
+                            <item value="Test"/>
+                            <item value="Test"/>
+                            <item value="Test"/>
+                            <item value="Test"/>
+                          </model>
+                        </properties>
+                      </component>
+                    </children>
+                  </scrollpane>
+                </children>
+              </grid>
+            </children>
+          </grid>
+          <grid id="da439" binding="settingsPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
+            <constraints>
+              <tabbedpane title="Settings"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <splitpane id="a3942" binding="settingsSplitPane">
+                <constraints border-constraint="Center"/>
+                <properties>
+                  <enabled value="true"/>
+                </properties>
+                <border type="none"/>
+                <children>
+                  <component id="28e35" class="javax.swing.JCheckBox" binding="checkBox1" default-binding="true">
+                    <constraints>
+                      <splitpane position="left"/>
+                    </constraints>
+                    <properties>
+                      <text value="CheckBox"/>
+                    </properties>
+                  </component>
+                  <component id="f3bd1" class="javax.swing.JCheckBox" binding="checkBox2" default-binding="true">
+                    <constraints>
+                      <splitpane position="right"/>
+                    </constraints>
+                    <properties>
+                      <text value="CheckBox"/>
+                    </properties>
+                  </component>
+                </children>
+              </splitpane>
+            </children>
+          </grid>
+        </children>
+      </tabbedpane>
+      <component id="a2d34" class="javax.swing.JLabel" binding="melangeMetaLabel">
         <constraints border-constraint="South"/>
-        <properties/>
-      </component>
-      <component id="134e1" class="javax.swing.JComboBox" binding="comboBox1" default-binding="true">
-        <constraints border-constraint="North"/>
-        <properties/>
+        <properties>
+          <horizontalAlignment value="4"/>
+          <text value="Version Area"/>
+        </properties>
       </component>
     </children>
   </grid>

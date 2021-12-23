@@ -84,7 +84,10 @@ jar {
     from("README.md") {}
 
     manifest {
-        attributes "Main-Class": "me.logwet.melange.Main"
+        attributes (
+                "Main-Class": "me.logwet.melange.Main",
+                "Implementation-Version": version
+        )
     }
 
     duplicatesStrategy = 'include'
