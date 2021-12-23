@@ -1,18 +1,62 @@
 package me.logwet.melange.renderer;
 
 import java.awt.image.BufferedImage;
+import java.awt.image.WritableRaster;
+import java.util.stream.IntStream;
 import lombok.Getter;
+import me.logwet.melange.math.RingDensity;
 
 public class RenderResult {
+    private static final int WIDTH_BITS = 9;
+    private static final int WIDTH = 1 << WIDTH_BITS;
+    private static final int WIDTH_2 = WIDTH / 2;
+    private static final double SEARCH_SIZE = RingDensity.UPPER_BOUND + 200;
+
+    private static final int COLOR_BITS = 16;
+    private static final int COLOR_DEPTH = 1 << COLOR_BITS;
+
     private final boolean hasData = false;
 
     @Getter(lazy = true)
     private final BufferedImage render = genRender();
 
-    private BufferedImage genRender() {
-        BufferedImage image = new BufferedImage(512, 512, BufferedImage.TYPE_USHORT_GRAY);
+    private void updatePixel(int ox, int oy, WritableRaster image) {
+        int v = getStrength(ox, oy);
+        if (v > 0) {
+            image.setPixel(ox, oy, new int[] {v});
+        }
+    }
 
-        if (hasData) {}
+    private int getStrength(int ox, int oy) {
+        int x = ox - WIDTH_2;
+        int y = oy - WIDTH_2;
+
+        double r = RingDensity.getMagnitude(x, y) * (SEARCH_SIZE / (double) WIDTH_2);
+        double t = RingDensity.getAngle(x, y);
+
+        if (r >= RingDensity.LOWER_BOUND && r <= RingDensity.UPPER_BOUND) {
+            RingDensity.getDensity(r);
+            return (int) (RingDensity.getCumulativeDensity(r) * COLOR_DEPTH);
+        }
+        return 0;
+    }
+
+    private BufferedImage genRender() {
+        long startTime = System.currentTimeMillis();
+
+        final BufferedImage image = new BufferedImage(WIDTH, WIDTH, BufferedImage.TYPE_USHORT_GRAY);
+
+        final int xMask = WIDTH - 1;
+
+        //noinspection ResultOfMethodCallIgnored
+        IntStream.range(0, WIDTH * WIDTH)
+                .parallel()
+                .peek(i -> updatePixel(i & xMask, i >> WIDTH_BITS, image.getRaster()))
+                .allMatch(i -> true);
+
+        long endTime = System.currentTimeMillis();
+
+        System.out.println("Generated render in " + (endTime - startTime) + "ms");
 
         return image;
     }
