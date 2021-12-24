@@ -12,11 +12,11 @@ public class RenderResult {
     private static final int WIDTH_2 = WIDTH / 2;
     private static final int BUFFER_SIZE = WIDTH * WIDTH;
     private static final int X_MASK = WIDTH - 1;
+    @Getter(lazy = true)
+    private static final DoubleBuffer2D defaultProbBuffer = buildDefaultBuffer();
     private static final double SEARCH_SIZE;
     private static final double SCALING_FACTOR;
     private static final double SCALING_FACTOR_2;
-    @Getter(lazy = true)
-    private static final DoubleBuffer2D defaultProbBuffer = buildDefaultBuffer();
     private static final int COLOR_BITS = 16;
     private static final int COLOR_DEPTH = 1 << COLOR_BITS;
 

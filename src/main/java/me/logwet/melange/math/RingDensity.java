@@ -37,6 +37,7 @@ public class RingDensity {
     private static final LoadingCache<Double, Double> DENSITY_CACHE;
     /** 21851 entries */
     private static final LoadingCache<Double, Double> CUMULATIVE_DENSITY_CACHE;
+
     @Getter(lazy = true)
     private static final double maxProbability = genMaxProbability();
     /** 22026 entries */
