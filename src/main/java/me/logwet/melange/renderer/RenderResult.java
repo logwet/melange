@@ -64,18 +64,12 @@ public class RenderResult {
         DoubleBuffer2D buffer = (DoubleBuffer2D) oBuffer.normalize();
 
         buffer.operateOnIndices(
-                i -> {
-                    int x = buffer.getX(i);
-                    int y = buffer.getY(i);
-
-                    try {
+                i ->
                         image.getRaster()
-                                .setPixel(x, y, new int[] {(int) (buffer.get(i) * COLOR_DEPTH)});
-                    } catch (Exception e) {
-                        System.out.println("Failed " + x + " | " + y);
-                    }
-                });
-
+                                .setPixel(
+                                        buffer.getX(i),
+                                        buffer.getY(i),
+                                        new int[] {(int) (buffer.get(i) * COLOR_DEPTH)}));
         return image;
     }
 
