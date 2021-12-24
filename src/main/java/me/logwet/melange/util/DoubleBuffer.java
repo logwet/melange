@@ -134,4 +134,16 @@ public class DoubleBuffer {
     public void normalizeSumInPlace() {
         this.normalizeSumInPlace(1);
     }
+
+    protected double[] copyHelper() {
+        final double[] array = new double[this.length];
+
+        System.arraycopy(this.buffer, 0, array, 0, this.length);
+
+        return array;
+    }
+
+    public DoubleBuffer copy() {
+        return new DoubleBuffer(this.copyHelper());
+    }
 }

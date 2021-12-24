@@ -12,6 +12,8 @@ public class RenderResult {
     private static final int WIDTH_2 = WIDTH / 2;
     private static final int BUFFER_SIZE = WIDTH * WIDTH;
     private static final int X_MASK = WIDTH - 1;
+    @Getter(lazy = true)
+    private static final DoubleBuffer2D defaultProbBuffer = buildDefaultBuffer();
     private static final double SEARCH_SIZE;
     private static final double SCALING_FACTOR;
     private static final int COLOR_BITS = 16;
@@ -27,41 +29,44 @@ public class RenderResult {
     @Getter(lazy = true)
     private final BufferedImage render = genRender();
 
-    private void addToBuffer(int i, DoubleBuffer buffer) {
+    private static void addProbToBuffer(int i, DoubleBuffer buffer) {
         int ox = i & X_MASK;
         int oy = i >> WIDTH_BITS;
 
-        double v = getProbForCoord(ox, oy);
+        double v = getDefaultProbForCoord(ox, oy);
         if (v > 0) {
             buffer.set(i, v);
         }
     }
 
-    private double getProbForCoord(int ox, int oy) {
+    private static double getDefaultProbForCoord(int ox, int oy) {
         int x = ox - WIDTH_2;
         int y = oy - WIDTH_2;
 
         double r = RingDensity.getMagnitude(x, y) * SCALING_FACTOR;
 
         if (r >= RingDensity.LOWER_BOUND && r <= RingDensity.UPPER_BOUND) {
-            double t = RingDensity.getAngle(x, y);
+            //            double t = RingDensity.getAngle(x, y);
             //            double k = RingDensity.getLengthFromAngle(t) * SCALING_FACTOR / 2D;
-            double k = 0.5D;
+            double k = SCALING_FACTOR / 2D;
 
             return RingDensity.getProbability(r - k, r + k);
         }
         return 0;
     }
 
-    private void buildBuffer(DoubleBuffer buffer) {
-        buffer.operateOnIndices(i -> addToBuffer(i, buffer));
+    private static DoubleBuffer2D buildDefaultBuffer() {
+        final DoubleBuffer2D buffer = new DoubleBuffer2D(WIDTH);
+        buffer.operateOnIndices(i -> addProbToBuffer(i, buffer));
+        buffer.normalizeSumInPlace();
+        return buffer;
     }
 
-    private BufferedImage buildImage(DoubleBuffer2D oBuffer) {
+    private BufferedImage buildImage(DoubleBuffer2D buffer) {
         @SuppressWarnings("SuspiciousNameCombination")
         final BufferedImage image = new BufferedImage(WIDTH, WIDTH, BufferedImage.TYPE_USHORT_GRAY);
 
-        DoubleBuffer2D buffer = (DoubleBuffer2D) oBuffer.normalize();
+        buffer.normalizeInPlace();
 
         buffer.operateOnIndices(
                 i ->
@@ -76,12 +81,9 @@ public class RenderResult {
     private BufferedImage genRender() {
         long startTime = System.currentTimeMillis();
 
-        final DoubleBuffer2D probBuffer = new DoubleBuffer2D(WIDTH);
-        buildBuffer(probBuffer);
+        DoubleBuffer2D buffer = (DoubleBuffer2D) getDefaultProbBuffer().copy();
 
-        probBuffer.normalizeSumInPlace();
-
-        final BufferedImage image = buildImage(probBuffer);
+        final BufferedImage image = buildImage(buffer);
 
         long endTime = System.currentTimeMillis();
 

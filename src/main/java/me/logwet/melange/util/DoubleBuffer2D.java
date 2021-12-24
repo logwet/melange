@@ -67,4 +67,9 @@ public class DoubleBuffer2D extends DoubleBuffer {
     public DoubleBuffer scale(double f) {
         return new DoubleBuffer2D(super.scaleHelper(f));
     }
+
+    @Override
+    public DoubleBuffer copy() {
+        return new DoubleBuffer2D(super.copyHelper());
+    }
 }
