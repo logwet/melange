@@ -37,6 +37,7 @@ dependencies {
 
     implementation("com.google.guava:guava:31.0.1-jre")
 
+    //noinspection GradlePackageUpdate
     implementation("com.github.ben-manes.caffeine:caffeine:2.9.3")
 
     implementation("net.harawata:appdirs:1.2.1")
@@ -86,7 +87,7 @@ jar {
     from("README.md") {}
 
     manifest {
-        attributes (
+        attributes(
                 "Main-Class": "me.logwet.melange.Main",
                 "Implementation-Version": version
         )

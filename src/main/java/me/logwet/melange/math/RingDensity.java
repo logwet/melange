@@ -11,7 +11,6 @@ import me.logwet.melange.math.RingDensity.Caches.AngleToLengthCacheLoader;
 import me.logwet.melange.math.RingDensity.Caches.CumulativeDensityCacheLoader;
 import me.logwet.melange.math.RingDensity.Caches.DensityCacheLoader;
 import me.logwet.melange.math.RingDensity.Caches.MagnitudeCacheLoader;
-import org.apache.commons.math3.geometry.Vector;
 import org.apache.commons.math3.util.FastMath;
 
 /**
@@ -34,14 +33,12 @@ public class RingDensity {
     private static final double PI_ON_4 = PI_ON_2 / 2;
     private static final double THREE_PI_ON_4 = 3 * PI_ON_4;
     private static final double SQRT_2 = FastMath.sqrt(2);
-
-    @Getter(lazy = true)
-    private static final double maxProbability = genMaxProbability();
-
     /** 0 entries */
     private static final LoadingCache<Double, Double> DENSITY_CACHE;
     /** 21851 entries */
     private static final LoadingCache<Double, Double> CUMULATIVE_DENSITY_CACHE;
+    @Getter(lazy = true)
+    private static final double maxProbability = genMaxProbability();
     /** 22026 entries */
     private static final LoadingCache<Double, Double> MAGNITUDE_CACHE;
     /** 142416 entries */
