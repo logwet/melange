@@ -11,7 +11,6 @@ import me.logwet.melange.math.RingDensity.Caches.AngleToLengthCacheLoader;
 import me.logwet.melange.math.RingDensity.Caches.CumulativeDensityCacheLoader;
 import me.logwet.melange.math.RingDensity.Caches.DensityCacheLoader;
 import me.logwet.melange.math.RingDensity.Caches.MagnitudeCacheLoader;
-import org.apache.commons.math3.complex.Complex;
 import org.apache.commons.math3.util.FastMath;
 import org.apache.commons.math3.util.MathUtils;
 
