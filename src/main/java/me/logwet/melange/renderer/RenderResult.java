@@ -1,7 +1,11 @@
 package me.logwet.melange.renderer;
 
+import com.google.common.collect.ImmutableList;
 import java.awt.image.BufferedImage;
 import lombok.Getter;
+import me.logwet.melange.divine.consumer.StrongholdRing;
+import me.logwet.melange.divine.provider.DivineProvider;
+import me.logwet.melange.divine.provider.feature.PlaceholderFeature;
 import me.logwet.melange.math.RingDensity;
 import me.logwet.melange.util.DoubleBuffer;
 import me.logwet.melange.util.DoubleBuffer2D;
@@ -14,15 +18,13 @@ public class RenderResult {
     private static final int X_MASK = WIDTH - 1;
     @Getter(lazy = true)
     private static final DoubleBuffer2D defaultProbBuffer = buildDefaultBuffer();
-    private static final double SEARCH_SIZE;
     private static final double SCALING_FACTOR;
     private static final double SCALING_FACTOR_2;
     private static final int COLOR_BITS = 16;
     private static final int COLOR_DEPTH = 1 << COLOR_BITS;
 
     static {
-        SEARCH_SIZE = RingDensity.UPPER_BOUND + 200;
-        SCALING_FACTOR = SEARCH_SIZE / (double) WIDTH_2;
+        SCALING_FACTOR = RingDensity.SEARCH_SIZE / (double) WIDTH_2;
         SCALING_FACTOR_2 = SCALING_FACTOR / 2;
     }
 
@@ -81,7 +83,11 @@ public class RenderResult {
     private BufferedImage genRender() {
         long startTime = System.currentTimeMillis();
 
-        DoubleBuffer2D buffer = (DoubleBuffer2D) getDefaultProbBuffer().copy();
+//        DoubleBuffer2D buffer = (DoubleBuffer2D) getDefaultProbBuffer().copy();
+
+        ImmutableList<DivineProvider> providers = ImmutableList.of(new PlaceholderFeature());
+
+        DoubleBuffer2D buffer = StrongholdRing.filter(providers, getDefaultProbBuffer());
 
         final BufferedImage image = buildImage(buffer);
 

@@ -5,10 +5,11 @@ import java.util.function.DoubleConsumer;
 import java.util.function.IntConsumer;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
+import lombok.Getter;
 
 @SuppressWarnings("unused")
 public class DoubleBuffer {
-    public final double[] buffer;
+    @Getter protected final double[] buffer;
     protected final int length;
 
     /**

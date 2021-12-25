@@ -29,6 +29,7 @@ import org.apache.commons.math3.util.MathUtils;
 public class RingDensity {
     public static final double LOWER_BOUND = 1280;
     public static final double UPPER_BOUND = 2816;
+    public static final double SEARCH_SIZE = RingDensity.UPPER_BOUND + 200;
     private static final long MAX_CACHE_SIZE = 5 * 8 * 1024 * 1024 / 64;
     private static final double PI_ON_2 = FastMath.PI / 2;
     private static final double PI_ON_4 = PI_ON_2 / 2;

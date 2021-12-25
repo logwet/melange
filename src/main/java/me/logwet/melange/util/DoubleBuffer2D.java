@@ -1,9 +1,11 @@
 package me.logwet.melange.util;
 
+import lombok.Getter;
 import org.apache.commons.math3.util.FastMath;
 
 @SuppressWarnings("unused")
 public class DoubleBuffer2D extends DoubleBuffer {
+    @Getter
     private final int width;
     private final int bits;
     private final int xMask;
