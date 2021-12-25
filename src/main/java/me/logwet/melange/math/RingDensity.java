@@ -11,7 +11,9 @@ import me.logwet.melange.math.RingDensity.Caches.AngleToLengthCacheLoader;
 import me.logwet.melange.math.RingDensity.Caches.CumulativeDensityCacheLoader;
 import me.logwet.melange.math.RingDensity.Caches.DensityCacheLoader;
 import me.logwet.melange.math.RingDensity.Caches.MagnitudeCacheLoader;
+import org.apache.commons.math3.complex.Complex;
 import org.apache.commons.math3.util.FastMath;
+import org.apache.commons.math3.util.MathUtils;
 
 /**
  * This class contains code used to sample the Stronghold ring's density. The methods use {@link
@@ -209,7 +211,7 @@ public class RingDensity {
         protected static class AngleCacheLoader implements CacheLoader<Double[], Double> {
             @Override
             public @NonNull Double load(@NonNull Double @NonNull [] r) {
-                return FastMath.atan2(r[1], r[0]);
+                return MathUtils.normalizeAngle(FastMath.atan2(r[1], r[0]), FastMath.PI);
             }
         }
 
