@@ -1,14 +1,24 @@
 package me.logwet.melange.divine.filter;
 
 public abstract class AbstractDivineFilter implements DivineFilter {
-    protected final Policy policy;
+    protected abstract Policy getPolicy();
 
-    public AbstractDivineFilter(Policy policy) {
-        this.policy = policy;
-    }
+    protected abstract boolean tester(double x);
 
     @Override
-    public Policy getPolicy() {
-        return policy;
+    public boolean test(double x) {
+        switch (this.getPolicy()) {
+            case INCLUDE:
+                return this.tester(x);
+            case EXCLUDE:
+                return !this.tester(x);
+            default:
+                return false;
+        }
+    }
+
+    protected enum Policy {
+        INCLUDE,
+        EXCLUDE
     }
 }

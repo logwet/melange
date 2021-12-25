@@ -1,10 +1,8 @@
 package me.logwet.melange.divine.filter.distance;
 
-import java.util.List;
-
 public class SliceDistanceFilter extends RangeDistanceFilter {
-    public SliceDistanceFilter(List<Integer> targets, int n, int i, double lb, double ub) {
-        super(targets, getLB(n, i, lb, ub), getUB(n, i, lb, ub));
+    public SliceDistanceFilter(int n, int i, double lb, double ub) {
+        super(getLB(n, i, lb, ub), getUB(n, i, lb, ub));
     }
 
     protected static double getLB(int n, int i, double lb, double ub) {
