@@ -15,7 +15,11 @@ public class RangeDistanceFilter extends AbstractDistanceFilter {
     }
 
     @Override
-    protected boolean tester(double x) {
-        return lb <= x && x <= ub;
+    protected boolean tester(double x, int index) {
+        if (index == 0) {
+            return lb <= x && x <= ub;
+        } else {
+            return true;
+        }
     }
 }

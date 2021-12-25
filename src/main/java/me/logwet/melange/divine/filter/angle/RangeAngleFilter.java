@@ -4,12 +4,14 @@ import org.apache.commons.math3.util.FastMath;
 import org.apache.commons.math3.util.MathUtils;
 
 public class RangeAngleFilter extends AbstractAngleFilter {
+    private static final double TWO_PI_ON_THREE = MathUtils.TWO_PI / 3;
+
     protected final double lb;
     protected final double ub;
 
     public RangeAngleFilter(double lb, double ub) {
-        this.lb = MathUtils.normalizeAngle(lb, FastMath.PI);
-        this.ub = MathUtils.normalizeAngle(ub, FastMath.PI);
+        this.lb = lb;
+        this.ub = ub;
     }
 
     @Override
@@ -18,11 +20,15 @@ public class RangeAngleFilter extends AbstractAngleFilter {
     }
 
     @Override
-    protected boolean tester(double x) {
-        if (lb < ub) {
-            return lb <= x && x <= ub;
+    protected boolean tester(double x, int index) {
+        double shift = TWO_PI_ON_THREE * index;
+        double l = MathUtils.normalizeAngle(lb + shift, FastMath.PI);
+        double u = MathUtils.normalizeAngle(ub + shift, FastMath.PI);
+
+        if (l < u) {
+            return l <= x && x <= u;
         } else {
-            return lb <= x || x <= ub;
+            return l <= x || x <= u;
         }
     }
 }
