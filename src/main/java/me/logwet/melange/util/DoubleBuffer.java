@@ -1,10 +1,12 @@
 package me.logwet.melange.util;
 
 import java.util.Arrays;
-import java.util.function.Consumer;
+import java.util.function.DoubleConsumer;
+import java.util.function.IntConsumer;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 
+@SuppressWarnings("unused")
 public class DoubleBuffer {
     public final double[] buffer;
     protected final int length;
@@ -33,18 +35,18 @@ public class DoubleBuffer {
         return Arrays.stream(this.buffer).parallel();
     }
 
-    public void operateOnBuffer(Consumer<Double> consumer) {
+    public void operateOnBuffer(DoubleConsumer consumer) {
         //noinspection ResultOfMethodCallIgnored
-        this.streamBuffer().peek(consumer::accept).allMatch(i -> true);
+        this.streamBuffer().peek(consumer).allMatch(i -> true);
     }
 
     public IntStream streamIndices() {
         return IntStream.range(0, length).parallel();
     }
 
-    public void operateOnIndices(Consumer<Integer> consumer) {
+    public void operateOnIndices(IntConsumer consumer) {
         //noinspection ResultOfMethodCallIgnored
-        this.streamIndices().peek(consumer::accept).allMatch(i -> true);
+        this.streamIndices().peek(consumer).allMatch(i -> true);
     }
 
     public double get(int i) {
@@ -57,6 +59,23 @@ public class DoubleBuffer {
 
     public void add(int i, double v) {
         this.buffer[i] += v;
+    }
+
+    protected double[] addHelper(final DoubleBuffer... doubleBuffers) {
+        double[] array = copyHelper();
+
+        this.operateOnIndices(
+                i -> {
+                    for (DoubleBuffer buffer : doubleBuffers) {
+                        array[i] += buffer.buffer[i];
+                    }
+                });
+
+        return array;
+    }
+
+    public DoubleBuffer add(DoubleBuffer... doubleBuffers) {
+        return new DoubleBuffer(this.addHelper(doubleBuffers));
     }
 
     public double max() {
@@ -113,6 +132,15 @@ public class DoubleBuffer {
 
     public DoubleBuffer normalizeSum() {
         return this.normalizeSum(1);
+    }
+
+    public void addInPlace(DoubleBuffer... doubleBuffers) {
+        this.operateOnIndices(
+                i -> {
+                    for (DoubleBuffer buffer : doubleBuffers) {
+                        this.buffer[i] += buffer.buffer[i];
+                    }
+                });
     }
 
     public void scaleInPlace(final double f) {

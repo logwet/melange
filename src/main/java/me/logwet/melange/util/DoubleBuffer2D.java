@@ -2,6 +2,7 @@ package me.logwet.melange.util;
 
 import org.apache.commons.math3.util.FastMath;
 
+@SuppressWarnings("unused")
 public class DoubleBuffer2D extends DoubleBuffer {
     private final int width;
     private final int bits;
@@ -61,6 +62,11 @@ public class DoubleBuffer2D extends DoubleBuffer {
 
     public void add(int x, int y, double v) {
         super.add(getIndex(x, y), v);
+    }
+
+    @Override
+    public DoubleBuffer add(DoubleBuffer... doubleBuffers) {
+        return new DoubleBuffer2D(super.addHelper(doubleBuffers));
     }
 
     @Override
