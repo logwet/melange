@@ -5,8 +5,8 @@
     "run": "always"
   },
   {
-    "java": 16,
-    "os": "windows-latest",
+    "java": 8,
+    "os": "ubuntu-latest",
     "run": "master"
   }
 ]
