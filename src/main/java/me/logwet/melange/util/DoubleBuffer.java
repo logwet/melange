@@ -6,6 +6,9 @@ import java.util.function.IntConsumer;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 import lombok.Getter;
+import me.logwet.melange.parallelization.SharedKernels;
+import me.logwet.melange.parallelization.scale.ScaleInPlaceKernel;
+import me.logwet.melange.parallelization.scale.ScaleKernel;
 
 @SuppressWarnings("unused")
 public class DoubleBuffer {
@@ -108,11 +111,14 @@ public class DoubleBuffer {
     }
 
     protected double[] scaleHelper(final double f) {
-        final double[] array = new double[this.length];
+        ScaleKernel kernel = SharedKernels.SCALE.get();
+        synchronized (SharedKernels.SCALE) {
+            kernel.setInput(this.buffer);
+            kernel.setOutput(new double[this.length]);
+            kernel.setFactor(f);
 
-        this.operateOnIndices(i -> array[i] = f * this.buffer[i]);
-
-        return array;
+            return kernel.execute();
+        }
     }
 
     public DoubleBuffer scale(double f) {
@@ -145,7 +151,13 @@ public class DoubleBuffer {
     }
 
     public void scaleInPlace(final double f) {
-        this.operateOnIndices(i -> this.buffer[i] *= f);
+        ScaleInPlaceKernel kernel = SharedKernels.SCALE_IN_PLACE.get();
+        synchronized (SharedKernels.SCALE_IN_PLACE) {
+            kernel.setInput(this.buffer);
+            kernel.setFactor(f);
+
+            kernel.execute();
+        }
     }
 
     public void normalizeInPlace(double f) {

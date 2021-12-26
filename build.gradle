@@ -45,6 +45,8 @@ dependencies {
 
     implementation("com.fasterxml.jackson.core:jackson-databind:2.13.1")
 
+    implementation('com.aparapi:aparapi:3.0.0')
+
     implementation("com.github.hube12:SEED:07d6f2502c0265703fe3a44a91af09141346f249")
 
     implementation("com.formdev:flatlaf:2.0-rc1")
