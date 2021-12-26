@@ -1,6 +1,7 @@
 plugins {
     id 'application'
     id "io.freefair.lombok" version "6.3.0"
+    id 'com.github.johnrengelman.shadow' version '7.1.1'
 }
 
 group = project.maven_group
@@ -25,8 +26,8 @@ repositories {
 }
 
 dependencies {
-    testImplementation('org.junit.jupiter:junit-jupiter-api:5.8.2')
-    testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.8.2')
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")
 
     implementation("org.apache.logging.log4j:log4j-api:2.17.0")
     implementation("org.apache.logging.log4j:log4j-core:2.17.0")
@@ -42,7 +43,7 @@ dependencies {
 
     implementation("net.harawata:appdirs:1.2.1")
 
-    implementation("com.fasterxml.jackson.core:jackson-databind:2.13.0")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.13.1")
 
     implementation("com.github.hube12:SEED:07d6f2502c0265703fe3a44a91af09141346f249")
 
@@ -82,21 +83,22 @@ task compileJava(type: JavaCompile, overwrite: true, dependsOn: configurations.i
     }
 }
 
+shadowJar {
+    archiveClassifier.set("")
+}
+
 jar {
     from("LICENSE") {}
     from("README.md") {}
 
+    archiveClassifier.set("thin")
+
+    //noinspection GroovyAssignabilityCheck
     manifest {
         attributes(
                 "Main-Class": "me.logwet.melange.Main",
                 "Implementation-Version": version
         )
-    }
-
-    duplicatesStrategy = 'include'
-
-    from {
-        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }
 
