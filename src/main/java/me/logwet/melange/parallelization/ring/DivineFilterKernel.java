@@ -1,44 +1,38 @@
 package me.logwet.melange.parallelization.ring;
 
+import com.aparapi.Range;
 import com.google.common.collect.ImmutableList;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.Getter;
+import lombok.Setter;
+import me.logwet.melange.MelangeConstants;
 import me.logwet.melange.divine.filter.DivineFilter;
 import me.logwet.melange.divine.filter.angle.RangeAngleFilter;
 import me.logwet.melange.divine.filter.distance.RangeDistanceFilter;
 import me.logwet.melange.divine.provider.DivineProvider;
-import me.logwet.melange.math.RingDensity;
-import me.logwet.melange.parallelization.kernel.AbstractCopyArrayKernel;
-import org.apache.commons.math3.util.FastMath;
+import me.logwet.melange.util.DoubleBuffer;
 
-public class DivineFilterKernel extends AbstractCopyArrayKernel {
+public class DivineFilterKernel extends AbstractRingKernel {
     protected static final int STRONGHOLD_COUNT = 3;
 
-    protected static final double PI = FastMath.PI;
-    protected static final double TWO_PI = 2 * PI;
-    protected static final double TWO_PI_ON_THREE = TWO_PI / 3;
-    protected static final double PI_ON_TWO = PI / 2;
+    protected int enabled;
 
-    protected int width;
-    protected int width_2;
-    protected double scalingFactor;
-    protected int xMask;
-    protected int widthBits;
+    @Getter @Setter protected double[] output2;
+    @Getter @Setter protected double[] output3;
 
     protected double[] angleLBs;
     protected double[] angleUBs;
     protected double[] distanceLBs;
     protected double[] distanceUBs;
 
-    public void setup(int width, ImmutableList<DivineProvider> divineProviders) {
-        this.width = width;
-        this.width_2 = width / 2;
+    public void setup(ImmutableList<DivineProvider> divineProviders) {
+        this.enabled = 1;
 
-        this.scalingFactor = RingDensity.SEARCH_SIZE / (double) width_2;
-
-        this.xMask = width - 1;
-        this.widthBits = Integer.bitCount(this.xMask);
+        input = new double[MelangeConstants.BUFFER_SIZE];
+        output2 = new double[MelangeConstants.BUFFER_SIZE];
+        output3 = new double[MelangeConstants.BUFFER_SIZE];
 
         List<RangeAngleFilter> angleFilters = new ArrayList<>();
         List<RangeDistanceFilter> distanceFilters = new ArrayList<>();
@@ -73,47 +67,38 @@ public class DivineFilterKernel extends AbstractCopyArrayKernel {
     }
 
     protected void setupForInitialization() {
-        width = 0;
-        width_2 = 0;
-        scalingFactor = 0;
-        xMask = 0;
-        widthBits = 0;
+        enabled = 0;
 
-        angleLBs = new double[0];
-        angleUBs = new double[0];
-        distanceLBs = new double[0];
-        distanceUBs = new double[0];
-    }
+        output2 = new double[1];
+        output3 = new double[1];
 
-    protected double normalizeAngle(double a) {
-        return a - TWO_PI * floor(a / TWO_PI);
-    }
-
-    protected double getAngle(double x, double y) {
-        return normalizeAngle(-atan2(x, y) + PI_ON_TWO);
-    }
-
-    protected double getMagnitude(double x, double y) {
-        return sqrt(x * x + y * y);
+        angleLBs = new double[1];
+        angleUBs = new double[1];
+        distanceLBs = new double[1];
+        distanceUBs = new double[1];
     }
 
     @Override
     public void run() {
-        if (width > 0) {
+        if (enabled > 0) {
             int i = getGlobalId();
 
-            int x = (i & xMask) - width_2;
-            int y = (i >> widthBits) - width_2;
+            int x = calcX(i);
+            int y = calcY(i);
 
-            int f = 0;
+            double r = calcMagnitude(x, y) * MelangeConstants.SCALING_FACTOR;
 
-            for (int j = 0; j < STRONGHOLD_COUNT; j++) {
+            if (r >= MelangeConstants.LOWER_BOUND && r <= MelangeConstants.UPPER_BOUND) {
+                int f = 0;
+
+                int s = getPassId();
+
                 boolean accept = false;
 
                 for (int k = 0; k < angleLBs.length; k++) {
-                    double t = getAngle(x, y);
+                    double t = calcAngle(x, y);
 
-                    double shift = TWO_PI_ON_THREE * j;
+                    double shift = MelangeConstants.TWO_PI_ON_THREE * s;
                     double l = normalizeAngle(angleLBs[k] + shift);
                     double u = normalizeAngle(angleUBs[k] + shift);
 
@@ -128,11 +113,9 @@ public class DivineFilterKernel extends AbstractCopyArrayKernel {
                     }
                 }
 
-                if (j == 0) {
+                if (s == 0) {
                     for (int l = 0; l < distanceLBs.length; l++) {
-                        double t = getMagnitude(x, y) * scalingFactor;
-
-                        if (!(t >= distanceLBs[l] && t <= distanceUBs[l])) {
+                        if (!(r >= distanceLBs[l] && r <= distanceUBs[l])) {
                             accept = false;
                         }
                     }
@@ -141,10 +124,17 @@ public class DivineFilterKernel extends AbstractCopyArrayKernel {
                 if (accept) {
                     f++;
                 }
-            }
 
-            if (f > 0) {
-                output[i] = input[i] * f;
+                if (f > 0) {
+                    double a = sampleProbability(r) * f;
+                    if (s == 0) {
+                        input[i] = a;
+                    } else if (s == 1) {
+                        output2[i] = a;
+                    } else {
+                        output3[i] = a;
+                    }
+                }
             }
         }
     }
@@ -153,5 +143,33 @@ public class DivineFilterKernel extends AbstractCopyArrayKernel {
     public void initialize() {
         this.setupForInitialization();
         super.initialize();
+    }
+
+    @Override
+    protected void executeHelper() {
+        Range range = Range.create(MelangeConstants.BUFFER_SIZE);
+        this.setExplicit(true);
+        this.execute(range, 3);
+        this.get(input).get(output2).get(output3);
+    }
+
+    @Override
+    public double[] execute() {
+        this.executeHelper();
+
+        if (enabled > 0) {
+            DoubleBuffer buffer = new DoubleBuffer(input);
+            DoubleBuffer buffer2 = new DoubleBuffer(output2);
+            DoubleBuffer buffer3 = new DoubleBuffer(output3);
+
+            buffer.normalizeSumInPlace();
+            buffer2.normalizeSumInPlace();
+            buffer3.normalizeSumInPlace();
+
+            buffer.addInPlace(buffer2, buffer3);
+
+            return buffer.getBuffer();
+        }
+        return new double[0];
     }
 }

@@ -1,17 +1,11 @@
 package me.logwet.melange.parallelization.scale;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.logwet.melange.parallelization.kernel.AbstractInPlaceArrayKernel;
 
 public class ScaleInPlaceKernel extends AbstractInPlaceArrayKernel {
-    protected double factor;
-
-    public double getFactor() {
-        return this.factor;
-    }
-
-    public void setFactor(double factor) {
-        this.factor = factor;
-    }
+    @Getter @Setter protected double factor;
 
     @Override
     public void run() {

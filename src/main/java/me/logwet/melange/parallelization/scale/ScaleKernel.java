@@ -1,17 +1,11 @@
 package me.logwet.melange.parallelization.scale;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.logwet.melange.parallelization.kernel.AbstractCopyArrayKernel;
 
 public class ScaleKernel extends AbstractCopyArrayKernel {
-    protected double factor;
-
-    public double getFactor() {
-        return this.factor;
-    }
-
-    public void setFactor(double factor) {
-        this.factor = factor;
-    }
+    @Getter @Setter protected double factor;
 
     @Override
     public void run() {
@@ -23,5 +17,13 @@ public class ScaleKernel extends AbstractCopyArrayKernel {
     public void initialize() {
         this.setFactor(0);
         super.initialize();
+    }
+
+    @Override
+    protected void executeHelper() {
+        this.setExplicit(true);
+        this.put(input);
+        super.executeHelper();
+        this.get(output);
     }
 }
