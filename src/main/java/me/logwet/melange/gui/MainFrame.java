@@ -1,9 +1,13 @@
 package me.logwet.melange.gui;
 
+import com.aparapi.device.Device;
+import com.aparapi.device.OpenCLDevice;
+import com.aparapi.internal.kernel.KernelManager;
 import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
+import java.util.Objects;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -41,6 +45,8 @@ public class MainFrame extends JFrame {
     protected JScrollPane divineSelectionScrollPane;
     protected JList divineSelectionList;
     protected JTree divineSelectionTree;
+    protected JLabel melangeOpenCLStatusLabel;
+    protected JPanel melangeMetaPanel;
 
     public MainFrame() {
         super("Melange");
@@ -72,6 +78,19 @@ public class MainFrame extends JFrame {
 
     private void addDataToUIComponents() {
         melangeMetaLabel.setText("Melange v" + Melange.VERSION + " by logwet");
+
+        Device device = KernelManager.instance().bestDevice();
+        String deviceMessage = device.getShortDescription();
+        if (device instanceof OpenCLDevice) {
+            String name = ((OpenCLDevice) device).getName();
+            if (Objects.nonNull(name)) {
+                deviceMessage = name;
+            }
+        } else {
+            deviceMessage += " (GPU not found or usable)";
+        }
+
+        melangeOpenCLStatusLabel.setText("Using " + deviceMessage);
     }
 
     private void createUIComponents() {

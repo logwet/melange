@@ -180,13 +180,26 @@
           </grid>
         </children>
       </tabbedpane>
-      <component id="a2d34" class="javax.swing.JLabel" binding="melangeMetaLabel">
+      <grid id="76c2" binding="melangeMetaPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
         <constraints border-constraint="South"/>
-        <properties>
-          <horizontalAlignment value="4"/>
-          <text value="Version Area"/>
-        </properties>
-      </component>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="8ec19" class="javax.swing.JLabel" binding="melangeMetaLabel">
+            <constraints border-constraint="East"/>
+            <properties>
+              <horizontalAlignment value="4"/>
+              <text value="Version Area"/>
+            </properties>
+          </component>
+          <component id="ec52c" class="javax.swing.JLabel" binding="melangeOpenCLStatusLabel">
+            <constraints border-constraint="West"/>
+            <properties>
+              <text value=""/>
+            </properties>
+          </component>
+        </children>
+      </grid>
     </children>
   </grid>
 </form>

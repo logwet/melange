@@ -15,8 +15,8 @@ public abstract class AbstractRingKernel extends AbstractInPlaceArrayKernel {
     protected static final double B = MelangeConstants.UPPER_BOUND;
     protected final double SQRT_A_ON_B = FastMath.sqrt(A / B);
     protected final double ONE_SUB_SQRT_A_ON_B = 1D - SQRT_A_ON_B;
-    protected final double P_FAC = 0.5D / (ONE_SUB_SQRT_A_ON_B * B * ONE_ON_SQRT_B);
     protected final double ONE_ON_SQRT_B = 1D / FastMath.sqrt(B);
+    protected final double P_FAC = 0.5D / (ONE_SUB_SQRT_A_ON_B * B * ONE_ON_SQRT_B);
 
     protected int calcX(int i) {
         return (i & MelangeConstants.X_MASK) - MelangeConstants.HALF_WIDTH;
