@@ -4,6 +4,7 @@ import com.aparapi.device.Device;
 import com.aparapi.device.OpenCLDevice;
 import com.aparapi.internal.kernel.KernelManager;
 import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
@@ -74,6 +75,9 @@ public class MainFrame extends JFrame {
 
         this.pack();
         this.setMinimumSize(new Dimension(this.getWidth(), this.getHeight()));
+
+        this.setIconImage(
+            Toolkit.getDefaultToolkit().getImage(getClass().getResource("/melange/icon.png")));
     }
 
     private void addDataToUIComponents() {

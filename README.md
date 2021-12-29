@@ -1,4 +1,5 @@
 # Melange
+![icon](src/main/resources/melange/icon.png)
 
 ## License
 
@@ -7,3 +8,5 @@ its components in your own projects, as long as you abide by the terms of the li
 
 If you fork the project and distribute your version, please change the name to a suitable and
 distinct alternative to avoid confusion.
+
+<div>Icon made by <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
