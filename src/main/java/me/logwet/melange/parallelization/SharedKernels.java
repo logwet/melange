@@ -4,6 +4,7 @@ import com.aparapi.Kernel;
 import com.aparapi.internal.kernel.KernelManager;
 import java.util.Objects;
 import me.logwet.melange.parallelization.kernel.SharedKernel;
+import me.logwet.melange.parallelization.ring.DivineFilterKernel;
 import me.logwet.melange.parallelization.scale.ScaleInPlaceKernel;
 import me.logwet.melange.parallelization.scale.ScaleKernel;
 import org.apache.commons.lang3.concurrent.BackgroundInitializer;
@@ -13,7 +14,8 @@ import org.jetbrains.annotations.Nullable;
 
 public enum SharedKernels {
     SCALE(ScaleKernel.class),
-    SCALE_IN_PLACE(ScaleInPlaceKernel.class);
+    SCALE_IN_PLACE(ScaleInPlaceKernel.class),
+    DIVINE_FILTER(DivineFilterKernel.class);
 
     private final KernelInitializer<? extends SharedKernel> initializer;
 

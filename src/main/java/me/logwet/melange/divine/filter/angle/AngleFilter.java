@@ -7,4 +7,9 @@ public interface AngleFilter extends DivineFilter {
     default Type getType() {
         return Type.ANGLE;
     }
+
+    @Override
+    default int getTypeI() {
+        return 0;
+    }
 }

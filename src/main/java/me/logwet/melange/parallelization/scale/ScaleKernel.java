@@ -21,8 +21,6 @@ public class ScaleKernel extends AbstractCopyArrayKernel {
 
     @Override
     public void initialize() {
-        this.setInput(new double[1]);
-        this.setOutput(new double[1]);
         this.setFactor(0);
         super.initialize();
     }

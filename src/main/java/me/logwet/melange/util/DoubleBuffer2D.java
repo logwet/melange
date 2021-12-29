@@ -8,6 +8,7 @@ public class DoubleBuffer2D extends DoubleBuffer {
     @Getter
     private final int width;
     private final int bits;
+    @Getter
     private final int xMask;
 
     /**

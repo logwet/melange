@@ -13,7 +13,7 @@ import me.logwet.melange.parallelization.scale.ScaleKernel;
 @SuppressWarnings("unused")
 public class DoubleBuffer {
     @Getter protected final double[] buffer;
-    protected final int length;
+    @Getter protected final int length;
 
     /**
      * One dimensional buffer of doubles.

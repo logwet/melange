@@ -21,7 +21,6 @@ public class ScaleInPlaceKernel extends AbstractInPlaceArrayKernel {
 
     @Override
     public void initialize() {
-        this.setInput(new double[1]);
         this.setFactor(0);
         super.initialize();
     }

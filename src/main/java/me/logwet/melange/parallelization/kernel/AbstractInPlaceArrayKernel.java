@@ -16,6 +16,7 @@ public abstract class AbstractInPlaceArrayKernel extends AbstractArrayKernel
 
     @Override
     public void initialize() {
+        this.setInput(new double[1]);
         this.execute();
     }
 }

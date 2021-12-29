@@ -16,10 +16,10 @@ public class RenderResult {
     private static final int WIDTH_2 = WIDTH / 2;
     private static final int BUFFER_SIZE = WIDTH * WIDTH;
     private static final int X_MASK = WIDTH - 1;
-    @Getter(lazy = true)
-    private static final DoubleBuffer2D defaultProbBuffer = buildDefaultBuffer();
     private static final double SCALING_FACTOR;
     private static final double SCALING_FACTOR_2;
+    @Getter(lazy = true)
+    private static final DoubleBuffer2D defaultProbBuffer = buildDefaultBuffer();
     private static final int COLOR_BITS = 16;
     private static final int COLOR_DEPTH = 1 << COLOR_BITS;
 
@@ -34,8 +34,8 @@ public class RenderResult {
     private final BufferedImage render = genRender();
 
     private static void addDefaultProbToBuffer(int i, DoubleBuffer buffer) {
-        int ox = i & X_MASK;
-        int oy = i >> WIDTH_BITS;
+        int ox = (i & X_MASK) - WIDTH_2;
+        int oy = (i >> WIDTH_BITS) - WIDTH_2;
 
         double v = getDefaultProbForCoord(ox, oy);
         if (v > 0) {
@@ -43,10 +43,7 @@ public class RenderResult {
         }
     }
 
-    private static double getDefaultProbForCoord(int ox, int oy) {
-        int x = ox - WIDTH_2;
-        int y = oy - WIDTH_2;
-
+    private static double getDefaultProbForCoord(int x, int y) {
         double r = RingDensity.getMagnitude(x, y) * SCALING_FACTOR;
 
         if (r >= RingDensity.LOWER_BOUND && r <= RingDensity.UPPER_BOUND) {
@@ -75,7 +72,7 @@ public class RenderResult {
                         image.getRaster()
                                 .setPixel(
                                         buffer.getX(i),
-                                        buffer.getY(i),
+                                        buffer.getXMask() - buffer.getY(i),
                                         new int[] {(int) buffer.get(i)}));
         return image;
     }
@@ -83,13 +80,11 @@ public class RenderResult {
     private BufferedImage genRender() {
         long startTime = System.currentTimeMillis();
 
-//        DoubleBuffer2D buffer = (DoubleBuffer2D) getDefaultProbBuffer().copy();
-
         ImmutableList<DivineProvider> providers = ImmutableList.of(new PlaceholderFeature());
 
         DoubleBuffer2D buffer = StrongholdRing.filter(providers, getDefaultProbBuffer());
 
-        final BufferedImage image = buildImage(buffer);
+        BufferedImage image = buildImage(buffer);
 
         long endTime = System.currentTimeMillis();
 

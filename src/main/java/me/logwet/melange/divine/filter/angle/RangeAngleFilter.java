@@ -1,13 +1,14 @@
 package me.logwet.melange.divine.filter.angle;
 
+import lombok.Getter;
 import org.apache.commons.math3.util.FastMath;
 import org.apache.commons.math3.util.MathUtils;
 
 public class RangeAngleFilter extends AbstractAngleFilter {
     private static final double TWO_PI_ON_THREE = MathUtils.TWO_PI / 3;
 
-    protected final double lb;
-    protected final double ub;
+    @Getter protected final double lb;
+    @Getter protected final double ub;
 
     public RangeAngleFilter(double lb, double ub) {
         this.lb = lb;
