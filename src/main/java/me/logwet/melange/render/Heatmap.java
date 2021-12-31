@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferUShort;
 import lombok.Getter;
+import me.logwet.melange.Melange;
 import me.logwet.melange.MelangeConstants;
 import me.logwet.melange.config.Config;
 import me.logwet.melange.divine.provider.DivineProvider;
@@ -48,7 +49,13 @@ public class Heatmap {
     }
 
     public Heatmap() {
-        this(ImmutableList.of());
+        this(ImmutableList.copyOf(Melange.providerList));
+    }
+
+    public static BufferedImage newRawImage() {
+        //noinspection SuspiciousNameCombination
+        return new BufferedImage(
+                MelangeConstants.WIDTH, MelangeConstants.WIDTH, BufferedImage.TYPE_USHORT_GRAY);
     }
 
     private void genBuffer() {
@@ -73,12 +80,6 @@ public class Heatmap {
         }
 
         assert buffer != null;
-    }
-
-    public static BufferedImage newRawImage() {
-        //noinspection SuspiciousNameCombination
-        return new BufferedImage(
-                MelangeConstants.WIDTH, MelangeConstants.WIDTH, BufferedImage.TYPE_USHORT_GRAY);
     }
 
     private BufferedImage genRender() {

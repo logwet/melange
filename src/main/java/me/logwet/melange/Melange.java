@@ -2,9 +2,12 @@ package me.logwet.melange;
 
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import java.awt.Dimension;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import javax.swing.JFrame;
 import me.logwet.melange.config.Config;
+import me.logwet.melange.divine.provider.DivineProvider;
 import me.logwet.melange.gui.MainFrame;
 import me.logwet.melange.kernel.SharedKernels;
 import me.logwet.melange.render.Heatmap;
@@ -18,6 +21,7 @@ public class Melange {
     public static final Dimension WINDOW_DIMENSION = new Dimension(800, 600);
     public static final Logger LOGGER = LogManager.getLogger("melange");
 
+    public static final List<DivineProvider> providerList = new ArrayList<>();
     @Nullable public static Heatmap heatmap;
 
     static {

@@ -6,6 +6,8 @@ import com.aparapi.internal.kernel.KernelManager;
 import com.aparapi.internal.opencl.OpenCLPlatform;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
@@ -71,6 +73,17 @@ public class MainFrame extends JFrame {
                         super.windowClosing(e);
                     }
                 });
+
+        divineForceRenderButton.addActionListener(e -> {
+            Melange.heatmap = new Heatmap();
+            updateRender();
+        });
+
+        divineResetbutton.addActionListener(e -> {
+            Melange.providerList.clear();
+            Melange.heatmap = new Heatmap();
+            updateRender();
+        });
 
         this.pack();
         this.addDataToTextLabels();
