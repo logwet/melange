@@ -1,4 +1,4 @@
-package me.logwet.melange.parallelization.kernel;
+package me.logwet.melange.render.kernel;
 
 import com.aparapi.Range;
 import com.google.common.collect.ImmutableList;
@@ -11,7 +11,7 @@ import me.logwet.melange.divine.filter.DivineFilter;
 import me.logwet.melange.divine.filter.angle.RangeAngleFilter;
 import me.logwet.melange.divine.filter.distance.RangeDistanceFilter;
 import me.logwet.melange.divine.provider.DivineProvider;
-import me.logwet.melange.parallelization.api.StrongholdDataKernel;
+import me.logwet.melange.kernel.api.StrongholdDataKernel;
 import me.logwet.melange.util.StrongholdData;
 
 public class RenderDivineKernel extends AbstractRingKernel implements StrongholdDataKernel {

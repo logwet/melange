@@ -1,7 +1,7 @@
-package me.logwet.melange.parallelization.kernel;
+package me.logwet.melange.render.kernel;
 
 import me.logwet.melange.MelangeConstants;
-import me.logwet.melange.parallelization.api.AbstractSharedKernel;
+import me.logwet.melange.kernel.api.AbstractSharedKernel;
 import org.apache.commons.math3.util.FastMath;
 
 /**

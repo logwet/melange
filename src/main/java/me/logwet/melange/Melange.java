@@ -6,7 +6,7 @@ import java.util.Objects;
 import javax.swing.JFrame;
 import me.logwet.melange.config.Config;
 import me.logwet.melange.gui.MainFrame;
-import me.logwet.melange.parallelization.SharedKernels;
+import me.logwet.melange.kernel.SharedKernels;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

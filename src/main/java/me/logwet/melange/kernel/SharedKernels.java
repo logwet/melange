@@ -1,13 +1,13 @@
-package me.logwet.melange.parallelization;
+package me.logwet.melange.kernel;
 
 import com.aparapi.Kernel;
 import com.aparapi.internal.kernel.KernelManager;
 import java.util.Objects;
-import me.logwet.melange.parallelization.api.SharedKernel;
-import me.logwet.melange.parallelization.kernel.PrepareBufferKernel;
-import me.logwet.melange.parallelization.kernel.PrepareImageKernel;
-import me.logwet.melange.parallelization.kernel.RenderDivineKernel;
-import me.logwet.melange.parallelization.kernel.ScaleKernel;
+import me.logwet.melange.kernel.api.SharedKernel;
+import me.logwet.melange.render.kernel.PrepareBufferKernel;
+import me.logwet.melange.render.kernel.PrepareImageKernel;
+import me.logwet.melange.render.kernel.RenderDivineKernel;
+import me.logwet.melange.render.kernel.ScaleKernel;
 import org.apache.commons.lang3.concurrent.BackgroundInitializer;
 import org.apache.commons.lang3.concurrent.ConcurrentException;
 import org.jetbrains.annotations.NotNull;

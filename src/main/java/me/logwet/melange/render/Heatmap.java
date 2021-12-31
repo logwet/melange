@@ -1,4 +1,4 @@
-package me.logwet.melange.renderer;
+package me.logwet.melange.render;
 
 import com.google.common.collect.ImmutableList;
 import java.awt.image.BufferedImage;
@@ -7,17 +7,17 @@ import java.util.concurrent.TimeUnit;
 import lombok.Getter;
 import me.logwet.melange.MelangeConstants;
 import me.logwet.melange.divine.provider.DivineProvider;
-import me.logwet.melange.parallelization.SharedKernels;
-import me.logwet.melange.parallelization.kernel.PrepareBufferKernel;
-import me.logwet.melange.parallelization.kernel.PrepareImageKernel;
-import me.logwet.melange.parallelization.kernel.RenderDivineKernel;
-import me.logwet.melange.parallelization.kernel.ScaleKernel;
+import me.logwet.melange.kernel.SharedKernels;
+import me.logwet.melange.render.kernel.PrepareBufferKernel;
+import me.logwet.melange.render.kernel.PrepareImageKernel;
+import me.logwet.melange.render.kernel.RenderDivineKernel;
+import me.logwet.melange.render.kernel.ScaleKernel;
 import me.logwet.melange.util.ArrayHelper;
 import me.logwet.melange.util.StrongholdData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class RenderResult {
+public class Heatmap {
     private final int strongholdCount;
     private final int range;
 
@@ -31,7 +31,7 @@ public class RenderResult {
     @Getter(lazy = true)
     private final BufferedImage render = genRender();
 
-    public RenderResult(
+    public Heatmap(
             int strongholdCount,
             int range,
             @NotNull ImmutableList<DivineProvider> divineProviders) {
@@ -65,11 +65,11 @@ public class RenderResult {
     }
 
     private BufferedImage genRender() {
-        try {
-            TimeUnit.SECONDS.sleep(5);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            TimeUnit.SECONDS.sleep(5);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
 
         long startTime = System.currentTimeMillis();
 

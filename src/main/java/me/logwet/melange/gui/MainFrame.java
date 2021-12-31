@@ -26,7 +26,7 @@ import javax.swing.JTextField;
 import javax.swing.JTree;
 import me.logwet.melange.Melange;
 import me.logwet.melange.divine.provider.feature.PlaceholderFeature;
-import me.logwet.melange.renderer.RenderResult;
+import me.logwet.melange.render.Heatmap;
 
 public class MainFrame extends JFrame {
     protected JPanel mainPanel;
@@ -113,8 +113,7 @@ public class MainFrame extends JFrame {
     }
 
     private void initRender() {
-        RenderResult renderResult =
-                new RenderResult(3, 600, ImmutableList.of(new PlaceholderFeature()));
+        Heatmap renderResult = new Heatmap(3, 600, ImmutableList.of(new PlaceholderFeature()));
         addRender(renderResult.getRender());
     }
 

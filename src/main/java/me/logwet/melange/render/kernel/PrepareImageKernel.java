@@ -1,9 +1,9 @@
-package me.logwet.melange.parallelization.kernel;
+package me.logwet.melange.render.kernel;
 
 import com.aparapi.Range;
 import me.logwet.melange.MelangeConstants;
-import me.logwet.melange.parallelization.api.AbstractSharedKernel;
-import me.logwet.melange.parallelization.api.ShortArrayKernel;
+import me.logwet.melange.kernel.api.AbstractSharedKernel;
+import me.logwet.melange.kernel.api.ShortArrayKernel;
 
 public class PrepareImageKernel extends AbstractSharedKernel implements ShortArrayKernel {
     protected double[] input;
