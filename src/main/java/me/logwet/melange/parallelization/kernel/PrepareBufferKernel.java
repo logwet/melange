@@ -58,15 +58,15 @@ public class PrepareBufferKernel extends AbstractRingKernel implements DoubleArr
                 int k = 0;
 
                 if (factor1 > 0) {
-                    s += input1[i] / factor1;
+                    s += input1[i] * factor1;
                     k++;
                 }
                 if (factor2 > 0) {
-                    s += input2[i] / factor2;
+                    s += input2[i] * factor2;
                     k++;
                 }
                 if (factor3 > 0) {
-                    s += input3[i] / factor3;
+                    s += input3[i] * factor3;
                     k++;
                 }
 

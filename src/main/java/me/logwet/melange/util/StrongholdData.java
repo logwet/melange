@@ -19,7 +19,7 @@ public class StrongholdData {
 
     public double getFactor(int index, double[] array) {
         if (index < count) {
-            return ArrayHelper.sumArray(array);
+            return ArrayHelper.normaliseSumFactor(array);
         }
 
         return 0D;

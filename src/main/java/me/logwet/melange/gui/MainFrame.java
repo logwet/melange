@@ -113,7 +113,8 @@ public class MainFrame extends JFrame {
     }
 
     private void initRender() {
-        RenderResult renderResult = new RenderResult(3, ImmutableList.of(new PlaceholderFeature()));
+        RenderResult renderResult =
+                new RenderResult(3, 600, ImmutableList.of(new PlaceholderFeature()));
         addRender(renderResult.getRender());
     }
 

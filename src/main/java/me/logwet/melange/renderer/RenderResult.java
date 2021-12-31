@@ -3,6 +3,7 @@ package me.logwet.melange.renderer;
 import com.google.common.collect.ImmutableList;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferUShort;
+import java.util.concurrent.TimeUnit;
 import lombok.Getter;
 import me.logwet.melange.MelangeConstants;
 import me.logwet.melange.divine.provider.DivineProvider;
@@ -10,6 +11,7 @@ import me.logwet.melange.parallelization.SharedKernels;
 import me.logwet.melange.parallelization.kernel.PrepareBufferKernel;
 import me.logwet.melange.parallelization.kernel.PrepareImageKernel;
 import me.logwet.melange.parallelization.kernel.RenderDivineKernel;
+import me.logwet.melange.parallelization.kernel.ScaleKernel;
 import me.logwet.melange.util.ArrayHelper;
 import me.logwet.melange.util.StrongholdData;
 import org.jetbrains.annotations.NotNull;
@@ -17,6 +19,8 @@ import org.jetbrains.annotations.Nullable;
 
 public class RenderResult {
     private final int strongholdCount;
+    private final int range;
+
     @NotNull private final ImmutableList<DivineProvider> divineProviders;
 
     @Nullable @Getter private StrongholdData strongholdData;
@@ -28,8 +32,11 @@ public class RenderResult {
     private final BufferedImage render = genRender();
 
     public RenderResult(
-            int strongholdCount, @NotNull ImmutableList<DivineProvider> divineProviders) {
+            int strongholdCount,
+            int range,
+            @NotNull ImmutableList<DivineProvider> divineProviders) {
         this.strongholdCount = strongholdCount;
+        this.range = range;
         this.divineProviders = divineProviders;
     }
 
@@ -44,19 +51,25 @@ public class RenderResult {
 
         PrepareBufferKernel prepareKernel = SharedKernels.PREPARE_BUFFER.get();
         synchronized (SharedKernels.PREPARE_BUFFER) {
-            prepareKernel.setup(strongholdData, 600);
+            prepareKernel.setup(strongholdData, range);
             buffer = prepareKernel.render();
+        }
+
+        ScaleKernel scaleKernel = SharedKernels.SCALE.get();
+        synchronized (SharedKernels.SCALE) {
+            scaleKernel.setup(buffer, ArrayHelper.normaliseSumFactor(buffer));
+            scaleKernel.render();
         }
 
         assert buffer != null;
     }
 
     private BufferedImage genRender() {
-        //        try {
-        //            TimeUnit.SECONDS.sleep(5);
-        //        } catch (InterruptedException e) {
-        //            e.printStackTrace();
-        //        }
+        try {
+            TimeUnit.SECONDS.sleep(5);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         long startTime = System.currentTimeMillis();
 

@@ -7,6 +7,7 @@ import me.logwet.melange.parallelization.api.SharedKernel;
 import me.logwet.melange.parallelization.kernel.PrepareBufferKernel;
 import me.logwet.melange.parallelization.kernel.PrepareImageKernel;
 import me.logwet.melange.parallelization.kernel.RenderDivineKernel;
+import me.logwet.melange.parallelization.kernel.ScaleKernel;
 import org.apache.commons.lang3.concurrent.BackgroundInitializer;
 import org.apache.commons.lang3.concurrent.ConcurrentException;
 import org.jetbrains.annotations.NotNull;
@@ -15,6 +16,7 @@ import org.jetbrains.annotations.Nullable;
 public enum SharedKernels {
     RENDER(RenderDivineKernel.class),
     PREPARE_BUFFER(PrepareBufferKernel.class),
+    SCALE(ScaleKernel.class),
     PREPARE_IMAGE(PrepareImageKernel.class);
 
     private final KernelInitializer<? extends SharedKernel> initializer;
