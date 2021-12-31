@@ -3,6 +3,7 @@ package me.logwet.melange.gui;
 import com.aparapi.device.Device;
 import com.aparapi.device.OpenCLDevice;
 import com.aparapi.internal.kernel.KernelManager;
+import com.aparapi.internal.opencl.OpenCLPlatform;
 import com.google.common.collect.ImmutableList;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -91,6 +92,11 @@ public class MainFrame extends JFrame {
             String name = ((OpenCLDevice) device).getName();
             if (Objects.nonNull(name)) {
                 deviceMessage = name;
+            }
+
+            OpenCLPlatform platform = (new OpenCLPlatform()).getOpenCLPlatforms().get(0);
+            if (Objects.nonNull(platform)) {
+                deviceMessage += " with " + platform.getVersion();
             }
         } else {
             deviceMessage += " (GPU not found or usable)";
