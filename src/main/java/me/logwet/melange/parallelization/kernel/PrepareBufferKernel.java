@@ -1,8 +1,8 @@
-package me.logwet.melange.parallelization.ring;
+package me.logwet.melange.parallelization.kernel;
 
 import com.aparapi.Range;
 import me.logwet.melange.MelangeConstants;
-import me.logwet.melange.parallelization.kernel.DoubleArrayKernel;
+import me.logwet.melange.parallelization.api.DoubleArrayKernel;
 import me.logwet.melange.util.StrongholdData;
 
 public class PrepareBufferKernel extends AbstractRingKernel implements DoubleArrayKernel {

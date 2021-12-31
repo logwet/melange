@@ -1,4 +1,4 @@
-package me.logwet.melange.parallelization.kernel;
+package me.logwet.melange.parallelization.api;
 
 import me.logwet.melange.util.StrongholdData;
 
