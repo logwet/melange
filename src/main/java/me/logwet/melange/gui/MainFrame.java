@@ -4,13 +4,14 @@ import com.aparapi.device.Device;
 import com.aparapi.device.OpenCLDevice;
 import com.aparapi.internal.kernel.KernelManager;
 import com.aparapi.internal.opencl.OpenCLPlatform;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Objects;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -24,7 +25,9 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
 import javax.swing.JTree;
+import javax.swing.event.HyperlinkEvent.EventType;
 import me.logwet.melange.Melange;
 import me.logwet.melange.render.Heatmap;
 
@@ -51,6 +54,8 @@ public class MainFrame extends JFrame {
     protected JTree divineSelectionTree;
     protected JLabel melangeOpenCLStatusLabel;
     protected JPanel melangeMetaPanel;
+    protected JPanel creditsPanel;
+    protected JTextPane creditsTextPane;
 
     public MainFrame() {
         super("Melange");
@@ -83,6 +88,16 @@ public class MainFrame extends JFrame {
             Melange.providerList.clear();
             Melange.heatmap = new Heatmap();
             updateRender();
+        });
+
+        creditsTextPane.addHyperlinkListener(e -> {
+            if (e.getEventType() == EventType.ACTIVATED) {
+                try {
+                    Desktop.getDesktop().browse(e.getURL().toURI());
+                } catch (IOException | URISyntaxException ex) {
+                    ex.printStackTrace();
+                }
+            }
         });
 
         this.pack();
