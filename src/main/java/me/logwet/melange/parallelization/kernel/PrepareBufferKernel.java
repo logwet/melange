@@ -75,6 +75,8 @@ public class PrepareBufferKernel extends AbstractRingKernel implements DoubleArr
                 int x = calcX(i);
                 int y = calcY(i);
 
+                double v = 0D;
+
                 for (int x0 = constrainToBounds((int) floor(x - range));
                         x0 < constrainToBounds((int) ceil(x + range));
                         x0++) {
@@ -82,10 +84,12 @@ public class PrepareBufferKernel extends AbstractRingKernel implements DoubleArr
                             y0 < constrainToBounds((int) ceil(y + range));
                             y0++) {
                         if (calcDistance(x0, y0, x, y) <= range) {
-                            input1[i] += input2[calcIndex(x0, y0)];
+                            v += input2[calcIndex(x0, y0)];
                         }
                     }
                 }
+
+                input1[i] = v;
             }
         }
     }
