@@ -8,8 +8,9 @@ import lombok.Getter;
 import lombok.Setter;
 import me.logwet.melange.MelangeConstants;
 import me.logwet.melange.divine.filter.DivineFilter;
-import me.logwet.melange.divine.filter.angle.RangeAngleFilter;
-import me.logwet.melange.divine.filter.distance.RangeDistanceFilter;
+import me.logwet.melange.divine.filter.DivineFilter.Type;
+import me.logwet.melange.divine.filter.angle.AngleFilter;
+import me.logwet.melange.divine.filter.distance.DistanceFilter;
 import me.logwet.melange.divine.provider.DivineProvider;
 import me.logwet.melange.kernel.api.StrongholdDataKernel;
 import me.logwet.melange.util.StrongholdData;
@@ -45,8 +46,8 @@ public class RenderDivineKernel extends AbstractRingKernel implements Stronghold
         this.output2 = new double[MelangeConstants.BUFFER_SIZE];
         this.output3 = new double[MelangeConstants.BUFFER_SIZE];
 
-        List<RangeAngleFilter> angleFilters = new ArrayList<>();
-        List<RangeDistanceFilter> distanceFilters = new ArrayList<>();
+        List<AngleFilter> angleFilters = new ArrayList<>();
+        List<DistanceFilter> distanceFilters = new ArrayList<>();
 
         this.numAngleProviders = 0;
         this.numDistanceProviders = 0;
@@ -56,11 +57,11 @@ public class RenderDivineKernel extends AbstractRingKernel implements Stronghold
             boolean hasDistanceFilter = false;
 
             for (DivineFilter divineFilter : divineProvider.getFilters()) {
-                if (divineFilter instanceof RangeAngleFilter) {
-                    angleFilters.add((RangeAngleFilter) divineFilter);
+                if (divineFilter.getType() == Type.ANGLE) {
+                    angleFilters.add((AngleFilter) divineFilter);
                     hasAngleFilter = true;
-                } else if (divineFilter instanceof RangeDistanceFilter) {
-                    distanceFilters.add((RangeDistanceFilter) divineFilter);
+                } else if (divineFilter.getType() == Type.DISTANCE) {
+                    distanceFilters.add((DistanceFilter) divineFilter);
                     hasDistanceFilter = true;
                 }
             }
@@ -78,25 +79,25 @@ public class RenderDivineKernel extends AbstractRingKernel implements Stronghold
         this.angleLBs =
                 guaranteeLength(
                         angleFilters.stream()
-                                .map(RangeAngleFilter::getLb)
+                                .map(DivineFilter::getLb)
                                 .mapToDouble(d -> d)
                                 .toArray());
         this.angleUBs =
                 guaranteeLength(
                         angleFilters.stream()
-                                .map(RangeAngleFilter::getUb)
+                                .map(DivineFilter::getUb)
                                 .mapToDouble(d -> d)
                                 .toArray());
         this.distanceLBs =
                 guaranteeLength(
                         distanceFilters.stream()
-                                .map(RangeDistanceFilter::getLb)
+                                .map(DivineFilter::getLb)
                                 .mapToDouble(d -> d)
                                 .toArray());
         this.distanceUBs =
                 guaranteeLength(
                         distanceFilters.stream()
-                                .map(RangeDistanceFilter::getUb)
+                                .map(DivineFilter::getUb)
                                 .mapToDouble(d -> d)
                                 .toArray());
     }

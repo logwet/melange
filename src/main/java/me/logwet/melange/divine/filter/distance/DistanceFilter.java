@@ -7,9 +7,4 @@ public interface DistanceFilter extends DivineFilter {
     default Type getType() {
         return Type.DISTANCE;
     }
-
-    @Override
-    default int getTypeI() {
-        return 1;
-    }
 }

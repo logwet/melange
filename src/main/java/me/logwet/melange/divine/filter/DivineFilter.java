@@ -1,11 +1,11 @@
 package me.logwet.melange.divine.filter;
 
 public interface DivineFilter {
+    double getLb();
+
+    double getUb();
+
     Type getType();
-
-    int getTypeI();
-
-    boolean test(double x, int index);
 
     enum Type {
         ANGLE,

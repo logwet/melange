@@ -79,26 +79,29 @@ public class MainFrame extends JFrame {
                     }
                 });
 
-        divineForceRenderButton.addActionListener(e -> {
-            Melange.heatmap = new Heatmap();
-            updateRender();
-        });
+        divineForceRenderButton.addActionListener(
+                e -> {
+                    Melange.heatmap = new Heatmap();
+                    updateRender();
+                });
 
-        divineResetbutton.addActionListener(e -> {
-            Melange.providerList.clear();
-            Melange.heatmap = new Heatmap();
-            updateRender();
-        });
+        divineResetbutton.addActionListener(
+                e -> {
+                    Melange.providerList.clear();
+                    Melange.heatmap = new Heatmap();
+                    updateRender();
+                });
 
-        creditsTextPane.addHyperlinkListener(e -> {
-            if (e.getEventType() == EventType.ACTIVATED) {
-                try {
-                    Desktop.getDesktop().browse(e.getURL().toURI());
-                } catch (IOException | URISyntaxException ex) {
-                    ex.printStackTrace();
-                }
-            }
-        });
+        creditsTextPane.addHyperlinkListener(
+                e -> {
+                    if (e.getEventType() == EventType.ACTIVATED) {
+                        try {
+                            Desktop.getDesktop().browse(e.getURL().toURI());
+                        } catch (IOException | URISyntaxException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                });
 
         this.pack();
         this.addDataToTextLabels();
