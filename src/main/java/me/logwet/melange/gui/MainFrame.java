@@ -3,6 +3,7 @@ package me.logwet.melange.gui;
 import com.aparapi.device.Device;
 import com.aparapi.device.OpenCLDevice;
 import com.aparapi.internal.kernel.KernelManager;
+import com.google.common.collect.ImmutableList;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
@@ -23,6 +24,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTree;
 import me.logwet.melange.Melange;
+import me.logwet.melange.divine.provider.feature.PlaceholderFeature;
 import me.logwet.melange.renderer.RenderResult;
 
 public class MainFrame extends JFrame {
@@ -77,7 +79,7 @@ public class MainFrame extends JFrame {
         this.setMinimumSize(new Dimension(this.getWidth(), this.getHeight()));
 
         this.setIconImage(
-            Toolkit.getDefaultToolkit().getImage(getClass().getResource("/melange/icon.png")));
+                Toolkit.getDefaultToolkit().getImage(getClass().getResource("/melange/icon.png")));
     }
 
     private void addDataToUIComponents() {
@@ -105,7 +107,7 @@ public class MainFrame extends JFrame {
     }
 
     private void initRender() {
-        RenderResult renderResult = new RenderResult();
+        RenderResult renderResult = new RenderResult(3, ImmutableList.of(new PlaceholderFeature()));
         addRender(renderResult.getRender());
     }
 

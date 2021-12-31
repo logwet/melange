@@ -4,18 +4,18 @@ import com.aparapi.Kernel;
 import com.aparapi.internal.kernel.KernelManager;
 import java.util.Objects;
 import me.logwet.melange.parallelization.kernel.SharedKernel;
-import me.logwet.melange.parallelization.ring.DivineFilterKernel;
-import me.logwet.melange.parallelization.scale.ScaleInPlaceKernel;
-import me.logwet.melange.parallelization.scale.ScaleKernel;
+import me.logwet.melange.parallelization.ring.PrepareBufferKernel;
+import me.logwet.melange.parallelization.ring.PrepareImageKernel;
+import me.logwet.melange.parallelization.ring.RenderDivineKernel;
 import org.apache.commons.lang3.concurrent.BackgroundInitializer;
 import org.apache.commons.lang3.concurrent.ConcurrentException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public enum SharedKernels {
-    SCALE(ScaleKernel.class),
-    SCALE_IN_PLACE(ScaleInPlaceKernel.class),
-    DIVINE_FILTER(DivineFilterKernel.class);
+    RENDER(RenderDivineKernel.class),
+    PREPARE_BUFFER(PrepareBufferKernel.class),
+    PREPARE_IMAGE(PrepareImageKernel.class);
 
     private final KernelInitializer<? extends SharedKernel> initializer;
 
@@ -53,6 +53,7 @@ public enum SharedKernels {
             this.kernelClass = kernelClass;
         }
 
+        @NotNull
         @Override
         protected T initialize() {
             @SuppressWarnings("unchecked")

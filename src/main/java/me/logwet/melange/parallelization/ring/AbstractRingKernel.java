@@ -1,7 +1,7 @@
 package me.logwet.melange.parallelization.ring;
 
 import me.logwet.melange.MelangeConstants;
-import me.logwet.melange.parallelization.kernel.AbstractInPlaceArrayKernel;
+import me.logwet.melange.parallelization.kernel.AbstractSharedKernel;
 import org.apache.commons.math3.util.FastMath;
 
 /**
@@ -10,20 +10,21 @@ import org.apache.commons.math3.util.FastMath;
  * @author logwet
  * @author al
  */
-public abstract class AbstractRingKernel extends AbstractInPlaceArrayKernel {
+public abstract class AbstractRingKernel extends AbstractSharedKernel {
     protected static final double A = MelangeConstants.LOWER_BOUND;
     protected static final double B = MelangeConstants.UPPER_BOUND;
+
     protected final double SQRT_A_ON_B = FastMath.sqrt(A / B);
     protected final double ONE_SUB_SQRT_A_ON_B = 1D - SQRT_A_ON_B;
     protected final double ONE_ON_SQRT_B = 1D / FastMath.sqrt(B);
     protected final double P_FAC = 0.5D / (ONE_SUB_SQRT_A_ON_B * B * ONE_ON_SQRT_B);
 
     protected int calcX(int i) {
-        return (i & MelangeConstants.X_MASK) - MelangeConstants.HALF_WIDTH;
+        return i & MelangeConstants.X_MASK;
     }
 
     protected int calcY(int i) {
-        return (i >> MelangeConstants.WIDTH_BITS) - MelangeConstants.HALF_WIDTH;
+        return MelangeConstants.X_MASK - (i >> MelangeConstants.WIDTH_BITS);
     }
 
     protected double normalizeAngle(double x) {
@@ -34,7 +35,7 @@ public abstract class AbstractRingKernel extends AbstractInPlaceArrayKernel {
         return normalizeAngle(MelangeConstants.PI_ON_TWO - atan2(x, y));
     }
 
-    protected double calcMagnitude(double x, double y) {
+    protected double calcMagnitude(int x, int y) {
         return sqrt(x * x + y * y);
     }
 

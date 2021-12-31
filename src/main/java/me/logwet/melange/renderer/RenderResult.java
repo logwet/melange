@@ -2,50 +2,77 @@ package me.logwet.melange.renderer;
 
 import com.google.common.collect.ImmutableList;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferUShort;
 import lombok.Getter;
 import me.logwet.melange.MelangeConstants;
-import me.logwet.melange.divine.consumer.StrongholdRing;
 import me.logwet.melange.divine.provider.DivineProvider;
-import me.logwet.melange.divine.provider.feature.PlaceholderFeature;
-import me.logwet.melange.util.DoubleBuffer2D;
+import me.logwet.melange.parallelization.SharedKernels;
+import me.logwet.melange.parallelization.ring.PrepareBufferKernel;
+import me.logwet.melange.parallelization.ring.PrepareImageKernel;
+import me.logwet.melange.parallelization.ring.RenderDivineKernel;
+import me.logwet.melange.util.ArrayHelper;
+import me.logwet.melange.util.StrongholdData;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class RenderResult {
-    private static final int COLOR_BITS = 16;
-    private static final int COLOR_DEPTH = 1 << COLOR_BITS;
+    private final int strongholdCount;
+    @NotNull private final ImmutableList<DivineProvider> divineProviders;
 
-    private final boolean hasData = false;
+    @Nullable @Getter private StrongholdData strongholdData;
 
+    @Nullable @Getter private double[] buffer;
+
+    @NotNull
     @Getter(lazy = true)
     private final BufferedImage render = genRender();
 
-    private BufferedImage buildImage(DoubleBuffer2D buffer) {
-        @SuppressWarnings("SuspiciousNameCombination")
-        final BufferedImage image =
-                new BufferedImage(
-                        MelangeConstants.WIDTH,
-                        MelangeConstants.WIDTH,
-                        BufferedImage.TYPE_USHORT_GRAY);
+    public RenderResult(
+            int strongholdCount, @NotNull ImmutableList<DivineProvider> divineProviders) {
+        this.strongholdCount = strongholdCount;
+        this.divineProviders = divineProviders;
+    }
 
-        buffer.normalizeInPlace(COLOR_DEPTH);
+    private void genBuffer() {
+        RenderDivineKernel renderKernel = SharedKernels.RENDER.get();
+        synchronized (SharedKernels.RENDER) {
+            renderKernel.setup(divineProviders, strongholdCount);
+            strongholdData = renderKernel.render();
+        }
 
-        buffer.operateOnIndices(
-                i ->
-                        image.getRaster()
-                                .setPixel(
-                                        buffer.getX(i),
-                                        buffer.getXMask() - buffer.getY(i),
-                                        new int[] {(int) buffer.get(i)}));
-        return image;
+        assert strongholdData != null;
+
+        PrepareBufferKernel prepareKernel = SharedKernels.PREPARE_BUFFER.get();
+        synchronized (SharedKernels.PREPARE_BUFFER) {
+            prepareKernel.setup(strongholdData);
+            buffer = prepareKernel.render();
+        }
+
+        assert buffer != null;
     }
 
     private BufferedImage genRender() {
         long startTime = System.currentTimeMillis();
 
-        ImmutableList<DivineProvider> providers = ImmutableList.of(new PlaceholderFeature());
+        @SuppressWarnings("SuspiciousNameCombination")
+        BufferedImage image =
+                new BufferedImage(
+                        MelangeConstants.WIDTH,
+                        MelangeConstants.WIDTH,
+                        BufferedImage.TYPE_USHORT_GRAY);
 
-        DoubleBuffer2D buffer = StrongholdRing.filter(providers);
+        genBuffer();
 
-        BufferedImage image = buildImage(buffer);
+        PrepareImageKernel kernel = SharedKernels.PREPARE_IMAGE.get();
+        synchronized (SharedKernels.PREPARE_IMAGE) {
+            assert buffer != null;
+            kernel.setup(
+                    buffer,
+                    ((DataBufferUShort) image.getRaster().getDataBuffer()).getData(),
+                    ArrayHelper.maxArray(buffer));
+
+            kernel.render();
+        }
 
         long endTime = System.currentTimeMillis();
 

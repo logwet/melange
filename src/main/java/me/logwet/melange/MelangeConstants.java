@@ -20,5 +20,8 @@ public class MelangeConstants {
     public static final double SCALING_FACTOR = SEARCH_SIZE / HALF_WIDTH;
     public static final double HALF_SCALING_FACTOR = SCALING_FACTOR / 2;
 
+    public static final int COLOR_BITS = 16;
+    public static final int COLOR_DEPTH = 1 << COLOR_BITS;
+
     private MelangeConstants() {}
 }

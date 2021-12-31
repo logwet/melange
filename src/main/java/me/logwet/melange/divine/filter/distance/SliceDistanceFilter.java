@@ -1,7 +1,6 @@
 package me.logwet.melange.divine.filter.distance;
 
 import me.logwet.melange.MelangeConstants;
-import me.logwet.melange.parallelization.ring.AbstractRingKernel;
 
 public class SliceDistanceFilter extends RangeDistanceFilter {
     public SliceDistanceFilter(int n, int i) {
