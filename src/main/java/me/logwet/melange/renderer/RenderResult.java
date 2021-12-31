@@ -44,7 +44,7 @@ public class RenderResult {
 
         PrepareBufferKernel prepareKernel = SharedKernels.PREPARE_BUFFER.get();
         synchronized (SharedKernels.PREPARE_BUFFER) {
-            prepareKernel.setup(strongholdData);
+            prepareKernel.setup(strongholdData, 600);
             buffer = prepareKernel.render();
         }
 
@@ -52,6 +52,12 @@ public class RenderResult {
     }
 
     private BufferedImage genRender() {
+        //        try {
+        //            TimeUnit.SECONDS.sleep(5);
+        //        } catch (InterruptedException e) {
+        //            e.printStackTrace();
+        //        }
+
         long startTime = System.currentTimeMillis();
 
         @SuppressWarnings("SuspiciousNameCombination")

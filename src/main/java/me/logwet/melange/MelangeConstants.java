@@ -16,7 +16,7 @@ public class MelangeConstants {
 
     public static final int BUFFER_SIZE = WIDTH * WIDTH;
 
-    public static final double SEARCH_SIZE = UPPER_BOUND + 200;
+    public static final double SEARCH_SIZE = UPPER_BOUND + 100;
     public static final double SCALING_FACTOR = SEARCH_SIZE / HALF_WIDTH;
     public static final double HALF_SCALING_FACTOR = SCALING_FACTOR / 2;
 

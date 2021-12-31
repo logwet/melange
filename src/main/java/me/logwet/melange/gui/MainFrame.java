@@ -55,8 +55,6 @@ public class MainFrame extends JFrame {
     public MainFrame() {
         super("Melange");
 
-        this.addDataToUIComponents();
-
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setContentPane(mainPanel);
         this.setMinimumSize(Melange.MIN_WINDOW_DIMENSION);
@@ -77,13 +75,15 @@ public class MainFrame extends JFrame {
                 });
 
         this.pack();
+        this.addDataToTextLabels();
+
         this.setMinimumSize(new Dimension(this.getWidth(), this.getHeight()));
 
         this.setIconImage(
                 Toolkit.getDefaultToolkit().getImage(getClass().getResource("/melange/icon.png")));
     }
 
-    private void addDataToUIComponents() {
+    private void addDataToTextLabels() {
         melangeMetaLabel.setText("Melange v" + Melange.VERSION + " by logwet");
 
         Device device = KernelManager.instance().bestDevice();

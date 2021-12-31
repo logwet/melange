@@ -16,7 +16,9 @@ public class PrepareBufferKernel extends AbstractRingKernel implements DoubleArr
     protected double factor2;
     protected double factor3;
 
-    public void setup(StrongholdData strongholdData) {
+    protected double range;
+
+    public void setup(StrongholdData strongholdData, int range) {
         this.enabled = 1;
 
         this.input1 = strongholdData.getData1();
@@ -26,6 +28,8 @@ public class PrepareBufferKernel extends AbstractRingKernel implements DoubleArr
         this.factor1 = strongholdData.getFactor(0, input1);
         this.factor2 = strongholdData.getFactor(1, input2);
         this.factor3 = strongholdData.getFactor(2, input3);
+
+        this.range = range / MelangeConstants.SCALING_FACTOR;
     }
 
     @Override
@@ -39,30 +43,50 @@ public class PrepareBufferKernel extends AbstractRingKernel implements DoubleArr
         this.factor1 = 0;
         this.factor2 = 0;
         this.factor3 = 0;
+
+        this.range = 0D;
     }
 
     @Override
     public void run() {
         if (enabled == 1) {
             int i = getGlobalId();
+            int p = getPassId();
 
-            double s = 0D;
-            int k = 0;
+            if (p == 0) {
+                double s = 0D;
+                int k = 0;
 
-            if (factor1 > 0) {
-                s += input1[i] / factor1;
-                k++;
-            }
-            if (factor2 > 0) {
-                s += input2[i] / factor2;
-                k++;
-            }
-            if (factor3 > 0) {
-                s += input3[i] / factor3;
-                k++;
-            }
+                if (factor1 > 0) {
+                    s += input1[i] / factor1;
+                    k++;
+                }
+                if (factor2 > 0) {
+                    s += input2[i] / factor2;
+                    k++;
+                }
+                if (factor3 > 0) {
+                    s += input3[i] / factor3;
+                    k++;
+                }
 
-            input1[i] = s / k;
+                input2[i] = s / k;
+            } else {
+                int x = calcX(i);
+                int y = calcY(i);
+
+                for (int x0 = constrainToBounds((int) floor(x - range));
+                        x0 < constrainToBounds((int) ceil(x + range));
+                        x0++) {
+                    for (int y0 = constrainToBounds((int) floor(y - range));
+                            y0 < constrainToBounds((int) ceil(y + range));
+                            y0++) {
+                        if (calcDistance(x0, y0, x, y) <= range) {
+                            input1[i] += input2[calcIndex(x0, y0)];
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -72,9 +96,9 @@ public class PrepareBufferKernel extends AbstractRingKernel implements DoubleArr
 
         this.put(input1).put(input2).put(input3);
 
-        this.execute(Range.create(MelangeConstants.BUFFER_SIZE));
+        this.execute(Range.create(MelangeConstants.BUFFER_SIZE), 2);
 
-        this.get(input1);
+        this.get(input1).get(input2);
 
         return this.input1;
     }

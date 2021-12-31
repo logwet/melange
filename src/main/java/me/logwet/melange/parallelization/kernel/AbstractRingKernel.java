@@ -17,7 +17,8 @@ public abstract class AbstractRingKernel extends AbstractSharedKernel {
     protected final double SQRT_A_ON_B = FastMath.sqrt(A / B);
     protected final double ONE_SUB_SQRT_A_ON_B = 1D - SQRT_A_ON_B;
     protected final double ONE_ON_SQRT_B = 1D / FastMath.sqrt(B);
-    protected final double P_FAC = 0.5D / (ONE_SUB_SQRT_A_ON_B * B * ONE_ON_SQRT_B);
+
+    public final double P_FAC = 0.5D / (ONE_SUB_SQRT_A_ON_B * B * ONE_ON_SQRT_B);
 
     protected int calcX(int i) {
         return i & MelangeConstants.X_MASK;
@@ -27,8 +28,20 @@ public abstract class AbstractRingKernel extends AbstractSharedKernel {
         return MelangeConstants.X_MASK - (i >> MelangeConstants.WIDTH_BITS);
     }
 
+    protected int calcIndex(int x, int y) {
+        return ((MelangeConstants.X_MASK - y) << MelangeConstants.WIDTH_BITS) ^ x;
+    }
+
     protected double normalizeAngle(double x) {
         return x - MelangeConstants.TWO_PI * floor(x / MelangeConstants.TWO_PI);
+    }
+
+    protected int clamp(int x, int mn, int mx) {
+        return min(max(x, mn), mx);
+    }
+
+    protected int constrainToBounds(int x) {
+        return min(max(x, 0), MelangeConstants.X_MASK);
     }
 
     protected double calcAngle(double x, double y) {
@@ -37,6 +50,12 @@ public abstract class AbstractRingKernel extends AbstractSharedKernel {
 
     protected double calcMagnitude(int x, int y) {
         return sqrt(x * x + y * y);
+    }
+
+    protected double calcDistance(int x0, int y0, int x1, int y1) {
+        int x = x0 - x1;
+        int y = y0 - y1;
+        return calcMagnitude(x, y);
     }
 
     /**
