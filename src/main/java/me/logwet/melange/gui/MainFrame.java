@@ -4,7 +4,6 @@ import com.aparapi.device.Device;
 import com.aparapi.device.OpenCLDevice;
 import com.aparapi.internal.kernel.KernelManager;
 import com.aparapi.internal.opencl.OpenCLPlatform;
-import com.google.common.collect.ImmutableList;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
@@ -25,7 +24,6 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTree;
 import me.logwet.melange.Melange;
-import me.logwet.melange.divine.provider.feature.PlaceholderFeature;
 import me.logwet.melange.render.Heatmap;
 
 public class MainFrame extends JFrame {
@@ -109,15 +107,20 @@ public class MainFrame extends JFrame {
         // TODO: place custom component creation code here
 
         divineRendererLabel = new JLabel();
-        initRender();
+
+        Melange.heatmap = new Heatmap();
+        updateRender();
     }
 
-    private void initRender() {
-        Heatmap renderResult = new Heatmap(3, 600, ImmutableList.of(new PlaceholderFeature()));
-        addRender(renderResult.getRender());
-    }
-
-    public void addRender(BufferedImage render) {
+    private void addRender(BufferedImage render) {
         divineRendererLabel.setIcon(new ImageIcon(render));
+    }
+
+    public void updateRender() {
+        if (Objects.nonNull(Melange.heatmap)) {
+            addRender(Melange.heatmap.getRender());
+        } else {
+            addRender(Heatmap.newRawImage());
+        }
     }
 }

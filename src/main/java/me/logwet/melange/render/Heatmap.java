@@ -3,9 +3,9 @@ package me.logwet.melange.render;
 import com.google.common.collect.ImmutableList;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferUShort;
-import java.util.concurrent.TimeUnit;
 import lombok.Getter;
 import me.logwet.melange.MelangeConstants;
+import me.logwet.melange.config.Config;
 import me.logwet.melange.divine.provider.DivineProvider;
 import me.logwet.melange.kernel.SharedKernels;
 import me.logwet.melange.render.kernel.PrepareBufferKernel;
@@ -40,6 +40,17 @@ public class Heatmap {
         this.divineProviders = divineProviders;
     }
 
+    public Heatmap(@NotNull ImmutableList<DivineProvider> divineProviders) {
+        this(
+                (Integer) Config.getProperty("stronghold_count"),
+                (Integer) Config.getProperty("range"),
+                divineProviders);
+    }
+
+    public Heatmap() {
+        this(ImmutableList.of());
+    }
+
     private void genBuffer() {
         RenderDivineKernel renderKernel = SharedKernels.RENDER.get();
         synchronized (SharedKernels.RENDER) {
@@ -64,21 +75,22 @@ public class Heatmap {
         assert buffer != null;
     }
 
+    public static BufferedImage newRawImage() {
+        //noinspection SuspiciousNameCombination
+        return new BufferedImage(
+                MelangeConstants.WIDTH, MelangeConstants.WIDTH, BufferedImage.TYPE_USHORT_GRAY);
+    }
+
     private BufferedImage genRender() {
-//        try {
-//            TimeUnit.SECONDS.sleep(5);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
+        //        try {
+        //            TimeUnit.SECONDS.sleep(5);
+        //        } catch (InterruptedException e) {
+        //            e.printStackTrace();
+        //        }
 
         long startTime = System.currentTimeMillis();
 
-        @SuppressWarnings("SuspiciousNameCombination")
-        BufferedImage image =
-                new BufferedImage(
-                        MelangeConstants.WIDTH,
-                        MelangeConstants.WIDTH,
-                        BufferedImage.TYPE_USHORT_GRAY);
+        BufferedImage image = newRawImage();
 
         genBuffer();
 

@@ -13,9 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import me.logwet.melange.config.Config.ConfigInstance.ConfigData;
 import net.harawata.appdirs.AppDirsFactory;
@@ -55,6 +53,10 @@ public class Config {
 
     public static ConfigData getData() {
         return CONFIG.data;
+    }
+
+    public static Object getProperty(String key) {
+        return getData().get(key);
     }
 
     @RequiredArgsConstructor
@@ -106,22 +108,34 @@ public class Config {
             }
         }
 
-        @NoArgsConstructor
-        @AllArgsConstructor
-        protected static class ConfigData {
+        public static class ConfigData {
             private static final ImmutableMap<String, Object> DEFAULT_PROPERTIES;
 
             static {
                 Map<String, Object> defaultProperties = new HashMap<>();
 
+                defaultProperties.put("stronghold_count", 3);
+                defaultProperties.put("range", 100);
+
                 DEFAULT_PROPERTIES = ImmutableMap.copyOf(defaultProperties);
             }
 
             @Getter protected int schema;
-            protected Map<String, Object> properties;
+
+            protected Map<String, Object> properties = new HashMap<>();
+
+            public ConfigData() {
+                this.schema = SCHEMA;
+                this.properties = new HashMap<>(DEFAULT_PROPERTIES);
+            }
+
+            public ConfigData(int schema, Map<String, Object> properties) {
+                this.schema = schema;
+                this.properties.putAll(properties);
+            }
 
             public static ConfigData fromDefaults() {
-                return new ConfigData(SCHEMA, new HashMap<>(DEFAULT_PROPERTIES));
+                return new ConfigData(SCHEMA, DEFAULT_PROPERTIES);
             }
 
             public static ConfigData migrate(ConfigData oldConfig) {
@@ -164,8 +178,12 @@ public class Config {
                 return properties;
             }
 
+            public Object get(String key) {
+                return properties.get(key);
+            }
+
             @JsonAnySetter
-            public void setProperty(String key, Object value) {
+            public void put(String key, Object value) {
                 properties.put(key, value);
             }
         }
