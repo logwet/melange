@@ -1,4 +1,4 @@
-package me.logwet.melange.commands.parse;
+package me.logwet.melange.commands.parsing;
 
 import com.github.benmanes.caffeine.cache.CacheLoader;
 import com.github.benmanes.caffeine.cache.Caffeine;
@@ -9,10 +9,10 @@ import com.mojang.brigadier.ParseResults;
 import me.logwet.melange.commands.source.CommandSource;
 import org.jetbrains.annotations.NotNull;
 
-public class Parser {
+public class ParseCache {
     private final LoadingCache<ParseInputs, ParseResults<CommandSource>> cache;
 
-    public Parser(CommandDispatcher<CommandSource> dispatcher) {
+    public ParseCache(CommandDispatcher<CommandSource> dispatcher) {
         cache = Caffeine.newBuilder().maximumSize(1024).build(new Loader(dispatcher));
     }
 

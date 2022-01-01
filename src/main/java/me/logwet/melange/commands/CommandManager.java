@@ -11,9 +11,9 @@ import lombok.Getter;
 import lombok.SneakyThrows;
 import me.logwet.melange.commands.commands.Command;
 import me.logwet.melange.commands.commands.divine.AddCommand;
-import me.logwet.melange.commands.commands.divine.PlaceholderDivineCommand;
+import me.logwet.melange.commands.commands.divine.placeholder.PlaceholderDivineCommand;
 import me.logwet.melange.commands.commands.divine.RemoveCommand;
-import me.logwet.melange.commands.parse.Parser;
+import me.logwet.melange.commands.parsing.ParseCache;
 import me.logwet.melange.commands.provider.MelangeCommandProvider;
 import me.logwet.melange.commands.provider.TwitchCommandProvider;
 import me.logwet.melange.commands.source.CommandSource;
@@ -35,13 +35,13 @@ public class CommandManager {
     public final TwitchCommandProvider twitchCommandProvider;
 
     @Getter private final CommandDispatcher<CommandSource> dispatcher;
-    private final Parser parser;
+    private final ParseCache parser;
 
     public CommandManager(String prefix) {
         long start = System.currentTimeMillis();
 
         dispatcher = new CommandDispatcher<>();
-        parser = new Parser(dispatcher);
+        parser = new ParseCache(dispatcher);
 
         register(dispatcher);
 

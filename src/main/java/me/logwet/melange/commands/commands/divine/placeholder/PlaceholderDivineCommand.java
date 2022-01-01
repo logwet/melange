@@ -1,7 +1,8 @@
-package me.logwet.melange.commands.commands.divine;
+package me.logwet.melange.commands.commands.divine.placeholder;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
+import me.logwet.melange.commands.commands.divine.AbstractDivineCommand;
 import me.logwet.melange.commands.source.CommandSource;
 import me.logwet.melange.divine.provider.feature.PlaceholderFeature;
 
