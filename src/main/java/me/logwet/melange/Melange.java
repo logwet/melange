@@ -24,7 +24,6 @@ public class Melange {
 
     public static final List<DivineProvider> providerList = new ArrayList<>();
 
-    @Nullable public static CommandManager commandManager;
     @Nullable public static Heatmap heatmap;
 
     static {
@@ -44,7 +43,7 @@ public class Melange {
     public static void onStarting() {
         SharedKernels.forceLoad();
         Config.load();
-        commandManager = new CommandManager();
+        CommandManager.initialize();
     }
 
     public static void onClosing() {

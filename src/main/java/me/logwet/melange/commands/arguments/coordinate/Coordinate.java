@@ -61,7 +61,7 @@ public class Coordinate {
         return new Coordinate(array[0], array[1], array[2], type);
     }
 
-    enum Type {
+    public enum Type {
         XYZ(7),
         XY(6),
         XZ(5),

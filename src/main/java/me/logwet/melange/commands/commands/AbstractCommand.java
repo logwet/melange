@@ -12,7 +12,7 @@ import me.logwet.melange.commands.source.CommandSource;
 public abstract class AbstractCommand implements Command {
     protected final String root;
 
-    protected AbstractCommand(String root) {
+    public AbstractCommand(String root) {
         this.root = root;
     }
 

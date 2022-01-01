@@ -11,7 +11,7 @@ public abstract class AbstractDivineCommand<T extends DivineProvider> extends Ab
         implements DivineCommand {
     protected Class<T> clazz;
 
-    protected AbstractDivineCommand(Class<T> clazz, String root, String... aliases) {
+    public AbstractDivineCommand(Class<T> clazz, String root, String... aliases) {
         super(root, aliases);
         this.clazz = clazz;
     }
