@@ -6,9 +6,9 @@ import me.logwet.melange.commands.commands.AbstractAliasedCommand;
 import me.logwet.melange.commands.commands.Command;
 import me.logwet.melange.commands.source.CommandSource;
 
-public class AddCommand extends AbstractAliasedCommand {
-    public AddCommand() {
-        super("add", "put");
+public class RemoveCommand extends AbstractAliasedCommand {
+    public RemoveCommand() {
+        super("remove", "delete");
     }
 
     @Override
@@ -16,7 +16,7 @@ public class AddCommand extends AbstractAliasedCommand {
             LiteralArgumentBuilder<CommandSource> rootLiteral) {
         for (Command command : CommandManager.COMMANDS) {
             if (command.getType() == Type.DIVINE) {
-                rootLiteral.then(command.getBuilder());
+                rootLiteral.then(command.getRoot().executes(((DivineCommand) command)::remove));
             }
         }
         return rootLiteral;

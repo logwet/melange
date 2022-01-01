@@ -17,4 +17,10 @@ public class MelangeCommandSource implements CommandSource {
     public Type getType() {
         return Type.MELANGE;
     }
+
+    @Override
+    public void sendSuccess(String message) {}
+
+    @Override
+    public void sendError(String message) {}
 }

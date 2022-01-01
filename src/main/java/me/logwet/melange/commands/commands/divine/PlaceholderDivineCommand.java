@@ -1,11 +1,13 @@
 package me.logwet.melange.commands.commands.divine;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.context.CommandContext;
 import me.logwet.melange.commands.source.CommandSource;
+import me.logwet.melange.divine.provider.feature.PlaceholderFeature;
 
-public class TestDivineCommand extends AbstractDivineCommand {
-    public TestDivineCommand() {
-        super("treasure", "tsure", "ts");
+public class PlaceholderDivineCommand extends AbstractDivineCommand<PlaceholderFeature> {
+    public PlaceholderDivineCommand() {
+        super(PlaceholderFeature.class, "placeholder", "pholder", "ph");
     }
 
     @Override
@@ -17,5 +19,10 @@ public class TestDivineCommand extends AbstractDivineCommand {
                         literal("test2")
                                 .executes(context -> 1)
                                 .then(literal("test3").executes(context -> 1)));
+    }
+
+    @Override
+    public int add(CommandContext<CommandSource> context) {
+        return 0;
     }
 }

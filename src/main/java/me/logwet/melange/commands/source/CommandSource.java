@@ -10,6 +10,10 @@ public interface CommandSource {
 
     Type getType();
 
+    void sendSuccess(String message);
+
+    void sendError(String message);
+
     enum Role {
         NONE(0),
         BROADCASTER(1),

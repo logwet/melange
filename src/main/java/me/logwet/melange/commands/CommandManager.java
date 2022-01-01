@@ -4,11 +4,15 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.suggestion.Suggestions;
 import java.util.Arrays;
+import java.util.concurrent.ExecutionException;
 import lombok.Getter;
+import lombok.SneakyThrows;
 import me.logwet.melange.commands.commands.Command;
 import me.logwet.melange.commands.commands.divine.AddCommand;
-import me.logwet.melange.commands.commands.divine.TestDivineCommand;
+import me.logwet.melange.commands.commands.divine.PlaceholderDivineCommand;
+import me.logwet.melange.commands.commands.divine.RemoveCommand;
 import me.logwet.melange.commands.parse.Parser;
 import me.logwet.melange.commands.provider.MelangeCommandProvider;
 import me.logwet.melange.commands.provider.TwitchCommandProvider;
@@ -22,7 +26,9 @@ public class CommandManager {
     public static final ImmutableList<Command> COMMANDS;
 
     static {
-        COMMANDS = ImmutableList.of(new TestDivineCommand(), new AddCommand());
+        COMMANDS =
+                ImmutableList.of(
+                        new PlaceholderDivineCommand(), new AddCommand(), new RemoveCommand());
     }
 
     public final MelangeCommandProvider melangeCommandProvider;
@@ -32,6 +38,8 @@ public class CommandManager {
     private final Parser parser;
 
     public CommandManager(String prefix) {
+        long start = System.currentTimeMillis();
+
         dispatcher = new CommandDispatcher<>();
         parser = new Parser(dispatcher);
 
@@ -39,6 +47,10 @@ public class CommandManager {
 
         melangeCommandProvider = new MelangeCommandProvider(dispatcher);
         twitchCommandProvider = new TwitchCommandProvider(prefix, dispatcher);
+
+        long end = System.currentTimeMillis();
+
+        System.out.println("Initialized CommandManager in " + (end - start) + "ms");
     }
 
     public CommandManager() {
@@ -62,6 +74,25 @@ public class CommandManager {
 
     public ParseResults<CommandSource> parse(String phrase, String username, Role role) {
         return parse(phrase, new TwitchCommandSource(username, role));
+    }
+
+    @SneakyThrows
+    public Suggestions getSuggestions(String phrase, CommandSource source) {
+        try {
+            return dispatcher.getCompletionSuggestions(parse(phrase, source)).get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        return Suggestions.empty().get();
+    }
+
+    public Suggestions getSuggestions(String phrase) {
+        return getSuggestions(phrase, new MelangeCommandSource());
+    }
+
+    public Suggestions getSuggestions(String phrase, String username, Role role) {
+        return getSuggestions(phrase, new TwitchCommandSource(username, role));
     }
 
     public int execute(String phrase, CommandSource source) {

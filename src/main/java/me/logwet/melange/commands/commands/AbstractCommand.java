@@ -10,6 +10,12 @@ import java.util.Locale;
 import me.logwet.melange.commands.source.CommandSource;
 
 public abstract class AbstractCommand implements Command {
+    protected final String root;
+
+    protected AbstractCommand(String root) {
+        this.root = root;
+    }
+
     protected static LiteralArgumentBuilder<CommandSource> literal(String name) {
         return LiteralArgumentBuilder.literal(name);
     }
@@ -43,6 +49,19 @@ public abstract class AbstractCommand implements Command {
             builder.then(child);
         }
         return builder.build();
+    }
+
+    @Override
+    public LiteralArgumentBuilder<CommandSource> getRoot() {
+        return literal(root);
+    }
+
+    protected abstract LiteralArgumentBuilder<CommandSource> buildCommandTree(
+            LiteralArgumentBuilder<CommandSource> rootLiteral);
+
+    @Override
+    public LiteralArgumentBuilder<CommandSource> getBuilder() {
+        return buildCommandTree(getRoot());
     }
 
     @Override

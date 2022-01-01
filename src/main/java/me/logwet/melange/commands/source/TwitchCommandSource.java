@@ -28,6 +28,12 @@ public class TwitchCommandSource implements CommandSource {
     }
 
     @Override
+    public void sendSuccess(String message) {}
+
+    @Override
+    public void sendError(String message) {}
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
