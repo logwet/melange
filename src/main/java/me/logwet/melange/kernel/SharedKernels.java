@@ -27,7 +27,8 @@ public enum SharedKernels {
     }
 
     public static void forceLoad() {
-        SharedKernels.values().clone();
+        //noinspection ResultOfMethodCallIgnored
+        SharedKernels.values();
     }
 
     @SuppressWarnings("unchecked")

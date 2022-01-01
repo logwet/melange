@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.collect.ImmutableSet;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -112,12 +113,13 @@ public class Config {
             private static final ImmutableMap<String, Object> DEFAULT_PROPERTIES;
 
             static {
-                Map<String, Object> defaultProperties = new HashMap<>();
+                Builder<String, Object> builder = ImmutableMap.builder();
 
-                defaultProperties.put("stronghold_count", 3);
-                defaultProperties.put("range", 100);
+                builder.put("stronghold_count", 3);
+                builder.put("range", 100);
+                builder.put("command_prefix", "?");
 
-                DEFAULT_PROPERTIES = ImmutableMap.copyOf(defaultProperties);
+                DEFAULT_PROPERTIES = builder.build();
             }
 
             @Getter protected int schema;

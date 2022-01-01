@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import javax.swing.JFrame;
+import me.logwet.melange.commands.CommandManager;
 import me.logwet.melange.config.Config;
 import me.logwet.melange.divine.provider.DivineProvider;
 import me.logwet.melange.gui.MainFrame;
@@ -22,6 +23,8 @@ public class Melange {
     public static final Logger LOGGER = LogManager.getLogger("melange");
 
     public static final List<DivineProvider> providerList = new ArrayList<>();
+
+    @Nullable public static CommandManager commandManager;
     @Nullable public static Heatmap heatmap;
 
     static {
@@ -41,6 +44,7 @@ public class Melange {
     public static void onStarting() {
         SharedKernels.forceLoad();
         Config.load();
+        commandManager = new CommandManager();
     }
 
     public static void onClosing() {
