@@ -21,13 +21,13 @@ public class PrepareBufferKernel extends AbstractRingKernel implements DoubleArr
     public void setup(StrongholdData strongholdData, int range) {
         this.enabled = 1;
 
-        this.input1 = strongholdData.getData1();
-        this.input2 = strongholdData.getData2();
-        this.input3 = strongholdData.getData3();
+        this.input1 = strongholdData.getData(0);
+        this.input2 = strongholdData.getData(1);
+        this.input3 = strongholdData.getData(2);
 
-        this.factor1 = strongholdData.getFactor(0, input1);
-        this.factor2 = strongholdData.getFactor(1, input2);
-        this.factor3 = strongholdData.getFactor(2, input3);
+        this.factor1 = strongholdData.getFactor(0);
+        this.factor2 = strongholdData.getFactor(1);
+        this.factor3 = strongholdData.getFactor(2);
 
         this.range = range / MelangeConstants.SCALING_FACTOR;
     }
@@ -70,7 +70,7 @@ public class PrepareBufferKernel extends AbstractRingKernel implements DoubleArr
                     k++;
                 }
 
-                input2[i] = s / k;
+                input1[i] = s / k;
             } else {
                 int x = calcX(i);
                 int y = calcY(i);
@@ -84,12 +84,12 @@ public class PrepareBufferKernel extends AbstractRingKernel implements DoubleArr
                             y0 < constrainToBounds((int) ceil(y + range));
                             y0++) {
                         if (calcDistance(x0, y0, x, y) <= range) {
-                            v += input2[calcIndex(x0, y0)];
+                            v += input1[calcIndex(x0, y0)];
                         }
                     }
                 }
 
-                input1[i] = v;
+                input2[i] = v;
             }
         }
     }
@@ -98,12 +98,24 @@ public class PrepareBufferKernel extends AbstractRingKernel implements DoubleArr
     public double[] render() {
         this.setExplicit(true);
 
-        this.put(input1).put(input2).put(input3);
+        if (factor1 > 0) {
+            this.put(input1);
+        }
+        if (factor2 > 0) {
+            this.put(input2);
+        }
+        if (factor3 > 0) {
+            this.put(input3);
+        }
 
-        this.execute(Range.create(MelangeConstants.BUFFER_SIZE), 2);
+        this.execute(Range.create(MelangeConstants.BUFFER_SIZE), range > 0 ? 2 : 1);
 
-        this.get(input1).get(input2);
-
-        return this.input1;
+        if (range > 0) {
+            this.get(input2);
+            return this.input2;
+        } else {
+            this.get(input1);
+            return this.input1;
+        }
     }
 }

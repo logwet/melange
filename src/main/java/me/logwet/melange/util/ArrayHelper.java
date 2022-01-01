@@ -10,8 +10,7 @@ public class ArrayHelper {
         return Arrays.stream(array).parallel().sum();
     }
 
-    public static double normaliseSumFactor(double[] array) {
-        double sum = sumArray(array);
+    public static double normaliseSumFactor(double sum) {
         if (sum > 0) {
             return 1D / sum;
         }

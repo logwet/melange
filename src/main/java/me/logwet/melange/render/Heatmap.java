@@ -14,6 +14,7 @@ import me.logwet.melange.render.kernel.PrepareImageKernel;
 import me.logwet.melange.render.kernel.RenderDivineKernel;
 import me.logwet.melange.render.kernel.ScaleKernel;
 import me.logwet.melange.util.ArrayHelper;
+import me.logwet.melange.util.BufferHolder;
 import me.logwet.melange.util.StrongholdData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -26,7 +27,7 @@ public class Heatmap {
 
     @Nullable @Getter private StrongholdData strongholdData;
 
-    @Nullable @Getter private double[] buffer;
+    @Nullable @Getter private BufferHolder bufferHolder;
 
     @NotNull
     @Getter(lazy = true)
@@ -59,27 +60,29 @@ public class Heatmap {
     }
 
     private void genBuffer() {
-        RenderDivineKernel renderKernel = SharedKernels.RENDER.get();
         synchronized (SharedKernels.RENDER) {
+            RenderDivineKernel renderKernel = SharedKernels.RENDER.get();
             renderKernel.setup(divineProviders, strongholdCount);
             strongholdData = renderKernel.render();
         }
 
         assert strongholdData != null;
 
-        PrepareBufferKernel prepareKernel = SharedKernels.PREPARE_BUFFER.get();
         synchronized (SharedKernels.PREPARE_BUFFER) {
+            PrepareBufferKernel prepareKernel = SharedKernels.PREPARE_BUFFER.get();
             prepareKernel.setup(strongholdData, range);
-            buffer = prepareKernel.render();
+            bufferHolder = new BufferHolder(prepareKernel.render(), false, true);
         }
 
-        ScaleKernel scaleKernel = SharedKernels.SCALE.get();
         synchronized (SharedKernels.SCALE) {
-            scaleKernel.setup(buffer, ArrayHelper.normaliseSumFactor(buffer));
+            ScaleKernel scaleKernel = SharedKernels.SCALE.get();
+            scaleKernel.setup(
+                    bufferHolder.getBuffer(),
+                    ArrayHelper.normaliseSumFactor(bufferHolder.getSum()));
             scaleKernel.render();
         }
 
-        assert buffer != null;
+        bufferHolder = bufferHolder.update(true, false);
     }
 
     private BufferedImage genRender() {
@@ -95,14 +98,12 @@ public class Heatmap {
 
         genBuffer();
 
-        PrepareImageKernel kernel = SharedKernels.PREPARE_IMAGE.get();
-        synchronized (SharedKernels.PREPARE_IMAGE) {
-            assert buffer != null;
-            kernel.setup(
-                    buffer,
-                    ((DataBufferUShort) image.getRaster().getDataBuffer()).getData(),
-                    ArrayHelper.maxArray(buffer));
+        assert bufferHolder != null;
 
+        synchronized (SharedKernels.PREPARE_IMAGE) {
+            PrepareImageKernel kernel = SharedKernels.PREPARE_IMAGE.get();
+            kernel.setup(
+                    bufferHolder, ((DataBufferUShort) image.getRaster().getDataBuffer()).getData());
             kernel.render();
         }
 

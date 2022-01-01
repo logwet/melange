@@ -4,6 +4,7 @@ import com.aparapi.Range;
 import me.logwet.melange.MelangeConstants;
 import me.logwet.melange.kernel.api.AbstractSharedKernel;
 import me.logwet.melange.kernel.api.ShortArrayKernel;
+import me.logwet.melange.util.BufferHolder;
 
 public class PrepareImageKernel extends AbstractSharedKernel implements ShortArrayKernel {
     protected double[] input;
@@ -11,11 +12,12 @@ public class PrepareImageKernel extends AbstractSharedKernel implements ShortArr
 
     protected double factor;
 
-    public void setup(double[] input, short[] output, double max) {
-        this.input = input;
+    public void setup(BufferHolder input, short[] output) {
+        this.input = input.getBuffer();
         this.output = output;
 
-        this.factor = MelangeConstants.COLOR_DEPTH / max;
+        double max = input.getMax();
+        this.factor = max > 0 ? MelangeConstants.COLOR_DEPTH / max : 0D;
     }
 
     @Override
@@ -35,6 +37,10 @@ public class PrepareImageKernel extends AbstractSharedKernel implements ShortArr
 
     @Override
     public short[] render() {
+        this.setExplicit(true);
+
+        this.put(input);
+
         this.execute(Range.create(MelangeConstants.BUFFER_SIZE));
 
         return this.output;
