@@ -1,13 +1,14 @@
 package me.logwet.melange.commands.provider;
 
-import com.mojang.brigadier.CommandDispatcher;
-import me.logwet.melange.commands.source.CommandSource;
+import me.logwet.melange.commands.CommandManager;
 
 public abstract class AbstractCommandProvider implements CommandProvider {
+    protected final CommandManager commandManager;
     private final String prefix;
 
-    public AbstractCommandProvider(String prefix, CommandDispatcher<CommandSource> dispatcher) {
+    public AbstractCommandProvider(String prefix, CommandManager commandManager) {
         this.prefix = prefix;
+        this.commandManager = commandManager;
     }
 
     @Override

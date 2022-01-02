@@ -15,7 +15,7 @@ public class PlaceholderDivineCommand extends AbstractDivineCommand<PlaceholderF
     protected LiteralArgumentBuilder<CommandSource> buildCommandTree(
             LiteralArgumentBuilder<CommandSource> rootLiteral) {
         return rootLiteral
-                .then(literal("test1").executes(context -> 1))
+                .then(literal("test1").executes(this::add))
                 .then(
                         literal("test2")
                                 .executes(context -> 1)
@@ -24,6 +24,7 @@ public class PlaceholderDivineCommand extends AbstractDivineCommand<PlaceholderF
 
     @Override
     public int add(CommandContext<CommandSource> context) {
-        return 0;
+        this.addAndWait(new PlaceholderFeatureProvider());
+        return 1;
     }
 }

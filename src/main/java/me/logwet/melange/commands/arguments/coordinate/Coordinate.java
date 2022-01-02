@@ -6,27 +6,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import lombok.Data;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Data
+@Value
+@RequiredArgsConstructor
 public class Coordinate {
-    @Nullable private final Integer x;
-    @Nullable private final Integer y;
-    @Nullable private final Integer z;
+    @Nullable Integer x;
+    @Nullable Integer y;
+    @Nullable Integer z;
 
-    @NotNull private final Type type;
-
-    private Coordinate(
-            @Nullable Integer x, @Nullable Integer y, @Nullable Integer z, @NotNull Type type) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-
-        this.type = type;
-    }
+    @NotNull Type type;
 
     private Coordinate(@Nullable Integer x, @Nullable Integer y, @Nullable Integer z) {
         this(x, y, z, Type.from(x, y, z));

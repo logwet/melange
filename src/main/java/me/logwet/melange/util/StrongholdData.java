@@ -1,5 +1,6 @@
 package me.logwet.melange.util;
 
+import com.google.common.base.Objects;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -54,5 +55,22 @@ public class StrongholdData {
         }
 
         return 0D;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        StrongholdData that = (StrongholdData) o;
+        return count == that.count && Objects.equal(data, that.data);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(data, count);
     }
 }

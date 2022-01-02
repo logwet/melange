@@ -2,6 +2,7 @@ package me.logwet.melange.commands.arguments.direction;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Locale;
+import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.Nullable;
 
 public enum Direction {
@@ -50,25 +51,19 @@ public enum Direction {
         return data[1];
     }
 
+    @RequiredArgsConstructor
     enum Axis {
         X(0),
         Z(1);
 
         private final int index;
-
-        Axis(int index) {
-            this.index = index;
-        }
     }
 
+    @RequiredArgsConstructor
     enum AxisDirection {
         POSITIVE(1),
         NEGATIVE(-1);
 
         private final int sign;
-
-        AxisDirection(int sign) {
-            this.sign = sign;
-        }
     }
 }

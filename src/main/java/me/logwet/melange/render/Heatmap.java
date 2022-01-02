@@ -1,9 +1,12 @@
 package me.logwet.melange.render;
 
+import ch.qos.logback.classic.Logger;
+import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferUShort;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import me.logwet.melange.Melange;
 import me.logwet.melange.MelangeConstants;
 import me.logwet.melange.config.Config;
@@ -18,8 +21,12 @@ import me.logwet.melange.util.BufferHolder;
 import me.logwet.melange.util.StrongholdData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.LoggerFactory;
 
+@RequiredArgsConstructor
 public class Heatmap {
+    protected static final Logger LOGGER = (Logger) LoggerFactory.getLogger(Heatmap.class);
+
     private final int strongholdCount;
     private final int range;
 
@@ -33,15 +40,6 @@ public class Heatmap {
     @Getter(lazy = true)
     private final BufferedImage render = genRender();
 
-    public Heatmap(
-            int strongholdCount,
-            int range,
-            @NotNull ImmutableList<DivineProvider> divineProviders) {
-        this.strongholdCount = strongholdCount;
-        this.range = range;
-        this.divineProviders = divineProviders;
-    }
-
     public Heatmap(@NotNull ImmutableList<DivineProvider> divineProviders) {
         this(
                 (Integer) Config.getProperty("stronghold_count"),
@@ -50,7 +48,7 @@ public class Heatmap {
     }
 
     public Heatmap() {
-        this(ImmutableList.copyOf(Melange.providerList));
+        this(ImmutableList.copyOf(Melange.getProviderList()));
     }
 
     public static BufferedImage newRawImage() {
@@ -109,8 +107,27 @@ public class Heatmap {
 
         long endTime = System.currentTimeMillis();
 
-        System.out.println("Generated render in " + (endTime - startTime) + "ms");
+        LOGGER.info("Generated render in " + (endTime - startTime) + "ms");
 
         return image;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Heatmap heatmap = (Heatmap) o;
+        return strongholdCount == heatmap.strongholdCount
+                && range == heatmap.range
+                && Objects.equal(divineProviders, heatmap.divineProviders);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(strongholdCount, range, divineProviders);
     }
 }

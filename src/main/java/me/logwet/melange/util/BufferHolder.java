@@ -1,5 +1,6 @@
 package me.logwet.melange.util;
 
+import com.google.common.base.Objects;
 import lombok.Getter;
 import org.apache.commons.lang3.concurrent.CallableBackgroundInitializer;
 
@@ -45,5 +46,22 @@ public class BufferHolder {
         }
 
         return 0D;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        BufferHolder that = (BufferHolder) o;
+        return Objects.equal(buffer, that.buffer);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(buffer);
     }
 }

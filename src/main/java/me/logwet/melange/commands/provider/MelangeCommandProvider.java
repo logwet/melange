@@ -1,15 +1,22 @@
 package me.logwet.melange.commands.provider;
 
-import com.mojang.brigadier.CommandDispatcher;
-import me.logwet.melange.commands.source.CommandSource;
+import me.logwet.melange.commands.CommandManager;
 
 public class MelangeCommandProvider extends AbstractCommandProvider {
-    public MelangeCommandProvider(CommandDispatcher<CommandSource> dispatcher) {
-        super("", dispatcher);
+    public MelangeCommandProvider(CommandManager commandManager) {
+        super("", commandManager);
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 
     @Override
     public Type getType() {
         return Type.MELANGE;
     }
+
+    @Override
+    public void close() {}
 }

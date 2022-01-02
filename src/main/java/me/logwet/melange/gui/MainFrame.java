@@ -1,5 +1,6 @@
 package me.logwet.melange.gui;
 
+import ch.qos.logback.classic.Logger;
 import com.aparapi.device.Device;
 import com.aparapi.device.OpenCLDevice;
 import com.aparapi.internal.kernel.KernelManager;
@@ -13,6 +14,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Objects;
+import java.util.concurrent.ExecutionException;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -30,8 +32,11 @@ import javax.swing.JTree;
 import javax.swing.event.HyperlinkEvent.EventType;
 import me.logwet.melange.Melange;
 import me.logwet.melange.render.Heatmap;
+import org.slf4j.LoggerFactory;
 
 public class MainFrame extends JFrame {
+    public static final Logger LOGGER = (Logger) LoggerFactory.getLogger(MainFrame.class);
+
     protected JPanel mainPanel;
     protected JTabbedPane tabbedPane;
     protected JLabel divineRendererLabel;
@@ -80,16 +85,12 @@ public class MainFrame extends JFrame {
                 });
 
         divineForceRenderButton.addActionListener(
-                e -> {
-                    Melange.heatmap = new Heatmap();
-                    updateRender();
-                });
+                e -> Melange.resetHeatmapAsync(this::updateRender));
 
         divineResetbutton.addActionListener(
                 e -> {
-                    Melange.providerList.clear();
-                    Melange.heatmap = new Heatmap();
-                    updateRender();
+                    Melange.removeAllProviders();
+                    Melange.resetHeatmapAsync(this::updateRender);
                 });
 
         creditsTextPane.addHyperlinkListener(
@@ -139,8 +140,12 @@ public class MainFrame extends JFrame {
 
         divineRendererLabel = new JLabel();
 
-        Melange.heatmap = new Heatmap();
-        updateRender();
+        try {
+            Melange.resetHeatmapAsync(this::updateRender).get();
+            System.out.println("wating");
+        } catch (InterruptedException | ExecutionException e) {
+            LOGGER.error("Unable to perform initial heatmap initialization", e);
+        }
     }
 
     private void addRender(BufferedImage render) {
@@ -148,10 +153,23 @@ public class MainFrame extends JFrame {
     }
 
     public void updateRender() {
-        if (Objects.nonNull(Melange.heatmap)) {
-            addRender(Melange.heatmap.getRender());
+        if (Objects.nonNull(Melange.getHeatmap())) {
+            BufferedImage render;
+            if (!Objects.equals(Thread.currentThread().getName(), "melange")) {
+                try {
+                    render = Melange.submit(() -> Melange.getHeatmap().getRender()).get();
+                } catch (InterruptedException | ExecutionException e) {
+                    LOGGER.error("Unable to update render", e);
+                    render = Heatmap.newRawImage();
+                }
+            } else {
+                render = Melange.getHeatmap().getRender();
+            }
+            addRender(render);
         } else {
             addRender(Heatmap.newRawImage());
         }
+
+        LOGGER.info("Updated render");
     }
 }

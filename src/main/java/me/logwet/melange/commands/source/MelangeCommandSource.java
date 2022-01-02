@@ -10,7 +10,7 @@ public class MelangeCommandSource implements CommandSource {
 
     @Override
     public Role getRole() {
-        return Role.NONE;
+        return Role.OWNER;
     }
 
     @Override

@@ -6,6 +6,7 @@ import com.github.benmanes.caffeine.cache.LoadingCache;
 import com.google.common.base.Objects;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.ParseResults;
+import com.mojang.brigadier.StringReader;
 import me.logwet.melange.commands.source.CommandSource;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,7 +21,7 @@ public class ParseCache {
         return cache.get(key);
     }
 
-    public ParseResults<CommandSource> parse(String phrase, CommandSource source) {
+    public ParseResults<CommandSource> parse(StringReader phrase, CommandSource source) {
         return parse(new ParseInputs(phrase, source));
     }
 
@@ -33,16 +34,16 @@ public class ParseCache {
 
         @Override
         public @NotNull ParseResults<CommandSource> load(@NotNull ParseInputs key) {
-            return dispatcher.parse(key.phrase, key.source);
+            return dispatcher.parse(key.reader, key.source);
         }
     }
 
     private static class ParseInputs {
-        private final String phrase;
+        private final StringReader reader;
         private final CommandSource source;
 
-        private ParseInputs(String phrase, CommandSource source) {
-            this.phrase = phrase;
+        private ParseInputs(StringReader reader, CommandSource source) {
+            this.reader = reader;
             this.source = source;
         }
 
@@ -55,12 +56,12 @@ public class ParseCache {
                 return false;
             }
             ParseInputs that = (ParseInputs) o;
-            return Objects.equal(phrase, that.phrase) && Objects.equal(source, that.source);
+            return Objects.equal(reader.getString(), that.reader.getString());
         }
 
         @Override
         public int hashCode() {
-            return Objects.hashCode(phrase, source);
+            return Objects.hashCode(reader.getString());
         }
     }
 }

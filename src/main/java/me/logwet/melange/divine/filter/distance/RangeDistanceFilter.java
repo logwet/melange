@@ -1,13 +1,19 @@
 package me.logwet.melange.divine.filter.distance;
 
-import lombok.Getter;
+import lombok.Value;
+import me.logwet.melange.MelangeConstants;
 
+@Value(staticConstructor = "range")
 public class RangeDistanceFilter implements DistanceFilter {
-    @Getter protected final double lb;
-    @Getter protected final double ub;
+    String id = "distance";
+    double lb;
+    double ub;
 
-    public RangeDistanceFilter(double lb, double ub) {
-        this.lb = lb;
-        this.ub = ub;
+    public static RangeDistanceFilter slice(int n, int i) {
+        return new RangeDistanceFilter(
+                ((MelangeConstants.UPPER_BOUND - MelangeConstants.LOWER_BOUND) / n) * i
+                        + MelangeConstants.LOWER_BOUND,
+                ((MelangeConstants.UPPER_BOUND - MelangeConstants.LOWER_BOUND) / n) * (i + 1)
+                        + MelangeConstants.LOWER_BOUND);
     }
 }

@@ -2,14 +2,17 @@ package me.logwet.melange.commands.source;
 
 import com.google.common.base.Objects;
 import me.logwet.melange.commands.provider.CommandProvider.Type;
+import me.logwet.melange.commands.provider.TwitchCommandProvider;
 
 public class TwitchCommandSource implements CommandSource {
     private final String username;
     private final Role role;
+    private final TwitchCommandProvider provider;
 
-    public TwitchCommandSource(String username, Role role) {
+    public TwitchCommandSource(String username, Role role, TwitchCommandProvider provider) {
         this.username = username;
         this.role = role;
+        this.provider = provider;
     }
 
     @Override
@@ -27,11 +30,25 @@ public class TwitchCommandSource implements CommandSource {
         return Type.TWITCH;
     }
 
-    @Override
-    public void sendSuccess(String message) {}
+    private void sendMessage(String message) {
+        if (this.provider.isEnabled()) {
+            assert this.provider.getTwitchClient() != null;
+            this.provider
+                    .getTwitchClient()
+                    .getChat()
+                    .sendMessage(this.provider.getChannelName(), message);
+        }
+    }
 
     @Override
-    public void sendError(String message) {}
+    public void sendSuccess(String message) {
+        sendMessage(message);
+    }
+
+    @Override
+    public void sendError(String message) {
+        sendMessage("[ERROR] " + message);
+    }
 
     @Override
     public boolean equals(Object o) {

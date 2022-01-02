@@ -18,11 +18,11 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import me.logwet.melange.config.Config.ConfigInstance.ConfigData;
 import net.harawata.appdirs.AppDirsFactory;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Config {
-    public static final Logger LOGGER = LogManager.getLogger("config");
+    public static final Logger LOGGER = LoggerFactory.getLogger("config");
     public static final File LOG_DIR;
     private static final File CONFIG_FILE;
     private static ConfigInstance CONFIG;
@@ -118,6 +118,12 @@ public class Config {
                 builder.put("stronghold_count", 3);
                 builder.put("range", 100);
                 builder.put("command_prefix", "?");
+
+                builder.put("twitch_oauth_token", "");
+                builder.put("twitch_channel_name", "");
+                builder.put("twitch_user_name", "");
+
+                builder.put("twitch_min_role", 1);
 
                 DEFAULT_PROPERTIES = builder.build();
             }
