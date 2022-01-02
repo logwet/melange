@@ -21,7 +21,9 @@ public abstract class AbstractCoordinateCommand<T extends DivineProvider>
     protected LiteralArgumentBuilder<CommandSource> buildCommandTree(
             LiteralArgumentBuilder<CommandSource> rootLiteral) {
         return rootLiteral.then(
-                argument("coordinate", CoordinateArgumentType.coordinate(coordinateType))
+                argument(
+                                coordinateType.toString(),
+                                CoordinateArgumentType.coordinate(coordinateType))
                         .executes(this::add));
     }
 }

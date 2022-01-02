@@ -5,8 +5,8 @@ import me.logwet.melange.divine.filter.angle.RangeAngleFilter;
 import me.logwet.melange.divine.filter.distance.SliceDistanceFilter;
 import me.logwet.melange.divine.provider.StrongholdProvider;
 
-public class PlaceholderFeature extends StrongholdProvider {
-    public PlaceholderFeature() {
+public class PlaceholderFeatureProvider extends StrongholdProvider {
+    public PlaceholderFeatureProvider() {
         super(
                 Arrays.asList(
                         new RangeAngleFilter(0, 0.5),

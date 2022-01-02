@@ -24,12 +24,10 @@ public class CoordinateArgumentType implements ArgumentType<Coordinate> {
                     Arrays.asList("0 0", "2 53", "-70 64"),
                     Arrays.asList("0 0 0", "-5 67 42", "98 54 -18"));
 
-    private final int numValues;
-    private final boolean[] descriptor;
+    private final Type type;
 
     private CoordinateArgumentType(Type type) {
-        this.numValues = type.getNumValues();
-        this.descriptor = type.getDescriptor();
+        this.type = type;
     }
 
     public static CoordinateArgumentType coordinate(Type type) {
@@ -41,25 +39,25 @@ public class CoordinateArgumentType implements ArgumentType<Coordinate> {
         List<Integer> values = new ArrayList<>();
 
         int k = reader.getCursor();
-        for (int i = 0; i < numValues; i++) {
+        for (int i = 0; i < type.getNumValues(); i++) {
             values.add(reader.readInt());
             if (!reader.canRead() || reader.peek() != ' ') {
                 reader.setCursor(k);
                 throw NOT_COMPLETE.createWithContext(reader);
             }
-            if (i < numValues - 1) {
+            if (i < type.getNumValues() - 1) {
                 reader.skip();
             }
         }
 
-        if (values.size() < numValues) {
+        if (values.size() < type.getNumValues()) {
             throw NOT_COMPLETE.createWithContext(reader);
         }
 
         int[] components = new int[3];
 
         for (int i = 0; i < 3; i++) {
-            if (descriptor[i]) {
+            if (type.getDescriptor()[i]) {
                 components[i] = values.remove(0);
             }
         }
@@ -72,9 +70,9 @@ public class CoordinateArgumentType implements ArgumentType<Coordinate> {
             CommandContext<S> context, SuggestionsBuilder builder) {
         StringBuilder msg = new StringBuilder();
 
-        for (int i = 0; i < numValues; i++) {
+        for (int i = 0; i < type.getNumValues(); i++) {
             msg.append("0");
-            if (i < numValues - 1) {
+            if (i < type.getNumValues() - 1) {
                 msg.append(" ");
             }
         }
@@ -86,6 +84,6 @@ public class CoordinateArgumentType implements ArgumentType<Coordinate> {
 
     @Override
     public Collection<String> getExamples() {
-        return EXAMPLES.get(numValues);
+        return EXAMPLES.get(type.getNumValues() - 1);
     }
 }

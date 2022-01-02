@@ -2,6 +2,9 @@ package me.logwet.melange.commands.arguments.coordinate;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import lombok.Data;
 import lombok.Getter;
@@ -62,14 +65,14 @@ public class Coordinate {
     }
 
     public enum Type {
-        XYZ(7),
-        XY(6),
-        XZ(5),
-        X(4),
-        YZ(3),
-        Y(2),
-        Z(1),
-        NONE(0);
+        XYZ(new boolean[] {true, true, true}),
+        XY(new boolean[] {true, true, false}),
+        XZ(new boolean[] {true, false, true}),
+        X(new boolean[] {true, false, false}),
+        YZ(new boolean[] {false, true, true}),
+        Y(new boolean[] {false, true, false}),
+        Z(new boolean[] {false, false, true}),
+        NONE(new boolean[] {false, false, false});
 
         private static final ImmutableMap<Integer, Type> MAP;
 
@@ -77,48 +80,47 @@ public class Coordinate {
             Builder<Integer, Type> builder = ImmutableMap.builder();
 
             for (Type type : Type.values()) {
-                builder.put(type.id, type);
+                builder.put(Arrays.hashCode(type.descriptor), type);
             }
 
             MAP = builder.build();
         }
 
-        @Getter private final int id;
+        @Getter private final int numValues;
+        @Getter private final boolean[] descriptor;
 
-        Type(int id) {
-            this.id = id;
+        Type(boolean[] descriptor) {
+            int n = 0;
+            for (boolean b : descriptor) {
+                if (b) {
+                    n++;
+                }
+            }
+            this.numValues = n;
+            this.descriptor = descriptor;
         }
 
-        public static Type from(int id) {
-            return MAP.get(id);
+        public static Type from(boolean[] descriptor) {
+            return MAP.get(Arrays.hashCode(descriptor));
         }
 
         public static Type from(@Nullable Integer x, @Nullable Integer y, @Nullable Integer z) {
-            int t = 0;
-            if (Objects.nonNull(x)) {
-                t ^= 4;
-            }
-            if (Objects.nonNull(y)) {
-                t ^= 2;
-            }
-            if (Objects.nonNull(z)) {
-                t ^= 1;
-            }
-            return from(t);
+            return from(new boolean[] {Objects.nonNull(x), Objects.nonNull(y), Objects.nonNull(z)});
         }
 
-        public int getNumValues() {
-            return Integer.bitCount(id);
-        }
-
-        public boolean[] getDescriptor() {
-            boolean[] descriptor = new boolean[3];
-
-            for (int i = 0; i < 3; i++) {
-                descriptor[i] = ((id >> i) & 1) != 0;
+        @Override
+        public String toString() {
+            List<String> values = new ArrayList<>();
+            if (descriptor[0]) {
+                values.add("x");
             }
-
-            return descriptor;
+            if (descriptor[1]) {
+                values.add("y");
+            }
+            if (descriptor[2]) {
+                values.add("z");
+            }
+            return String.join(" ", values);
         }
     }
 }
