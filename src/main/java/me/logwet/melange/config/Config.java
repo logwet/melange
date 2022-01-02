@@ -16,6 +16,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import me.logwet.melange.commands.commands.alias.AliasManager;
 import me.logwet.melange.config.Config.ConfigInstance.ConfigData;
 import net.harawata.appdirs.AppDirsFactory;
 import org.slf4j.Logger;
@@ -43,10 +44,14 @@ public class Config {
 
         CONFIG = new ConfigInstance(ConfigInstance.load());
         ConfigInstance.save();
+
+        AliasManager.load();
     }
 
     public static void save() {
         LOGGER.info("Saving config...");
+
+        AliasManager.save();
 
         ConfigInstance.save();
         CONFIG = new ConfigInstance(ConfigInstance.load());
@@ -58,6 +63,10 @@ public class Config {
 
     public static Object getProperty(String key) {
         return getData().get(key);
+    }
+
+    public static void setProperty(String key, Object value) {
+        getData().put(key, value);
     }
 
     @RequiredArgsConstructor
@@ -124,6 +133,8 @@ public class Config {
                 builder.put("twitch_user_name", "");
 
                 builder.put("twitch_min_role", 1);
+
+                builder.put("command_aliases", AliasManager.DEFAULT_ALIASES);
 
                 DEFAULT_PROPERTIES = builder.build();
             }

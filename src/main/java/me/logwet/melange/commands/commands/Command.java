@@ -5,7 +5,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import me.logwet.melange.commands.source.CommandSource;
 
 public interface Command {
-    LiteralArgumentBuilder<CommandSource> getRoot();
+    LiteralArgumentBuilder<CommandSource> getRootBuilder();
 
     LiteralArgumentBuilder<CommandSource> getBuilder();
 

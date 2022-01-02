@@ -13,6 +13,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicBoolean;
 import lombok.Getter;
 import lombok.Setter;
 import me.logwet.melange.commands.CommandManager;
@@ -30,10 +31,9 @@ public class Melange {
     public static final Dimension MIN_WINDOW_DIMENSION = new Dimension(600, 400);
     public static final Dimension WINDOW_DIMENSION = new Dimension(800, 600);
     public static final Logger LOGGER = LoggerFactory.getLogger("melange");
-
     public static final ExecutorService EXECUTOR =
             Executors.newSingleThreadExecutor(runnable -> new Thread(runnable, "melange"));
-
+    private static final AtomicBoolean HAS_SHUTDOWN = new AtomicBoolean(false);
     @Getter private static final List<DivineProvider> providerList = new ArrayList<>();
 
     @Getter @Setter @Nullable private static Heatmap heatmap;
@@ -57,13 +57,18 @@ public class Melange {
     public static void onStarting() {
         SharedKernels.forceLoad();
         execute(Config::load);
-        execute(CommandManager::initialize);
+        resetCommandManager();
     }
 
     public static void onClosing() {
         try {
-            updateConfig();
-            EXECUTOR.shutdown();
+            synchronized (HAS_SHUTDOWN) {
+                if (!HAS_SHUTDOWN.get()) {
+                    updateConfig();
+                    EXECUTOR.shutdown();
+                    HAS_SHUTDOWN.set(true);
+                }
+            }
         } catch (Exception e) {
             LOGGER.error("Unable to shut Melange down properly.", e);
         }
@@ -88,6 +93,10 @@ public class Melange {
     public static <V> List<Future<V>> invokeAll(Collection<Callable<V>> callables)
             throws InterruptedException {
         return EXECUTOR.invokeAll(callables);
+    }
+
+    public static Future<?> resetCommandManager() {
+        return submit(CommandManager::initialize);
     }
 
     public static void resetHeatmap(Runnable runnable) {
@@ -116,6 +125,11 @@ public class Melange {
 
     public static void addProvider(DivineProvider provider) {
         execute(() -> providerList.add(provider));
+    }
+
+    public static Future<?> addProviderAndUpdateRender(DivineProvider provider) {
+        addProvider(provider);
+        return Melange.resetHeatmapAndRender();
     }
 
     public static Future<?> removeProvider(DivineProvider provider) {

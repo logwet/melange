@@ -16,5 +16,6 @@ public class Main {
     public static void main(String[] args) {
         LOGGER.info("Launching Melange...");
         Melange.launch();
+        Runtime.getRuntime().addShutdownHook(new Thread(Melange::onClosing));
     }
 }

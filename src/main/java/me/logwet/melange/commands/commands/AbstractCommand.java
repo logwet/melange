@@ -7,10 +7,11 @@ import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import java.util.Locale;
+import lombok.Getter;
 import me.logwet.melange.commands.source.CommandSource;
 
 public abstract class AbstractCommand implements Command {
-    protected final String root;
+    @Getter protected final String root;
 
     public AbstractCommand(String root) {
         this.root = root;
@@ -52,7 +53,7 @@ public abstract class AbstractCommand implements Command {
     }
 
     @Override
-    public LiteralArgumentBuilder<CommandSource> getRoot() {
+    public LiteralArgumentBuilder<CommandSource> getRootBuilder() {
         return literal(root);
     }
 
@@ -61,7 +62,7 @@ public abstract class AbstractCommand implements Command {
 
     @Override
     public LiteralArgumentBuilder<CommandSource> getBuilder() {
-        return buildCommandTree(getRoot());
+        return buildCommandTree(getRootBuilder());
     }
 
     @Override

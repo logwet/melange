@@ -8,6 +8,8 @@ import com.aparapi.internal.opencl.OpenCLPlatform;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
@@ -32,6 +34,7 @@ import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.event.HyperlinkEvent.EventType;
 import me.logwet.melange.Melange;
+import me.logwet.melange.config.Config;
 import me.logwet.melange.render.Heatmap;
 import org.slf4j.LoggerFactory;
 
@@ -63,6 +66,9 @@ public class MainFrame extends JFrame {
     protected JPanel creditsPanel;
     protected JTextPane creditsTextPane;
 
+    protected boolean lightEditsPending = false;
+    protected boolean heavyEditsPending = false;
+
     public MainFrame() {
         super("Melange");
 
@@ -92,6 +98,38 @@ public class MainFrame extends JFrame {
                 e -> {
                     Melange.removeAllProviders();
                     Melange.resetHeatmapAsync(this::updateRender);
+                });
+
+        settingsPanel.addComponentListener(
+                new ComponentAdapter() {
+                    @Override
+                    public void componentShown(ComponentEvent e) {
+                        LOGGER.info("Settings panel opened");
+
+                        lightEditsPending = false;
+                        heavyEditsPending = false;
+
+                        super.componentShown(e);
+                    }
+
+                    @Override
+                    public void componentHidden(ComponentEvent e) {
+                        LOGGER.info("Settings panel closed");
+
+                        if (lightEditsPending || heavyEditsPending) {
+                            refreshLightSettings();
+                        }
+                        if (heavyEditsPending) {
+                            refreshHeavySettings();
+                        }
+
+                        Melange.resetHeatmapAsync(() -> updateRender());
+
+                        lightEditsPending = false;
+                        heavyEditsPending = false;
+
+                        super.componentHidden(e);
+                    }
                 });
 
         creditsTextPane.addHyperlinkListener(
@@ -175,5 +213,21 @@ public class MainFrame extends JFrame {
         SwingUtilities.invokeLater(() -> addRender(finalRender));
 
         LOGGER.info("Updated render");
+    }
+
+    private void refreshLightSettings() {
+        try {
+            Melange.submit(Config::save).get();
+        } catch (InterruptedException | ExecutionException e) {
+            LOGGER.error("Unable to save light settings", e);
+        }
+    }
+
+    private void refreshHeavySettings() {
+        try {
+            Melange.resetCommandManager().get();
+        } catch (InterruptedException | ExecutionException e) {
+            LOGGER.error("Unable to save heavy settings", e);
+        }
     }
 }

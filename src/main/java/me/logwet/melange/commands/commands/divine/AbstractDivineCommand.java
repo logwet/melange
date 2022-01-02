@@ -5,12 +5,12 @@ import com.mojang.brigadier.context.CommandContext;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import me.logwet.melange.Melange;
-import me.logwet.melange.commands.commands.AbstractAliasedCommand;
+import me.logwet.melange.commands.commands.alias.AbstractAliasCommand;
 import me.logwet.melange.commands.source.CommandSource;
 import me.logwet.melange.divine.provider.DivineProvider;
 import org.slf4j.LoggerFactory;
 
-public abstract class AbstractDivineCommand<T extends DivineProvider> extends AbstractAliasedCommand
+public abstract class AbstractDivineCommand<T extends DivineProvider> extends AbstractAliasCommand
         implements DivineCommand {
     protected final Class<T> clazz;
     protected final Logger LOGGER;
@@ -23,8 +23,7 @@ public abstract class AbstractDivineCommand<T extends DivineProvider> extends Ab
 
     protected Future<?> add(T provider) {
         LOGGER.info("Adding provider " + clazz.getSimpleName());
-        Melange.addProvider(provider);
-        return Melange.resetHeatmapAndRender();
+        return Melange.addProviderAndUpdateRender(provider);
     }
 
     protected boolean addAndWait(T provider) {

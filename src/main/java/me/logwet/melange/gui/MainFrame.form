@@ -214,7 +214,7 @@
           <component id="ec52c" class="javax.swing.JLabel" binding="melangeOpenCLStatusLabel">
             <constraints border-constraint="West"/>
             <properties>
-              <text value=""/>
+              <text value="OpenCL Status"/>
             </properties>
           </component>
         </children>

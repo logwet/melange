@@ -1,13 +1,15 @@
-package me.logwet.melange.commands.commands;
+package me.logwet.melange.commands.commands.alias;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.tree.LiteralCommandNode;
+import lombok.Getter;
+import me.logwet.melange.commands.commands.AbstractCommand;
 import me.logwet.melange.commands.source.CommandSource;
 
-public abstract class AbstractAliasedCommand extends AbstractCommand {
-    protected final String[] aliases;
+public abstract class AbstractAliasCommand extends AbstractCommand {
+    @Getter protected final String[] aliases;
 
-    public AbstractAliasedCommand(String root, String... aliases) {
+    public AbstractAliasCommand(String root, String... aliases) {
         super(root);
         this.aliases = aliases;
     }
@@ -18,7 +20,7 @@ public abstract class AbstractAliasedCommand extends AbstractCommand {
 
         dispatcher.getRoot().addChild(node);
 
-        for (String alias : aliases) {
+        for (String alias : AliasManager.getAliases(root)) {
             dispatcher.getRoot().addChild(buildRedirect(alias, node));
         }
     }

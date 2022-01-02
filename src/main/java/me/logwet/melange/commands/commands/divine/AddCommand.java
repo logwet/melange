@@ -2,11 +2,11 @@ package me.logwet.melange.commands.commands.divine;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import me.logwet.melange.commands.CommandManager;
-import me.logwet.melange.commands.commands.AbstractAliasedCommand;
 import me.logwet.melange.commands.commands.Command;
+import me.logwet.melange.commands.commands.alias.AbstractAliasCommand;
 import me.logwet.melange.commands.source.CommandSource;
 
-public class AddCommand extends AbstractAliasedCommand {
+public class AddCommand extends AbstractAliasCommand {
     public AddCommand() {
         super("add", "put");
     }

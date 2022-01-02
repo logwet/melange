@@ -72,6 +72,12 @@ public class CommandManager implements AutoCloseable {
     }
 
     public static void initialize() {
+        if (Objects.nonNull(initializer)) {
+            if (initializer.isStarted()) {
+                get().close();
+            }
+        }
+
         initializer = new CallableBackgroundInitializer<>(CommandManager::new);
         initializer.start();
     }
@@ -99,9 +105,7 @@ public class CommandManager implements AutoCloseable {
     }
 
     public ParseResults<CommandSource> parse(StringReader stringReader, CommandSource source) {
-        ParseResults<CommandSource> parseResults = this.parser.parse(stringReader, source);
-        System.out.println(parseResults.getContext().getRootNode().getName());
-        return parseResults;
+        return this.parser.parse(stringReader, source);
     }
 
     @SneakyThrows
