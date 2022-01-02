@@ -38,8 +38,8 @@ import me.logwet.melange.config.Config;
 import me.logwet.melange.render.Heatmap;
 import org.slf4j.LoggerFactory;
 
-public class MainFrame extends JFrame {
-    public static final Logger LOGGER = (Logger) LoggerFactory.getLogger(MainFrame.class);
+public class MelangeFrame extends JFrame {
+    public static final Logger LOGGER = (Logger) LoggerFactory.getLogger(MelangeFrame.class);
 
     protected JPanel mainPanel;
     protected JTabbedPane tabbedPane;
@@ -69,7 +69,7 @@ public class MainFrame extends JFrame {
     protected boolean lightEditsPending = false;
     protected boolean heavyEditsPending = false;
 
-    public MainFrame() {
+    public MelangeFrame() {
         super("Melange");
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -122,8 +122,9 @@ public class MainFrame extends JFrame {
                         if (heavyEditsPending) {
                             refreshHeavySettings();
                         }
-
-                        Melange.resetHeatmapAsync(() -> updateRender());
+                        if (lightEditsPending || heavyEditsPending) {
+                            Melange.resetHeatmapAsync(() -> updateRender());
+                        }
 
                         lightEditsPending = false;
                         heavyEditsPending = false;

@@ -19,7 +19,7 @@ import lombok.Setter;
 import me.logwet.melange.commands.CommandManager;
 import me.logwet.melange.config.Config;
 import me.logwet.melange.divine.provider.DivineProvider;
-import me.logwet.melange.gui.MainFrame;
+import me.logwet.melange.gui.MelangeFrame;
 import me.logwet.melange.kernel.SharedKernels;
 import me.logwet.melange.render.Heatmap;
 import org.jetbrains.annotations.Nullable;
@@ -38,7 +38,7 @@ public class Melange {
 
     @Getter @Setter @Nullable private static Heatmap heatmap;
 
-    @Getter @Nullable private static MainFrame mainFrame;
+    @Getter @Nullable private static MelangeFrame mainFrame;
 
     static {
         String version = Melange.class.getPackage().getImplementationVersion();
@@ -50,7 +50,7 @@ public class Melange {
         Melange.onStarting();
 
         FlatIntelliJLaf.setup();
-        mainFrame = new MainFrame();
+        mainFrame = new MelangeFrame();
         mainFrame.setVisible(true);
     }
 
@@ -114,7 +114,7 @@ public class Melange {
             return resetHeatmapAsync(mainFrame::updateRender);
         }
 
-        LOGGER.error("MainFrame object is null");
+        LOGGER.error("MelangeFrame object is null");
         return CompletableFuture.completedFuture(null);
     }
 
