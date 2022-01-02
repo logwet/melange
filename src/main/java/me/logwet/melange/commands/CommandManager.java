@@ -50,8 +50,6 @@ public class CommandManager implements AutoCloseable {
     @Getter private final CommandDispatcher<CommandSource> dispatcher;
     private final ParseCache parser;
 
-    private final Object syncObj = new Object();
-
     private CommandManager(String prefix) {
         long start = System.currentTimeMillis();
 
@@ -65,9 +63,8 @@ public class CommandManager implements AutoCloseable {
 
         long end = System.currentTimeMillis();
 
+        LOGGER.info("Loaded commands: " + this);
         LOGGER.info("Initialized CommandManager in " + (end - start) + "ms");
-
-        System.out.println(this);
     }
 
     private CommandManager() {

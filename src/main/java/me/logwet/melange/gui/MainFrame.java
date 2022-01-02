@@ -29,6 +29,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.JTree;
+import javax.swing.SwingUtilities;
 import javax.swing.event.HyperlinkEvent.EventType;
 import me.logwet.melange.Melange;
 import me.logwet.melange.render.Heatmap;
@@ -142,7 +143,6 @@ public class MainFrame extends JFrame {
 
         try {
             Melange.resetHeatmapAsync(this::updateRender).get();
-            System.out.println("wating");
         } catch (InterruptedException | ExecutionException e) {
             LOGGER.error("Unable to perform initial heatmap initialization", e);
         }
@@ -150,11 +150,13 @@ public class MainFrame extends JFrame {
 
     private void addRender(BufferedImage render) {
         divineRendererLabel.setIcon(new ImageIcon(render));
+        LOGGER.info("Updated image object");
     }
 
     public void updateRender() {
+        BufferedImage render;
+
         if (Objects.nonNull(Melange.getHeatmap())) {
-            BufferedImage render;
             if (!Objects.equals(Thread.currentThread().getName(), "melange")) {
                 try {
                     render = Melange.submit(() -> Melange.getHeatmap().getRender()).get();
@@ -165,10 +167,12 @@ public class MainFrame extends JFrame {
             } else {
                 render = Melange.getHeatmap().getRender();
             }
-            addRender(render);
         } else {
-            addRender(Heatmap.newRawImage());
+            render = Heatmap.newRawImage();
         }
+
+        BufferedImage finalRender = render;
+        SwingUtilities.invokeLater(() -> addRender(finalRender));
 
         LOGGER.info("Updated render");
     }
