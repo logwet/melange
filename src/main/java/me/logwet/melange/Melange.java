@@ -1,6 +1,6 @@
 package me.logwet.melange;
 
-import com.formdev.flatlaf.FlatIntelliJLaf;
+import com.formdev.flatlaf.FlatDarculaLaf;
 import com.google.common.collect.ImmutableList;
 import com.google.common.util.concurrent.Runnables;
 import java.awt.Dimension;
@@ -49,7 +49,7 @@ public class Melange {
     public static void launch() {
         Melange.onStarting();
 
-        FlatIntelliJLaf.setup();
+        FlatDarculaLaf.setup();
         mainFrame = new MelangeFrame();
         mainFrame.setVisible(true);
     }
