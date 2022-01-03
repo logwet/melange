@@ -2,7 +2,6 @@ package me.logwet.melange.render.kernel;
 
 import me.logwet.melange.MelangeConstants;
 import me.logwet.melange.kernel.api.AbstractSharedKernel;
-import org.apache.commons.math3.util.FastMath;
 
 /**
  * PDF and CDF derived with the help of al.
@@ -14,9 +13,9 @@ public abstract class AbstractRingKernel extends AbstractSharedKernel {
     protected static final double A = MelangeConstants.LOWER_BOUND;
     protected static final double B = MelangeConstants.UPPER_BOUND;
 
-    protected final double SQRT_A_ON_B = FastMath.sqrt(A / B);
+    protected final double SQRT_A_ON_B = Math.sqrt(A / B);
     protected final double ONE_SUB_SQRT_A_ON_B = 1D - SQRT_A_ON_B;
-    protected final double ONE_ON_SQRT_B = 1D / FastMath.sqrt(B);
+    protected final double ONE_ON_SQRT_B = 1D / Math.sqrt(B);
 
     public final double P_FAC = 0.5D / (ONE_SUB_SQRT_A_ON_B * B * ONE_ON_SQRT_B);
 
