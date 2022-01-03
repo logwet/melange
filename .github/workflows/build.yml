@@ -104,4 +104,20 @@ jobs:
           body: |
             ${{ steps.changelog.outputs.changelog }}
 
-            Make sure to read the [README](README.md) for instructions on how this mod works and how to use it.
+            Make sure to read the [README](README.md) for instructions on how this program works and how to use it.
+
+            `melange-x.x.x.jar` is an universal, cross-platform `jar` that you can run anywhere, even (theoretically) in a headless environment.
+            The minimum Java version needed to run this is 8, but you can also use any version newer than 8.
+            I recommend you use the newest version of Java you have access to as newer JREs usually have better stability and performance.
+            This program was developed against and works well with a `Java 16` JRE, so that'd be a good choice.
+
+            `melange-x.x.x.exe` is a Windows specific executable that wraps the above `jar`, if you are on Windows, I recommend you use it.
+            It will check if you have a compatible JRE (Java Runtime Environment) installed, and if not, direct you to download one.
+            It will also automatically set the program's max heap size property to 50MB to reduce RAM usage.
+            If you would like to replicate this on any platform, pass the JVM arg `-Xmx50m` when executing the jar, eg `java -Xmx50m -jar melange-x.x.x.jar`
+
+            The config file will be saved and read to/from:
+            (Windows) `C:\Users\{USER}\AppData\Roaming\melange\config.json`
+            (MacOS) `/Users/{USER}/Library/Preferences/melange/config.json`
+            (Linux) `/home/{USER}/.config/melange/config.json`
+            Program logs are also written to this directory.
