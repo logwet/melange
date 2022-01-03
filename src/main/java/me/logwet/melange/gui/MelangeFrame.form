@@ -192,7 +192,7 @@
                 <properties>
                   <contentType value="text/html"/>
                   <editable value="false"/>
-                  <text value="&lt;html&gt;&#13;  &lt;head&gt;&#13;    &#13;  &lt;/head&gt;&#13;  &lt;body&gt;&#13;    &lt;p style=&quot;margin-top: 0&quot;&gt;&#13;      &#13;    &lt;/p&gt;&#13;    Created by &lt;a href=&quot;https://linktr.ee/logwet&quot;&gt;logwet&lt;/a&gt;, with algorithm &#13;    contributions from al (immigrant).&#13;&#13;    &lt;p&gt;&#13;      Inspired by &lt;a href=&quot; https://github.com/mjtb49/DivineHeatmapGenerator&quot;&gt;DivineHeatmapGenerator&lt;/a&gt; &#13;      by Matthew Bolan.&#13;    &lt;/p&gt;&#13;    &lt;p&gt;&#13;      Icon made by &lt;a href=&quot;https://www.flaticon.com/authors/smashicons&quot; title=&quot;Smashicons&quot;&gt;Smashicons&lt;/a&gt; &#13;      from &lt;a href=&quot;https://www.flaticon.com/&quot; title=&quot;Flaticon&quot;&gt;www.flaticon.com&lt;/a&gt;&#13;    &lt;/p&gt;&#13;  &lt;/body&gt;&#13;&lt;/html&gt;&#13;"/>
+                  <text value="&lt;html&gt;&#13;  &lt;head&gt;&#13;    &#13;  &lt;/head&gt;&#13;  &lt;body&gt;&#13;    &lt;p style=&quot;margin-top: 0&quot;&gt;&#13;      &#13;    &lt;/p&gt;&#13;    Created by &lt;a href=&quot;https://linktr.ee/logwet&quot;&gt;logwet&lt;/a&gt;, with algorithm &#13;    contributions from al (immigrant).&#13;&#13;    &lt;p&gt;&#13;      Inspired by &lt;a href=&quot; https://github.com/mjtb49/DivineHeatmapGenerator&quot;&gt;DivineHeatmapGenerator&lt;/a&gt; &#13;      by Matthew Bolan.&#13;    &lt;/p&gt;&#13;    &lt;p&gt;&#13;      Icon made by &lt;a href=&quot;https://www.flaticon.com/authors/smashicons&quot; title=&quot;Smashicons&quot;&gt;Smashicons&lt;/a&gt; &#13;      from &lt;a href=&quot;https://www.flaticon.com/&quot; title=&quot;Flaticon&quot;&gt;www.flaticon.com&lt;/a&gt;&#13;    &lt;/p&gt;&#13;    &lt;p&gt;&#13;      Splashscreen by &lt;a href=&quot;https://unsplash.com/@wolfgang_hasselmann?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText&quot;&gt;Wolfgang &#13;      Hasselmann&lt;/a&gt; on &lt;a href=&quot;https://unsplash.com/s/photos/dune?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText&quot;&gt;Unsplash&lt;/a&gt;&#13;    &lt;/p&gt;&#13;  &lt;/body&gt;&#13;&lt;/html&gt;&#13;"/>
                 </properties>
               </component>
             </children>
@@ -204,17 +204,19 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="8ec19" class="javax.swing.JLabel" binding="melangeMetaLabel">
-            <constraints border-constraint="East"/>
-            <properties>
-              <horizontalAlignment value="4"/>
-              <text value="Version Area"/>
-            </properties>
-          </component>
-          <component id="ec52c" class="javax.swing.JLabel" binding="melangeOpenCLStatusLabel">
+          <component id="e3da2" class="javax.swing.JTextArea" binding="melangeSystemStatusTextField">
             <constraints border-constraint="West"/>
             <properties>
-              <text value="OpenCL Status"/>
+              <editable value="false"/>
+              <text value="OpenCL Status&#10;System Status"/>
+            </properties>
+          </component>
+          <component id="1de6c" class="javax.swing.JTextPane" binding="melangeVersionTextPane">
+            <constraints border-constraint="East"/>
+            <properties>
+              <contentType value="text/plain"/>
+              <editable value="false"/>
+              <text value="Version&#10;Update status"/>
             </properties>
           </component>
         </children>

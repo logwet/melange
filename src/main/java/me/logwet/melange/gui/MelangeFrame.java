@@ -33,13 +33,33 @@ import javax.swing.JTextPane;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.event.HyperlinkEvent.EventType;
+import javax.swing.event.HyperlinkListener;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 import me.logwet.melange.Melange;
 import me.logwet.melange.config.Config;
+import me.logwet.melange.config.Metadata;
+import me.logwet.melange.config.Metadata.Update;
 import me.logwet.melange.render.Heatmap;
 import org.slf4j.LoggerFactory;
 
 public class MelangeFrame extends JFrame {
     public static final Logger LOGGER = (Logger) LoggerFactory.getLogger(MelangeFrame.class);
+    private static final HyperlinkListener HYPERLINK_LISTENER;
+
+    static {
+        HYPERLINK_LISTENER =
+                e -> {
+                    if (e.getEventType() == EventType.ACTIVATED) {
+                        try {
+                            Desktop.getDesktop().browse(e.getURL().toURI());
+                        } catch (IOException | URISyntaxException ex) {
+                            LOGGER.error("Unable to open hyperlink");
+                        }
+                    }
+                };
+    }
 
     protected JPanel mainPanel;
     protected JTabbedPane tabbedPane;
@@ -61,10 +81,11 @@ public class MelangeFrame extends JFrame {
     protected JScrollPane divineSelectionScrollPane;
     protected JList divineSelectionList;
     protected JTree divineSelectionTree;
-    protected JLabel melangeOpenCLStatusLabel;
     protected JPanel melangeMetaPanel;
     protected JPanel creditsPanel;
     protected JTextPane creditsTextPane;
+    protected JTextArea melangeSystemStatusTextField;
+    protected JTextPane melangeVersionTextPane;
 
     protected boolean lightEditsPending = false;
     protected boolean heavyEditsPending = false;
@@ -133,16 +154,7 @@ public class MelangeFrame extends JFrame {
                     }
                 });
 
-        creditsTextPane.addHyperlinkListener(
-                e -> {
-                    if (e.getEventType() == EventType.ACTIVATED) {
-                        try {
-                            Desktop.getDesktop().browse(e.getURL().toURI());
-                        } catch (IOException | URISyntaxException ex) {
-                            ex.printStackTrace();
-                        }
-                    }
-                });
+        creditsTextPane.addHyperlinkListener(HYPERLINK_LISTENER);
 
         this.pack();
         this.addDataToTextLabels();
@@ -154,8 +166,6 @@ public class MelangeFrame extends JFrame {
     }
 
     private void addDataToTextLabels() {
-        melangeMetaLabel.setText("Melange v" + Melange.VERSION + " by logwet");
-
         Device device = KernelManager.instance().bestDevice();
         String deviceMessage = device.getShortDescription();
         if (device instanceof OpenCLDevice) {
@@ -163,16 +173,77 @@ public class MelangeFrame extends JFrame {
             if (Objects.nonNull(name)) {
                 deviceMessage = name;
             }
-
-            OpenCLPlatform platform = (new OpenCLPlatform()).getOpenCLPlatforms().get(0);
+            OpenCLPlatform platform = ((OpenCLDevice) device).getOpenCLPlatform();
             if (Objects.nonNull(platform)) {
                 deviceMessage += " with " + platform.getVersion();
             }
         } else {
-            deviceMessage += " (GPU not found or usable)";
+            deviceMessage += " (GPU acceleration not available)";
         }
 
-        melangeOpenCLStatusLabel.setText("Using " + deviceMessage);
+        melangeSystemStatusTextField.setText("Device: " + deviceMessage);
+        melangeSystemStatusTextField.append(
+                "\nJRE: "
+                        + System.getProperty("java.vendor")
+                        + " "
+                        + System.getProperty("java.runtime.name")
+                        + " "
+                        + System.getProperty("java.version"));
+
+        final String versionString = "Melange v" + Metadata.VERSION + " by logwet";
+        melangeVersionTextPane.setText(versionString);
+
+        new Thread(
+                        () -> {
+                            Update update = Metadata.getUpdate();
+                            final Runnable runnable;
+
+                            if (update.isValid()) {
+                                if (update.isShouldUpdate()) {
+                                    final String updateString =
+                                            versionString
+                                                    + "<br> Update available! Get <a href = \""
+                                                    + update.getUrl().toString()
+                                                    + "\">v"
+                                                    + update.getLatestVer().getOriginalValue()
+                                                    + "</a>";
+
+                                    runnable =
+                                            () -> {
+                                                melangeVersionTextPane.setContentType("text/html");
+                                                melangeVersionTextPane.setText(updateString);
+                                                melangeVersionTextPane.addHyperlinkListener(
+                                                        HYPERLINK_LISTENER);
+                                            };
+                                } else {
+                                    runnable =
+                                            () ->
+                                                    melangeVersionTextPane.setText(
+                                                            versionString
+                                                                    + "\n You are using the latest version!");
+                                }
+                            } else {
+                                runnable =
+                                        () ->
+                                                melangeVersionTextPane.setText(
+                                                        versionString
+                                                                + "\n Unable to query for latest version!");
+                            }
+
+                            SwingUtilities.invokeLater(
+                                    () -> {
+                                        runnable.run();
+
+                                        StyledDocument style =
+                                                melangeVersionTextPane.getStyledDocument();
+                                        SimpleAttributeSet align = new SimpleAttributeSet();
+                                        StyleConstants.setAlignment(
+                                                align, StyleConstants.ALIGN_RIGHT);
+                                        style.setParagraphAttributes(
+                                                0, style.getLength(), align, false);
+                                    });
+                        })
+                .start();
     }
 
     private void createUIComponents() {

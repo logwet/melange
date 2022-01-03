@@ -27,7 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Melange {
-    public static final String VERSION;
     public static final Dimension MIN_WINDOW_DIMENSION = new Dimension(600, 400);
     public static final Dimension WINDOW_DIMENSION = new Dimension(800, 600);
     public static final Logger LOGGER = LoggerFactory.getLogger("melange");
@@ -39,12 +38,6 @@ public class Melange {
     @Getter @Setter @Nullable private static Heatmap heatmap;
 
     @Getter @Nullable private static MelangeFrame mainFrame;
-
-    static {
-        String version = Melange.class.getPackage().getImplementationVersion();
-
-        VERSION = Objects.nonNull(version) ? version : "DEVELOPMENT";
-    }
 
     public static void launch() {
         Melange.onStarting();

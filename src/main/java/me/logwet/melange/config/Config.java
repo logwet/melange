@@ -3,7 +3,6 @@ package me.logwet.melange.config;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.collect.ImmutableSet;
@@ -25,6 +24,7 @@ import org.slf4j.LoggerFactory;
 public class Config {
     public static final Logger LOGGER = LoggerFactory.getLogger("config");
     public static final File LOG_DIR;
+    private static final ObjectMapper OBJECT_MAPPER = Metadata.OBJECT_MAPPER;
     private static final File CONFIG_FILE;
     private static ConfigInstance CONFIG;
 
@@ -71,12 +71,7 @@ public class Config {
 
     @RequiredArgsConstructor
     protected static class ConfigInstance {
-        private static final ObjectMapper OBJECT_MAPPER;
         private static final int SCHEMA = 1;
-
-        static {
-            OBJECT_MAPPER = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
-        }
 
         protected final ConfigData data;
 

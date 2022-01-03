@@ -1,0 +1,5 @@
+{
+  "name": "${archivesBaseName}",
+  "version": "${version}",
+  "base_version": "${base_version}"
+}

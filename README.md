@@ -1,4 +1,5 @@
 # Melange
+
 ![icon](src/main/resources/melange/icon.png)
 
 ## License
@@ -10,3 +11,9 @@ If you fork the project and distribute your version, please change the name to a
 distinct alternative to avoid confusion.
 
 <div>Icon made by <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+
+Splashscreen
+by <a href="https://unsplash.com/@wolfgang_hasselmann?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">
+Wolfgang Hasselmann</a>
+on <a href="https://unsplash.com/s/photos/dune?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">
+Unsplash</a>

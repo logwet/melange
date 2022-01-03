@@ -86,8 +86,7 @@ jobs:
 
       - name: Delete dev and sources artifacts
         run: |
-          find bin/ -name '*-dev.jar' -delete
-          find bin/ -name '*-sources.jar' -delete
+          find bin/ -name '*-thin.jar' -delete
 
       - name: Generate changelog
         id: changelog
