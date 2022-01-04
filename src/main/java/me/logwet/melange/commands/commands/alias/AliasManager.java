@@ -84,7 +84,7 @@ public class AliasManager {
     }
 
     public static void save() {
-        Config.setProperty("command_aliases", getOverlap());
+        Config.setProperty("command_aliases", ALIASES);
     }
 
     public static void load() {

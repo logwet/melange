@@ -1,7 +1,6 @@
 package me.logwet.melange.render.kernel;
 
 import com.aparapi.Range;
-import com.google.common.collect.ImmutableList;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
@@ -39,7 +38,7 @@ public class RenderDivineKernel extends AbstractRingKernel implements Stronghold
         return array;
     }
 
-    public void setup(ImmutableList<DivineProvider> divineProviders, int strongholdCount) {
+    public void setup(List<DivineProvider> divineProviders, int strongholdCount) {
         this.strongholdCount = strongholdCount;
 
         this.output1 = new double[MelangeConstants.BUFFER_SIZE];

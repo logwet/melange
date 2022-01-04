@@ -123,7 +123,11 @@ launch4j {
     outfile = "melange-${project.version}.exe"
     mainClassName = "me.logwet.melange.Main"
     icon = "${projectDir}/assets/icon.ico"
+    splashFileName = "${projectDir}/assets/splashscreen.bmp"
+    version = project.base_version
+    textVersion = project.version
     companyName = "logwet"
+    copyright = "Copyright (C) 2022 logwet"
     copyConfigurable = []
     jarTask = project.tasks.shadowJar
     jreMinVersion = "1.8.0"

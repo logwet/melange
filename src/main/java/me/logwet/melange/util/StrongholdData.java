@@ -1,18 +1,19 @@
 package me.logwet.melange.util;
 
-import com.google.common.base.Objects;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.apache.commons.lang3.concurrent.CallableBackgroundInitializer;
 import org.apache.commons.lang3.concurrent.ConcurrentException;
 
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class StrongholdData {
-    private final List<double[]> data;
+    @EqualsAndHashCode.Include private final List<double[]> data;
     private final List<CallableBackgroundInitializer<Double>> sums;
 
-    @Getter private final int count;
+    @EqualsAndHashCode.Include @Getter private final int count;
 
     public StrongholdData(double[] data1, double[] data2, double[] data3, int count) {
         data = new ArrayList<>();
@@ -55,22 +56,5 @@ public class StrongholdData {
         }
 
         return 0D;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        StrongholdData that = (StrongholdData) o;
-        return count == that.count && Objects.equal(data, that.data);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(data, count);
     }
 }

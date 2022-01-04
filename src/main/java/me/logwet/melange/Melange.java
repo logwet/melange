@@ -57,8 +57,11 @@ public class Melange {
         try {
             synchronized (HAS_SHUTDOWN) {
                 if (!HAS_SHUTDOWN.get()) {
-                    updateConfig();
-                    EXECUTOR.shutdown();
+                    EXECUTOR.shutdownNow();
+
+                    Config.save();
+                    SharedKernels.closeAll();
+
                     HAS_SHUTDOWN.set(true);
                 }
             }

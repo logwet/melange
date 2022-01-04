@@ -1,11 +1,12 @@
 package me.logwet.melange.divine.filter.distance;
 
+import lombok.EqualsAndHashCode;
 import lombok.Value;
 import me.logwet.melange.MelangeConstants;
 
 @Value(staticConstructor = "range")
 public class RangeDistanceFilter implements DistanceFilter {
-    String id = "distance";
+    @EqualsAndHashCode.Include String id = "distance";
     double lb;
     double ub;
 

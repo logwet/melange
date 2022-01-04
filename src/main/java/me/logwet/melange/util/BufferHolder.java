@@ -1,11 +1,12 @@
 package me.logwet.melange.util;
 
-import com.google.common.base.Objects;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.apache.commons.lang3.concurrent.CallableBackgroundInitializer;
 
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class BufferHolder {
-    @Getter private final double[] buffer;
+    @EqualsAndHashCode.Include @Getter private final double[] buffer;
 
     private CallableBackgroundInitializer<Double> max;
     private CallableBackgroundInitializer<Double> sum;
@@ -46,22 +47,5 @@ public class BufferHolder {
         }
 
         return 0D;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        BufferHolder that = (BufferHolder) o;
-        return Objects.equal(buffer, that.buffer);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(buffer);
     }
 }

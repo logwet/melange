@@ -11,4 +11,9 @@ public abstract class AbstractSharedKernel extends Kernel implements SharedKerne
 
         this.execute(1);
     }
+
+    @Override
+    public void close() {
+        this.dispose();
+    }
 }

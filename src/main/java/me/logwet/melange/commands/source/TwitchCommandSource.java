@@ -1,12 +1,14 @@
 package me.logwet.melange.commands.source;
 
-import com.google.common.base.Objects;
+import lombok.EqualsAndHashCode;
 import me.logwet.melange.commands.provider.CommandProvider.Type;
 import me.logwet.melange.commands.provider.TwitchCommandProvider;
 
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class TwitchCommandSource implements CommandSource {
-    private final String username;
-    private final Role role;
+    @EqualsAndHashCode.Include private final String username;
+    @EqualsAndHashCode.Include private final Role role;
+
     private final TwitchCommandProvider provider;
 
     public TwitchCommandSource(String username, Role role, TwitchCommandProvider provider) {
@@ -48,22 +50,5 @@ public class TwitchCommandSource implements CommandSource {
     @Override
     public void sendError(String message) {
         sendMessage("[ERROR] " + message);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        TwitchCommandSource that = (TwitchCommandSource) o;
-        return Objects.equal(username, that.username) && role == that.role;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(username, role);
     }
 }

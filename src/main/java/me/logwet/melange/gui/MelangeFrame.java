@@ -24,9 +24,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
@@ -62,30 +60,24 @@ public class MelangeFrame extends JFrame {
     }
 
     protected JPanel mainPanel;
-    protected JTabbedPane tabbedPane;
     protected JLabel divineRendererLabel;
     protected JPanel divinePanel;
     protected JPanel settingsPanel;
     protected JSplitPane settingsSplitPane;
     protected JCheckBox checkBox1;
     protected JCheckBox checkBox2;
-    protected JLabel melangeMetaLabel;
-    protected JPanel divineLeftPanel;
-    protected JTextArea divineMetaTextArea;
-    protected JPanel divineRightPanel;
-    protected JPanel divineInputPanel;
+    protected JTextArea divineMetaLeftTextArea;
     protected JLabel divineSelectionMetaLabel;
     protected JTextField divineSelectionTextField;
     protected JButton divineForceRenderButton;
     protected JButton divineResetbutton;
-    protected JScrollPane divineSelectionScrollPane;
     protected JList divineSelectionList;
     protected JTree divineSelectionTree;
-    protected JPanel melangeMetaPanel;
     protected JPanel creditsPanel;
     protected JTextPane creditsTextPane;
     protected JTextArea melangeSystemStatusTextField;
     protected JTextPane melangeVersionTextPane;
+    protected JTextArea divineMetaRightTextArea;
 
     protected boolean lightEditsPending = false;
     protected boolean heavyEditsPending = false;

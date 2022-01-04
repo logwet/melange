@@ -12,12 +12,16 @@ import org.apache.commons.lang3.concurrent.BackgroundInitializer;
 import org.apache.commons.lang3.concurrent.ConcurrentException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public enum SharedKernels {
+public enum SharedKernels implements AutoCloseable {
     RENDER(RenderDivineKernel.class),
     PREPARE_BUFFER(PrepareBufferKernel.class),
     SCALE(ScaleKernel.class),
     PREPARE_IMAGE(PrepareImageKernel.class);
+
+    public static final Logger LOGGER = LoggerFactory.getLogger(SharedKernels.class);
 
     private final KernelInitializer<? extends SharedKernel> initializer;
 
@@ -31,13 +35,19 @@ public enum SharedKernels {
         SharedKernels.values();
     }
 
+    public static void closeAll() {
+        for (SharedKernels sharedKernel : SharedKernels.values()) {
+            sharedKernel.close();
+        }
+    }
+
     @SuppressWarnings("unchecked")
     @Nullable
     public <T extends SharedKernel> T getChecked() {
         try {
             return (T) initializer.get();
         } catch (ConcurrentException e) {
-            e.printStackTrace();
+            LOGGER.error("Unable to get SharedKernel from initializer", e);
         }
 
         return null;
@@ -46,6 +56,15 @@ public enum SharedKernels {
     @NotNull
     public <T extends SharedKernel> T get() {
         return Objects.requireNonNull(getChecked());
+    }
+
+    @Override
+    public void close() {
+        try {
+            this.get().close();
+        } catch (Exception e) {
+            LOGGER.error("Unable to close SharedKernel", e);
+        }
     }
 
     private static class KernelInitializer<T extends SharedKernel>

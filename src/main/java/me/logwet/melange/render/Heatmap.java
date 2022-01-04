@@ -1,12 +1,14 @@
 package me.logwet.melange.render;
 
 import ch.qos.logback.classic.Logger;
-import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferUShort;
+import java.util.List;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import me.logwet.melange.Melange;
 import me.logwet.melange.MelangeConstants;
 import me.logwet.melange.config.Config;
@@ -23,14 +25,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.LoggerFactory;
 
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @RequiredArgsConstructor
 public class Heatmap {
     protected static final Logger LOGGER = (Logger) LoggerFactory.getLogger(Heatmap.class);
 
-    private final int strongholdCount;
-    private final int range;
-
-    @NotNull private final ImmutableList<DivineProvider> divineProviders;
+    @EqualsAndHashCode.Include private final int strongholdCount;
+    @EqualsAndHashCode.Include private final int range;
+    @EqualsAndHashCode.Include @NotNull private final List<DivineProvider> divineProviders;
 
     @Nullable @Getter private StrongholdData strongholdData;
 
@@ -84,12 +86,6 @@ public class Heatmap {
     }
 
     private BufferedImage genRender() {
-        //        try {
-        //            TimeUnit.SECONDS.sleep(5);
-        //        } catch (InterruptedException e) {
-        //            e.printStackTrace();
-        //        }
-
         long startTime = System.currentTimeMillis();
 
         BufferedImage image = newRawImage();
@@ -112,22 +108,10 @@ public class Heatmap {
         return image;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Heatmap heatmap = (Heatmap) o;
-        return strongholdCount == heatmap.strongholdCount
-                && range == heatmap.range
-                && Objects.equal(divineProviders, heatmap.divineProviders);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(strongholdCount, range, divineProviders);
+    @Value
+    public static class ProspectiveHeatmap {
+        int strongholdCount;
+        int range;
+        List<DivineProvider> divineProviders;
     }
 }

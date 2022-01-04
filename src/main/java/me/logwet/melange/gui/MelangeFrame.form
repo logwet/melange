@@ -7,7 +7,7 @@
     <properties/>
     <border type="none"/>
     <children>
-      <tabbedpane id="4c3aa" binding="tabbedPane">
+      <tabbedpane id="4c3aa">
         <constraints border-constraint="Center"/>
         <properties/>
         <border type="none"/>
@@ -19,7 +19,7 @@
             <properties/>
             <border type="none"/>
             <children>
-              <grid id="c52bc" binding="divineLeftPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
+              <grid id="c52bc" layout-manager="BorderLayout" hgap="0" vgap="0">
                 <constraints border-constraint="West"/>
                 <properties/>
                 <border type="none"/>
@@ -27,24 +27,39 @@
                   <component id="b70d6" class="javax.swing.JLabel" binding="divineRendererLabel" custom-create="true">
                     <constraints border-constraint="Center"/>
                     <properties>
+                      <horizontalTextPosition value="2"/>
                       <text value=""/>
                     </properties>
                   </component>
-                  <component id="95e4f" class="javax.swing.JTextArea" binding="divineMetaTextArea">
+                  <grid id="5411f" layout-manager="BorderLayout" hgap="0" vgap="0">
                     <constraints border-constraint="South"/>
-                    <properties>
-                      <editable value="false"/>
-                      <text value="Info Area"/>
-                    </properties>
-                  </component>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <component id="95e4f" class="javax.swing.JTextArea" binding="divineMetaLeftTextArea">
+                        <constraints border-constraint="West"/>
+                        <properties>
+                          <editable value="false"/>
+                          <text value="Position&#10;Probability" noi18n="true"/>
+                        </properties>
+                      </component>
+                      <component id="7967e" class="javax.swing.JTextArea" binding="divineMetaRightTextArea">
+                        <constraints border-constraint="East"/>
+                        <properties>
+                          <editable value="false"/>
+                          <text value="Timing" noi18n="true"/>
+                        </properties>
+                      </component>
+                    </children>
+                  </grid>
                 </children>
               </grid>
-              <grid id="23ae2" binding="divineRightPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
+              <grid id="23ae2" layout-manager="BorderLayout" hgap="0" vgap="0">
                 <constraints border-constraint="Center"/>
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <grid id="6f336" binding="divineInputPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
+                  <grid id="6f336" layout-manager="BorderLayout" hgap="0" vgap="0">
                     <constraints border-constraint="South"/>
                     <properties/>
                     <border type="none"/>
@@ -99,7 +114,7 @@
                       </grid>
                     </children>
                   </grid>
-                  <scrollpane id="94cf5" binding="divineSelectionScrollPane">
+                  <scrollpane id="94cf5">
                     <constraints border-constraint="Center"/>
                     <properties/>
                     <border type="none"/>
@@ -192,23 +207,24 @@
                 <properties>
                   <contentType value="text/html"/>
                   <editable value="false"/>
-                  <text value="&lt;html&gt;&#13;  &lt;head&gt;&#13;    &#13;  &lt;/head&gt;&#13;  &lt;body&gt;&#13;    &lt;p style=&quot;margin-top: 0&quot;&gt;&#13;      &#13;    &lt;/p&gt;&#13;    Created by &lt;a href=&quot;https://linktr.ee/logwet&quot;&gt;logwet&lt;/a&gt;, with algorithm &#13;    contributions from al (immigrant).&#13;&#13;    &lt;p&gt;&#13;      Inspired by &lt;a href=&quot; https://github.com/mjtb49/DivineHeatmapGenerator&quot;&gt;DivineHeatmapGenerator&lt;/a&gt; &#13;      by Matthew Bolan.&#13;    &lt;/p&gt;&#13;    &lt;p&gt;&#13;      Icon made by &lt;a href=&quot;https://www.flaticon.com/authors/smashicons&quot; title=&quot;Smashicons&quot;&gt;Smashicons&lt;/a&gt; &#13;      from &lt;a href=&quot;https://www.flaticon.com/&quot; title=&quot;Flaticon&quot;&gt;www.flaticon.com&lt;/a&gt;&#13;    &lt;/p&gt;&#13;    &lt;p&gt;&#13;      Splashscreen by &lt;a href=&quot;https://unsplash.com/@wolfgang_hasselmann?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText&quot;&gt;Wolfgang &#13;      Hasselmann&lt;/a&gt; on &lt;a href=&quot;https://unsplash.com/s/photos/dune?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText&quot;&gt;Unsplash&lt;/a&gt;&#13;    &lt;/p&gt;&#13;  &lt;/body&gt;&#13;&lt;/html&gt;&#13;"/>
+                  <font size="16"/>
+                  <text value="&lt;html&gt;&#10;  &lt;head&gt;&#10;    &#10;  &lt;/head&gt;&#10;  &lt;body&gt;&#10;    Copyright (C) 2022 &lt;a href=&quot;https://linktr.ee/logwet&quot;&gt;logwet&lt;/a&gt;, licensed &#10;    under the &lt;a href=&quot;https://www.gnu.org/licenses/gpl-3.0.en.html&quot;&gt;GNU &#10;    GPL-3.0&lt;/a&gt; license.&lt;br&gt;Source code published at &lt;a href=&quot;https://github.com/logwet/melange&quot;&gt;https://github.com/logwet/melange&lt;/a&gt;&#10;&#10;    &lt;p&gt;&#10;      Thanks to:&#10;    &lt;/p&gt;&#10;    &lt;ul&gt;&#10;      &lt;li&gt;&#10;        al (immigrant) for math contributions&#10;      &lt;/li&gt;&#10;      &lt;li&gt;&#10;        Ybot76 for suggestions&#10;      &lt;/li&gt;&#10;    &lt;/ul&gt;&#10;    Inspired by &lt;a href=&quot;https://github.com/mjtb49/DivineHeatmapGenerator&quot;&gt;DivineHeatmapGenerator&lt;/a&gt; &#10;    by &lt;a href=&quot;https://twitter.com/admiral_stapler&quot;&gt;Matthew Bolan&lt;/a&gt;&#10;&#10;    &lt;p&gt;&#10;      Icon made by &lt;a href=&quot;https://www.flaticon.com/authors/smashicons&quot; title=&quot;Smashicons&quot;&gt;Smashicons&lt;/a&gt; &#10;      from &lt;a href=&quot;https://www.flaticon.com/&quot; title=&quot;Flaticon&quot;&gt;www.flaticon.com&lt;/a&gt;&lt;br&gt;Splashscreen &#10;      photo by &lt;a href=&quot;https://unsplash.com/@wolfgang_hasselmann&quot;&gt;Wolfgang &#10;      Hasselmann&lt;/a&gt; on &lt;a href=&quot;https://unsplash.com/s/photos/dune&quot;&gt;Unsplash&lt;/a&gt;&#10;    &lt;/p&gt;&#10;  &lt;/body&gt;&#10;&lt;/html&gt;&#10;" noi18n="true"/>
                 </properties>
               </component>
             </children>
           </grid>
         </children>
       </tabbedpane>
-      <grid id="76c2" binding="melangeMetaPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
+      <grid id="76c2" layout-manager="BorderLayout" hgap="0" vgap="0">
         <constraints border-constraint="South"/>
         <properties/>
-        <border type="none"/>
+        <border type="etched"/>
         <children>
           <component id="e3da2" class="javax.swing.JTextArea" binding="melangeSystemStatusTextField">
             <constraints border-constraint="West"/>
             <properties>
               <editable value="false"/>
-              <text value="OpenCL Status&#10;System Status"/>
+              <text value="OpenCL Status&#10;System Status" noi18n="true"/>
             </properties>
           </component>
           <component id="1de6c" class="javax.swing.JTextPane" binding="melangeVersionTextPane">
@@ -216,7 +232,7 @@
             <properties>
               <contentType value="text/plain"/>
               <editable value="false"/>
-              <text value="Version&#10;Update status"/>
+              <text value="Version&#10;Update status" noi18n="true"/>
             </properties>
           </component>
         </children>
