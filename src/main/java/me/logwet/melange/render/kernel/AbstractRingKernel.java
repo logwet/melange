@@ -51,12 +51,6 @@ public abstract class AbstractRingKernel extends AbstractSharedKernel {
         return sqrt(x * x + y * y);
     }
 
-    protected double calcDistance(int x0, int y0, int x1, int y1) {
-        int x = x0 - x1;
-        int y = y0 - y1;
-        return calcMagnitude(x, y);
-    }
-
     /**
      * Probability Density Function of the Stronghold's distance from 0,0.
      *
