@@ -13,8 +13,6 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import javax.swing.ImageIcon;
@@ -24,6 +22,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -52,8 +51,8 @@ public class MelangeFrame extends JFrame {
                     if (e.getEventType() == EventType.ACTIVATED) {
                         try {
                             Desktop.getDesktop().browse(e.getURL().toURI());
-                        } catch (IOException | URISyntaxException ex) {
-                            LOGGER.error("Unable to open hyperlink");
+                        } catch (Exception ex) {
+                            LOGGER.error("Unable to open hyperlink", ex);
                         }
                     }
                 };
@@ -66,18 +65,22 @@ public class MelangeFrame extends JFrame {
     protected JSplitPane settingsSplitPane;
     protected JCheckBox checkBox1;
     protected JCheckBox checkBox2;
-    protected JTextArea divineMetaLeftTextArea;
-    protected JLabel divineSelectionMetaLabel;
-    protected JTextField divineSelectionTextField;
-    protected JButton divineForceRenderButton;
-    protected JButton divineResetbutton;
-    protected JList divineSelectionList;
-    protected JTree divineSelectionTree;
+    protected JButton renderForceRenderButton;
+    protected JButton renderResetbutton;
+    protected JList providerDisplayList;
+    protected JTree providerSelectionTree;
     protected JPanel creditsPanel;
     protected JTextPane creditsTextPane;
     protected JTextArea melangeSystemStatusTextField;
     protected JTextPane melangeVersionTextPane;
-    protected JTextArea divineMetaRightTextArea;
+    protected JTextField providerSelectionTextField;
+    protected JButton providerAddButton;
+    protected JButton providerRemoveButton;
+    protected JTextPane providerInfoTextPane;
+    protected JTextPane divineMetaLeftTextPane;
+    protected JTextPane divineMetaRightTextPane;
+    protected JSpinner mainRangeSelectionSpinner;
+    protected JCheckBox checkBox3;
 
     protected boolean lightEditsPending = false;
     protected boolean heavyEditsPending = false;
@@ -104,10 +107,10 @@ public class MelangeFrame extends JFrame {
                     }
                 });
 
-        divineForceRenderButton.addActionListener(
+        renderForceRenderButton.addActionListener(
                 e -> Melange.resetHeatmapAsync(this::updateRender));
 
-        divineResetbutton.addActionListener(
+        renderResetbutton.addActionListener(
                 e -> {
                     Melange.removeAllProviders();
                     Melange.resetHeatmapAsync(this::updateRender);

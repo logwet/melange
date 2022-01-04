@@ -2,14 +2,16 @@
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="me.logwet.melange.gui.MelangeFrame">
   <grid id="27dc6" binding="mainPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
     <constraints>
-      <xy x="20" y="20" width="397" height="523"/>
+      <xy x="20" y="20" width="417" height="523"/>
     </constraints>
     <properties/>
     <border type="none"/>
     <children>
       <tabbedpane id="4c3aa">
         <constraints border-constraint="Center"/>
-        <properties/>
+        <properties>
+          <tabPlacement value="1"/>
+        </properties>
         <border type="none"/>
         <children>
           <grid id="771d7" binding="divinePanel" layout-manager="BorderLayout" hgap="0" vgap="0">
@@ -36,18 +38,20 @@
                     <properties/>
                     <border type="none"/>
                     <children>
-                      <component id="95e4f" class="javax.swing.JTextArea" binding="divineMetaLeftTextArea">
+                      <component id="896fa" class="javax.swing.JTextPane" binding="divineMetaLeftTextPane">
                         <constraints border-constraint="West"/>
                         <properties>
                           <editable value="false"/>
-                          <text value="Position&#10;Probability" noi18n="true"/>
+                          <text value="Position&#10;Probability"/>
+                          <toolTipText value="The first set of coords are for the nether,&#10;the second for the overworld."/>
                         </properties>
                       </component>
-                      <component id="7967e" class="javax.swing.JTextArea" binding="divineMetaRightTextArea">
+                      <component id="9d7c5" class="javax.swing.JTextPane" binding="divineMetaRightTextPane">
                         <constraints border-constraint="East"/>
                         <properties>
                           <editable value="false"/>
-                          <text value="Timing" noi18n="true"/>
+                          <text value="Timing"/>
+                          <toolTipText value="How long it took to render&#10;the Heatmap you see above."/>
                         </properties>
                       </component>
                     </children>
@@ -59,55 +63,148 @@
                 <properties/>
                 <border type="none"/>
                 <children>
+                  <grid id="df873" layout-manager="BorderLayout" hgap="0" vgap="0">
+                    <constraints border-constraint="North"/>
+                    <properties/>
+                    <border type="etched"/>
+                    <children>
+                      <grid id="87c0b" layout-manager="BorderLayout" hgap="0" vgap="0">
+                        <constraints border-constraint="South"/>
+                        <properties/>
+                        <border type="none"/>
+                        <children>
+                          <component id="fc2e" class="javax.swing.JLabel">
+                            <constraints border-constraint="Center"/>
+                            <properties>
+                              <text value="Stronghold Range:"/>
+                              <toolTipText value="Configure the stronghold distance to generate&#10;a Heatmap for. eg. X% of stronghold Y blocks&#10;away or closer from this position."/>
+                            </properties>
+                          </component>
+                          <component id="18a71" class="javax.swing.JSpinner" binding="mainRangeSelectionSpinner">
+                            <constraints border-constraint="East"/>
+                            <properties>
+                              <toolTipText value="Configure the stronghold distance to generate&#10;a Heatmap for. eg. X% of stronghold Y blocks&#10;away or closer from this position."/>
+                            </properties>
+                          </component>
+                        </children>
+                      </grid>
+                      <grid id="46f02" layout-manager="BorderLayout" hgap="0" vgap="0">
+                        <constraints border-constraint="Center"/>
+                        <properties/>
+                        <border type="none"/>
+                        <children>
+                          <component id="ae58c" class="javax.swing.JLabel">
+                            <constraints border-constraint="Center"/>
+                            <properties>
+                              <text value="Automatically Refresh Render:"/>
+                              <toolTipText value="Automatically refresh the Heatmap whenever&#10;a Divine Provider is added, removed or modified."/>
+                            </properties>
+                          </component>
+                          <component id="dcdb1" class="javax.swing.JCheckBox" binding="checkBox3" default-binding="true">
+                            <constraints border-constraint="East"/>
+                            <properties>
+                              <selected value="true"/>
+                              <text value=""/>
+                              <toolTipText value="Automatically refresh the Heatmap whenever&#10;a Divine Provider is added, removed or modified."/>
+                            </properties>
+                          </component>
+                        </children>
+                      </grid>
+                    </children>
+                  </grid>
                   <grid id="6f336" layout-manager="BorderLayout" hgap="0" vgap="0">
                     <constraints border-constraint="South"/>
                     <properties/>
                     <border type="none"/>
                     <children>
-                      <component id="edbc5" class="javax.swing.JLabel" binding="divineSelectionMetaLabel">
-                        <constraints border-constraint="Center"/>
-                        <properties>
-                          <text value="Selection Meta"/>
-                        </properties>
-                      </component>
-                      <component id="f4112" class="javax.swing.JTextField" binding="divineSelectionTextField">
-                        <constraints border-constraint="South"/>
-                        <properties>
-                          <columns value="17"/>
-                        </properties>
-                      </component>
-                      <grid id="8bdae" layout-manager="GridBagLayout">
+                      <grid id="c493" layout-manager="GridBagLayout">
                         <constraints border-constraint="North"/>
                         <properties/>
                         <border type="none"/>
                         <children>
-                          <component id="c1183" class="javax.swing.JButton" binding="divineForceRenderButton">
+                          <component id="c1183" class="javax.swing.JButton" binding="renderForceRenderButton">
                             <constraints>
-                              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="2" indent="0" use-parent-layout="false"/>
+                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                               <gridbag weightx="1.0" weighty="1.0"/>
                             </constraints>
                             <properties>
-                              <text value="Rerender"/>
+                              <enabled value="true"/>
+                              <foreground color="-4473925"/>
+                              <horizontalAlignment value="0"/>
+                              <text value="Re-Render"/>
+                              <toolTipText value="Force Re-Render of Heatmap&#10;using existing providers"/>
                             </properties>
                           </component>
-                          <component id="8e52b" class="javax.swing.JTree" binding="divineSelectionTree">
+                          <component id="606e8" class="javax.swing.JButton" binding="renderResetbutton">
                             <constraints>
-                              <grid row="0" column="0" row-span="2" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-                              <gridbag weightx="0.0" weighty="0.0"/>
+                              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="1.0" weighty="1.0"/>
                             </constraints>
+                            <properties>
+                              <text value="Reset"/>
+                              <toolTipText value="Reset providers and&#10;render default Heatmap"/>
+                            </properties>
+                          </component>
+                        </children>
+                      </grid>
+                      <grid id="e5e7b" layout-manager="BorderLayout" hgap="0" vgap="0">
+                        <constraints border-constraint="Center"/>
+                        <properties/>
+                        <border type="none"/>
+                        <children>
+                          <component id="8e52b" class="javax.swing.JTree" binding="providerSelectionTree">
+                            <constraints border-constraint="Center"/>
                             <properties>
                               <rootVisible value="false"/>
                               <scrollsOnExpand value="false"/>
                               <showsRootHandles value="true"/>
                             </properties>
                           </component>
-                          <component id="606e8" class="javax.swing.JButton" binding="divineResetbutton">
-                            <constraints>
-                              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="2" indent="0" use-parent-layout="false"/>
-                              <gridbag weightx="0.0" weighty="0.0"/>
-                            </constraints>
+                          <grid id="8adda" layout-manager="GridBagLayout">
+                            <constraints border-constraint="East"/>
+                            <properties/>
+                            <border type="none"/>
+                            <children>
+                              <component id="cc5c3" class="javax.swing.JButton" binding="providerAddButton">
+                                <constraints>
+                                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="4" fill="2" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="0.0" weighty="0.0"/>
+                                </constraints>
+                                <properties>
+                                  <text value="Add"/>
+                                  <toolTipText value="Add selected provider to list"/>
+                                </properties>
+                              </component>
+                              <component id="42ae0" class="javax.swing.JButton" binding="providerRemoveButton">
+                                <constraints>
+                                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="4" fill="2" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="0.0" weighty="0.0"/>
+                                </constraints>
+                                <properties>
+                                  <text value="Remove"/>
+                                  <toolTipText value="Remove selected provider from list"/>
+                                </properties>
+                              </component>
+                            </children>
+                          </grid>
+                        </children>
+                      </grid>
+                      <grid id="3a9c6" layout-manager="BorderLayout" hgap="0" vgap="0">
+                        <constraints border-constraint="South"/>
+                        <properties/>
+                        <border type="none"/>
+                        <children>
+                          <component id="576b7" class="javax.swing.JTextField" binding="providerSelectionTextField">
+                            <constraints border-constraint="South"/>
                             <properties>
-                              <text value="Reset"/>
+                              <columns value="17"/>
+                            </properties>
+                          </component>
+                          <component id="50d6d" class="javax.swing.JTextPane" binding="providerInfoTextPane">
+                            <constraints border-constraint="Center"/>
+                            <properties>
+                              <editable value="false"/>
+                              <text value="Selection meta&#10;Selection status"/>
                             </properties>
                           </component>
                         </children>
@@ -116,10 +213,12 @@
                   </grid>
                   <scrollpane id="94cf5">
                     <constraints border-constraint="Center"/>
-                    <properties/>
+                    <properties>
+                      <verticalScrollBarPolicy value="22"/>
+                    </properties>
                     <border type="none"/>
                     <children>
-                      <component id="9936e" class="javax.swing.JList" binding="divineSelectionList">
+                      <component id="9936e" class="javax.swing.JList" binding="providerDisplayList">
                         <constraints/>
                         <properties>
                           <model>
@@ -153,7 +252,11 @@
                             <item value="Test"/>
                             <item value="Test"/>
                           </model>
+                          <toolTipText value="Divine Providers"/>
                         </properties>
+                        <clientProperties>
+                          <List.isFileList class="java.lang.Boolean" value="false"/>
+                        </clientProperties>
                       </component>
                     </children>
                   </scrollpane>
@@ -208,7 +311,7 @@
                   <contentType value="text/html"/>
                   <editable value="false"/>
                   <font size="16"/>
-                  <text value="&lt;html&gt;&#10;  &lt;head&gt;&#10;    &#10;  &lt;/head&gt;&#10;  &lt;body&gt;&#10;    Copyright (C) 2022 &lt;a href=&quot;https://linktr.ee/logwet&quot;&gt;logwet&lt;/a&gt;, licensed &#10;    under the &lt;a href=&quot;https://www.gnu.org/licenses/gpl-3.0.en.html&quot;&gt;GNU &#10;    GPL-3.0&lt;/a&gt; license.&lt;br&gt;Source code published at &lt;a href=&quot;https://github.com/logwet/melange&quot;&gt;https://github.com/logwet/melange&lt;/a&gt;&#10;&#10;    &lt;p&gt;&#10;      Thanks to:&#10;    &lt;/p&gt;&#10;    &lt;ul&gt;&#10;      &lt;li&gt;&#10;        al (immigrant) for math contributions&#10;      &lt;/li&gt;&#10;      &lt;li&gt;&#10;        Ybot76 for suggestions&#10;      &lt;/li&gt;&#10;    &lt;/ul&gt;&#10;    Inspired by &lt;a href=&quot;https://github.com/mjtb49/DivineHeatmapGenerator&quot;&gt;DivineHeatmapGenerator&lt;/a&gt; &#10;    by &lt;a href=&quot;https://twitter.com/admiral_stapler&quot;&gt;Matthew Bolan&lt;/a&gt;&#10;&#10;    &lt;p&gt;&#10;      Icon made by &lt;a href=&quot;https://www.flaticon.com/authors/smashicons&quot; title=&quot;Smashicons&quot;&gt;Smashicons&lt;/a&gt; &#10;      from &lt;a href=&quot;https://www.flaticon.com/&quot; title=&quot;Flaticon&quot;&gt;www.flaticon.com&lt;/a&gt;&lt;br&gt;Splashscreen &#10;      photo by &lt;a href=&quot;https://unsplash.com/@wolfgang_hasselmann&quot;&gt;Wolfgang &#10;      Hasselmann&lt;/a&gt; on &lt;a href=&quot;https://unsplash.com/s/photos/dune&quot;&gt;Unsplash&lt;/a&gt;&#10;    &lt;/p&gt;&#10;  &lt;/body&gt;&#10;&lt;/html&gt;&#10;" noi18n="true"/>
+                  <text value="&lt;html&gt;&#10;  &lt;head&gt;&#10;    &#10;  &lt;/head&gt;&#10;  &lt;body&gt;&#10;    Copyright (C) 2022 &lt;a href=&quot;https://linktr.ee/logwet&quot;&gt;logwet&lt;/a&gt;, licensed &#10;    under the &lt;a href=&quot;https://www.gnu.org/licenses/gpl-3.0.en.html&quot;&gt;GNU &#10;    GPL-3.0&lt;/a&gt; license.&lt;br&gt;Source code published at &lt;a href=&quot;https://github.com/logwet/melange&quot;&gt;https://github.com/logwet/melange&lt;/a&gt;&#10;&#10;    &lt;p&gt;&#10;      Thanks to:&#10;    &lt;/p&gt;&#10;    &lt;ul&gt;&#10;      &lt;li&gt;&#10;        &lt;a href=&quot;https://github.com/alanlu776&quot;&gt;al&lt;/a&gt; (immigrant) for math &#10;        contributions&#10;      &lt;/li&gt;&#10;      &lt;li&gt;&#10;        Ybot76 for suggestions&#10;      &lt;/li&gt;&#10;    &lt;/ul&gt;&#10;    Inspired by &lt;a href=&quot;https://github.com/mjtb49/DivineHeatmapGenerator&quot;&gt;DivineHeatmapGenerator&lt;/a&gt; &#10;    by &lt;a href=&quot;https://twitter.com/admiral_stapler&quot;&gt;Matthew Bolan&lt;/a&gt;&#10;&#10;    &lt;p&gt;&#10;      Icon made by &lt;a href=&quot;https://www.flaticon.com/authors/smashicons&quot; title=&quot;Smashicons&quot;&gt;Smashicons&lt;/a&gt; &#10;      from &lt;a href=&quot;https://www.flaticon.com/&quot; title=&quot;Flaticon&quot;&gt;www.flaticon.com&lt;/a&gt;&lt;br&gt;Splashscreen &#10;      photo by &lt;a href=&quot;https://unsplash.com/@wolfgang_hasselmann&quot;&gt;Wolfgang &#10;      Hasselmann&lt;/a&gt; on &lt;a href=&quot;https://unsplash.com/s/photos/dune&quot;&gt;Unsplash&lt;/a&gt;&#10;    &lt;/p&gt;&#10;  &lt;/body&gt;&#10;&lt;/html&gt;&#10;"/>
                 </properties>
               </component>
             </children>
@@ -224,7 +327,8 @@
             <constraints border-constraint="West"/>
             <properties>
               <editable value="false"/>
-              <text value="OpenCL Status&#10;System Status" noi18n="true"/>
+              <text value="OpenCL Status&#10;System Status"/>
+              <toolTipText value="Melange will, on systems with supported hardware and device&#10;drivers, do certain calculations on your GPU for performance.&#10;Look at the README on the GitHub for more info."/>
             </properties>
           </component>
           <component id="1de6c" class="javax.swing.JTextPane" binding="melangeVersionTextPane">
@@ -232,7 +336,8 @@
             <properties>
               <contentType value="text/plain"/>
               <editable value="false"/>
-              <text value="Version&#10;Update status" noi18n="true"/>
+              <text value="Version&#10;Update status"/>
+              <toolTipText value="On launch the program will automatically query the&#10;GitHub API to check if a release with a newer version&#10;number is available. If so, it will notify you here."/>
             </properties>
           </component>
         </children>

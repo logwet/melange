@@ -55,14 +55,12 @@ public class Melange {
 
     public static void onClosing() {
         try {
-            synchronized (HAS_SHUTDOWN) {
-                if (!HAS_SHUTDOWN.get()) {
+            if (!HAS_SHUTDOWN.getAndSet(true)) {
+                synchronized (HAS_SHUTDOWN) {
                     EXECUTOR.shutdownNow();
 
                     Config.save();
                     SharedKernels.closeAll();
-
-                    HAS_SHUTDOWN.set(true);
                 }
             }
         } catch (Exception e) {
