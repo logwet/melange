@@ -70,7 +70,11 @@ public class PrepareBufferKernel extends AbstractRingKernel implements DoubleArr
                     k++;
                 }
 
-                input1[i] = s / k;
+                if (k > 0) {
+                    input1[i] = s / k;
+                } else {
+                    input1[i] = 0;
+                }
             } else {
                 int x = calcX(i);
                 int y = calcY(i);

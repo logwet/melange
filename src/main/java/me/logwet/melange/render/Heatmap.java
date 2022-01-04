@@ -17,8 +17,6 @@ import me.logwet.melange.kernel.SharedKernels;
 import me.logwet.melange.render.kernel.PrepareBufferKernel;
 import me.logwet.melange.render.kernel.PrepareImageKernel;
 import me.logwet.melange.render.kernel.RenderDivineKernel;
-import me.logwet.melange.render.kernel.ScaleKernel;
-import me.logwet.melange.util.ArrayHelper;
 import me.logwet.melange.util.BufferHolder;
 import me.logwet.melange.util.StrongholdData;
 import org.jetbrains.annotations.NotNull;
@@ -71,18 +69,8 @@ public class Heatmap {
         synchronized (SharedKernels.PREPARE_BUFFER) {
             PrepareBufferKernel prepareKernel = SharedKernels.PREPARE_BUFFER.get();
             prepareKernel.setup(strongholdData, range);
-            bufferHolder = new BufferHolder(prepareKernel.render(), false, true);
+            bufferHolder = new BufferHolder(prepareKernel.render(), true, false);
         }
-
-        synchronized (SharedKernels.SCALE) {
-            ScaleKernel scaleKernel = SharedKernels.SCALE.get();
-            scaleKernel.setup(
-                    bufferHolder.getBuffer(),
-                    ArrayHelper.normaliseSumFactor(bufferHolder.getSum()));
-            scaleKernel.render();
-        }
-
-        bufferHolder = bufferHolder.update(true, false);
     }
 
     private BufferedImage genRender() {

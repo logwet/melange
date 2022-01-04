@@ -181,10 +181,13 @@ public class MelangeFrame extends JFrame {
                                                         (y - MelangeConstants.HALF_WIDTH)
                                                                 * MelangeConstants.SCALING_FACTOR);
 
-                                //                                double p =
-                                // Math.round(bufferHolder.getBuffer()[ArrayHelper.getIndex(x, y)] *
-                                // 10000) / 100D;
-                                double p = bufferHolder.getBuffer()[ArrayHelper.getIndex(x, y)];
+                                double p =
+                                        Math.round(
+                                                        bufferHolder
+                                                                        .getBuffer()[
+                                                                        ArrayHelper.getIndex(x, y)]
+                                                                * 10000)
+                                                / 100D;
 
                                 heatmapRendererLabel.setToolTipText(dx + " " + dy + " " + p + "%");
                             }
