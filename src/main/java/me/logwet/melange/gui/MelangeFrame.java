@@ -7,9 +7,12 @@ import com.aparapi.internal.kernel.KernelManager;
 import com.aparapi.internal.opencl.OpenCLPlatform;
 import java.awt.Desktop;
 import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
@@ -29,16 +32,20 @@ import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
+import javax.swing.ToolTipManager;
 import javax.swing.event.HyperlinkEvent.EventType;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import me.logwet.melange.Melange;
+import me.logwet.melange.MelangeConstants;
 import me.logwet.melange.config.Config;
 import me.logwet.melange.config.Metadata;
 import me.logwet.melange.config.Metadata.Update;
 import me.logwet.melange.render.Heatmap;
+import me.logwet.melange.util.ArrayHelper;
+import me.logwet.melange.util.BufferHolder;
 import org.slf4j.LoggerFactory;
 
 public class MelangeFrame extends JFrame {
@@ -59,7 +66,7 @@ public class MelangeFrame extends JFrame {
     }
 
     protected JPanel mainPanel;
-    protected JLabel divineRendererLabel;
+    protected JLabel heatmapRendererLabel;
     protected JPanel divinePanel;
     protected JPanel settingsPanel;
     protected JSplitPane settingsSplitPane;
@@ -150,6 +157,43 @@ public class MelangeFrame extends JFrame {
                 });
 
         creditsTextPane.addHyperlinkListener(HYPERLINK_LISTENER);
+
+        heatmapRendererLabel.addMouseMotionListener(
+                new MouseMotionAdapter() {
+                    @Override
+                    public void mouseMoved(MouseEvent e) {
+                        if (Objects.nonNull(Melange.getHeatmap())) {
+                            BufferHolder bufferHolder = Melange.getHeatmap().getBufferHolder();
+                            if (Objects.nonNull(bufferHolder)) {
+                                Point location = e.getLocationOnScreen();
+                                Point offset = e.getComponent().getLocationOnScreen();
+                                int x = (location.x - offset.x);
+                                int y = MelangeConstants.X_MASK - (location.y - offset.y);
+
+                                int dx =
+                                        (int)
+                                                Math.round(
+                                                        (x - MelangeConstants.HALF_WIDTH)
+                                                                * MelangeConstants.SCALING_FACTOR);
+                                int dy =
+                                        (int)
+                                                Math.round(
+                                                        (y - MelangeConstants.HALF_WIDTH)
+                                                                * MelangeConstants.SCALING_FACTOR);
+
+                                //                                double p =
+                                // Math.round(bufferHolder.getBuffer()[ArrayHelper.getIndex(x, y)] *
+                                // 10000) / 100D;
+                                double p = bufferHolder.getBuffer()[ArrayHelper.getIndex(x, y)];
+
+                                heatmapRendererLabel.setToolTipText(dx + " " + dy + " " + p + "%");
+                            }
+                        }
+                    }
+                });
+
+        ToolTipManager.sharedInstance().setDismissDelay(Integer.MAX_VALUE);
+        ToolTipManager.sharedInstance().setInitialDelay(0);
 
         this.pack();
         this.addDataToTextLabels();
@@ -244,7 +288,7 @@ public class MelangeFrame extends JFrame {
     private void createUIComponents() {
         // TODO: place custom component creation code here
 
-        divineRendererLabel = new JLabel();
+        heatmapRendererLabel = new JLabel();
 
         try {
             Melange.resetHeatmapAsync(this::updateRender).get();
@@ -254,7 +298,7 @@ public class MelangeFrame extends JFrame {
     }
 
     private void addRender(BufferedImage render) {
-        divineRendererLabel.setIcon(new ImageIcon(render));
+        heatmapRendererLabel.setIcon(new ImageIcon(render));
         LOGGER.info("Updated image object");
     }
 

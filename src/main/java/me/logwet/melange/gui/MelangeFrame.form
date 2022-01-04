@@ -26,7 +26,7 @@
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <component id="b70d6" class="javax.swing.JLabel" binding="divineRendererLabel" custom-create="true">
+                  <component id="b70d6" class="javax.swing.JLabel" binding="heatmapRendererLabel" custom-create="true">
                     <constraints border-constraint="Center"/>
                     <properties>
                       <horizontalTextPosition value="2"/>
