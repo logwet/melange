@@ -24,11 +24,11 @@ public abstract class AbstractRingKernel extends AbstractSharedKernel {
     }
 
     protected int calcY(int i) {
-        return MelangeConstants.X_MASK - (i >> MelangeConstants.WIDTH_BITS);
+        return i >> MelangeConstants.WIDTH_BITS;
     }
 
     protected int calcIndex(int x, int y) {
-        return ((MelangeConstants.X_MASK - y) << MelangeConstants.WIDTH_BITS) ^ x;
+        return (y << MelangeConstants.WIDTH_BITS) ^ x;
     }
 
     protected double normalizeAngle(double x) {

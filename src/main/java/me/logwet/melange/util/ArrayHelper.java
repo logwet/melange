@@ -35,10 +35,10 @@ public class ArrayHelper {
     }
 
     public static int getY(int i) {
-        return MelangeConstants.X_MASK - (i >> MelangeConstants.WIDTH_BITS);
+        return i >> MelangeConstants.WIDTH_BITS;
     }
 
     public static int getIndex(int x, int y) {
-        return ((MelangeConstants.X_MASK - y) << MelangeConstants.WIDTH_BITS) ^ x;
+        return (y << MelangeConstants.WIDTH_BITS) ^ x;
     }
 }

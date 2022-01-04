@@ -16,6 +16,7 @@ import java.awt.event.MouseMotionAdapter;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import javax.swing.ImageIcon;
@@ -182,14 +183,15 @@ public class MelangeFrame extends JFrame {
                                                                 * MelangeConstants.SCALING_FACTOR);
 
                                 double p =
-                                        Math.round(
-                                                        bufferHolder
-                                                                        .getBuffer()[
-                                                                        ArrayHelper.getIndex(x, y)]
-                                                                * 10000)
-                                                / 100D;
+                                        bufferHolder.getBuffer()[ArrayHelper.getIndex(x, y)] * 100D;
 
-                                heatmapRendererLabel.setToolTipText(dx + " " + dy + " " + p + "%");
+                                heatmapRendererLabel.setToolTipText(
+                                        dx
+                                                + " "
+                                                + dy
+                                                + " "
+                                                + formatDoubleToTwoDecimalPlaces(p)
+                                                + "%");
                             }
                         }
                     }
@@ -205,6 +207,16 @@ public class MelangeFrame extends JFrame {
 
         this.setIconImage(
                 Toolkit.getDefaultToolkit().getImage(getClass().getResource("/melange/icon.png")));
+    }
+
+    private static String formatDoubleToTwoDecimalPlaces(double x) {
+        if (x == 0) {
+            return String.valueOf(0D);
+        } else if (x < 0.01) {
+            return String.format(Locale.ROOT, "%.2e", x);
+        } else {
+            return String.valueOf(Math.round(x * 100) / 100D);
+        }
     }
 
     private void addDataToTextLabels() {
