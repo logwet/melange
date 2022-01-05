@@ -18,6 +18,7 @@ import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -247,57 +248,53 @@ public class MelangeFrame extends JFrame {
         final String versionString = "Melange v" + Metadata.VERSION + " by logwet";
         melangeVersionTextPane.setText(versionString);
 
-        new Thread(
-                        () -> {
-                            Update update = Metadata.getUpdate();
-                            final Runnable runnable;
+        CompletableFuture.runAsync(
+                () -> {
+                    Update update = Metadata.getUpdate();
+                    final Runnable runnable;
 
-                            if (update.isValid()) {
-                                if (update.isShouldUpdate()) {
-                                    final String updateString =
-                                            versionString
-                                                    + "<br> Update available! Get <a href = \""
-                                                    + update.getUrl().toString()
-                                                    + "\">v"
-                                                    + update.getLatestVer().getOriginalValue()
-                                                    + "</a>";
+                    if (update.isValid()) {
+                        if (update.isShouldUpdate()) {
+                            final String updateString =
+                                    versionString
+                                            + "<br> Update available! Get <a href = \""
+                                            + update.getUrl().toString()
+                                            + "\">v"
+                                            + update.getLatestVer().getOriginalValue()
+                                            + "</a>";
 
-                                    runnable =
-                                            () -> {
-                                                melangeVersionTextPane.setContentType("text/html");
-                                                melangeVersionTextPane.setText(updateString);
-                                                melangeVersionTextPane.addHyperlinkListener(
-                                                        HYPERLINK_LISTENER);
-                                            };
-                                } else {
-                                    runnable =
-                                            () ->
-                                                    melangeVersionTextPane.setText(
-                                                            versionString
-                                                                    + "\n You are using the latest version!");
-                                }
-                            } else {
-                                runnable =
-                                        () ->
-                                                melangeVersionTextPane.setText(
-                                                        versionString
-                                                                + "\n Unable to query for latest version!");
-                            }
-
-                            SwingUtilities.invokeLater(
+                            runnable =
                                     () -> {
-                                        runnable.run();
+                                        melangeVersionTextPane.setContentType("text/html");
+                                        melangeVersionTextPane.setText(updateString);
+                                        melangeVersionTextPane.addHyperlinkListener(
+                                                HYPERLINK_LISTENER);
+                                    };
+                        } else {
+                            runnable =
+                                    () ->
+                                            melangeVersionTextPane.setText(
+                                                    versionString
+                                                            + "\n You are using the latest version!");
+                        }
+                    } else {
+                        runnable =
+                                () ->
+                                        melangeVersionTextPane.setText(
+                                                versionString
+                                                        + "\n Unable to query for latest version!");
+                    }
 
-                                        StyledDocument style =
-                                                melangeVersionTextPane.getStyledDocument();
-                                        SimpleAttributeSet align = new SimpleAttributeSet();
-                                        StyleConstants.setAlignment(
-                                                align, StyleConstants.ALIGN_RIGHT);
-                                        style.setParagraphAttributes(
-                                                0, style.getLength(), align, false);
-                                    });
-                        })
-                .start();
+                    SwingUtilities.invokeLater(
+                            () -> {
+                                runnable.run();
+
+                                StyledDocument style = melangeVersionTextPane.getStyledDocument();
+                                SimpleAttributeSet align = new SimpleAttributeSet();
+                                StyleConstants.setAlignment(align, StyleConstants.ALIGN_RIGHT);
+                                style.setParagraphAttributes(0, style.getLength(), align, false);
+                            });
+                });
     }
 
     private void createUIComponents() {
