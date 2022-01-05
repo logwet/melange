@@ -1,27 +1,26 @@
 package me.logwet.melange.util;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import org.apache.commons.lang3.concurrent.CallableBackgroundInitializer;
 
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class BufferHolder {
     @EqualsAndHashCode.Include @Getter private final double[] buffer;
 
-    private CallableBackgroundInitializer<Double> max;
-    private CallableBackgroundInitializer<Double> sum;
+    private Future<Double> max;
+    private Future<Double> sum;
 
     public BufferHolder(double[] buffer, boolean maxEnabled, boolean sumEnabled) {
         this.buffer = buffer;
 
         if (maxEnabled) {
-            this.max = new CallableBackgroundInitializer<>(() -> ArrayHelper.maxArray(this.buffer));
-            this.max.start();
+            this.max = CompletableFuture.supplyAsync(() -> ArrayHelper.maxArray(this.buffer));
         }
 
         if (sumEnabled) {
-            this.sum = new CallableBackgroundInitializer<>(() -> ArrayHelper.sumArray(this.buffer));
-            this.sum.start();
+            this.sum = CompletableFuture.supplyAsync(() -> ArrayHelper.sumArray(this.buffer));
         }
     }
 
