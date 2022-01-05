@@ -16,14 +16,12 @@ public class PrepareBufferKernel extends AbstractRingKernel implements DoubleArr
     protected double factor2;
     protected double factor3;
 
-    protected int convolve2Enabled = 0;
-
     protected double[] convolve1;
     protected int convolve1Range;
     protected double[] convolve2;
     protected int convolve2Range;
 
-    public void setup(StrongholdData strongholdData, int r, double[] convolve2) {
+    public void setup(StrongholdData strongholdData, final double[] convolve1, int r) {
         this.enabled = 1;
 
         this.input1 = strongholdData.getData(0);
@@ -34,42 +32,40 @@ public class PrepareBufferKernel extends AbstractRingKernel implements DoubleArr
         this.factor2 = strongholdData.getFactor(1);
         this.factor3 = strongholdData.getFactor(2);
 
+        this.convolve1 = convolve1;
+        if (this.convolve1.length > 1) {
+            this.convolve1Range = (((int) Math.sqrt(this.convolve2.length)) - 1) / 2;
+        } else {
+            this.convolve1Range = 0;
+        }
+
         double rawRange = r / MelangeConstants.SCALING_FACTOR;
         double maxDist = rawRange * rawRange;
-        convolve1Range = (int) Math.ceil(rawRange);
+        this.convolve2Range = (int) Math.ceil(rawRange);
 
-        if (convolve1Range > 0) {
-            int convolveWidth = 2 * convolve1Range + 1;
+        if (convolve2Range > 0) {
+            int convolveWidth = 2 * convolve2Range + 1;
             int convolveLength = convolveWidth * convolveWidth;
 
-            convolve1 = new double[convolveLength];
+            this.convolve2 = new double[convolveLength];
 
-            for (int x0 = -convolve1Range; x0 < convolveWidth - convolve1Range; x0++) {
-                for (int y0 = -convolve1Range; y0 < convolveWidth - convolve1Range; y0++) {
+            for (int x0 = -convolve2Range; x0 < convolveWidth - convolve2Range; x0++) {
+                for (int y0 = -convolve2Range; y0 < convolveWidth - convolve2Range; y0++) {
                     if (x0 * x0 + y0 * y0 <= maxDist) {
-                        int x = x0 + convolve1Range;
-                        int y = y0 + convolve1Range;
+                        int x = x0 + convolve2Range;
+                        int y = y0 + convolve2Range;
 
-                        convolve1[y * convolveWidth + x] = 1;
+                        this.convolve2[y * convolveWidth + x] = 1;
                     }
                 }
             }
         } else {
-            convolve1 = new double[1];
-        }
-
-        this.convolve2 = convolve2;
-        if (this.convolve2.length > 1) {
-            this.convolve2Enabled = 1;
-            this.convolve2Range = (((int) Math.sqrt(this.convolve2.length)) - 1) / 2;
-        } else {
-            this.convolve2Enabled = 0;
-            this.convolve2Range = 0;
+            this.convolve2 = new double[1];
         }
     }
 
     public void setup(StrongholdData strongholdData, int r) {
-        setup(strongholdData, r, new double[1]);
+        setup(strongholdData, new double[1], r);
     }
 
     @Override
@@ -88,8 +84,6 @@ public class PrepareBufferKernel extends AbstractRingKernel implements DoubleArr
         this.convolve1Range = 0;
         this.convolve2 = new double[1];
         this.convolve2Range = 0;
-
-        this.convolve2Enabled = 0;
     }
 
     @Override
