@@ -2,6 +2,7 @@ package me.logwet.melange.render.kernel;
 
 import me.logwet.melange.MelangeConstants;
 import me.logwet.melange.kernel.api.AbstractSharedKernel;
+import org.apache.commons.math3.util.FastMath;
 
 /**
  * PDF and CDF derived with the help of al.
@@ -13,22 +14,22 @@ public abstract class AbstractRingKernel extends AbstractSharedKernel {
     protected static final double A = MelangeConstants.LOWER_BOUND;
     protected static final double B = MelangeConstants.UPPER_BOUND;
 
-    protected final double SQRT_A_ON_B = Math.sqrt(A / B);
+    protected final double SQRT_A_ON_B = FastMath.sqrt(A / B);
     protected final double ONE_SUB_SQRT_A_ON_B = 1D - SQRT_A_ON_B;
-    protected final double ONE_ON_SQRT_B = 1D / Math.sqrt(B);
+    protected final double ONE_ON_SQRT_B = 1D / FastMath.sqrt(B);
 
     public final double P_FAC = 0.5D / (ONE_SUB_SQRT_A_ON_B * B * ONE_ON_SQRT_B);
 
     protected int calcX(int i) {
-        return i & MelangeConstants.X_MASK;
+        return i - (MelangeConstants.WIDTH * (i / MelangeConstants.WIDTH));
     }
 
     protected int calcY(int i) {
-        return i >> MelangeConstants.WIDTH_BITS;
+        return i / MelangeConstants.WIDTH;
     }
 
     protected int calcIndex(int x, int y) {
-        return (y << MelangeConstants.WIDTH_BITS) ^ x;
+        return y * MelangeConstants.WIDTH + x;
     }
 
     protected double normalizeAngle(double x) {
@@ -40,7 +41,7 @@ public abstract class AbstractRingKernel extends AbstractSharedKernel {
     }
 
     protected int constrainToBounds(int x) {
-        return min(max(x, 0), MelangeConstants.X_MASK);
+        return min(max(x, 0), MelangeConstants.WIDTH - 1);
     }
 
     protected double calcAngle(double x, double y) {

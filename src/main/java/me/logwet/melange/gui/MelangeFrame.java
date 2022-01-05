@@ -48,6 +48,7 @@ import me.logwet.melange.config.Metadata.Update;
 import me.logwet.melange.render.Heatmap;
 import me.logwet.melange.util.ArrayHelper;
 import me.logwet.melange.util.BufferHolder;
+import org.apache.commons.math3.util.FastMath;
 import org.slf4j.LoggerFactory;
 
 public class MelangeFrame extends JFrame {
@@ -170,16 +171,16 @@ public class MelangeFrame extends JFrame {
                                 Point location = e.getLocationOnScreen();
                                 Point offset = e.getComponent().getLocationOnScreen();
                                 int x = (location.x - offset.x);
-                                int y = MelangeConstants.X_MASK - (location.y - offset.y);
+                                int y = (location.y - offset.y);
 
                                 int dx =
                                         (int)
-                                                Math.round(
+                                                FastMath.round(
                                                         (x - MelangeConstants.HALF_WIDTH)
                                                                 * MelangeConstants.SCALING_FACTOR);
                                 int dy =
                                         (int)
-                                                Math.round(
+                                                FastMath.round(
                                                         (y - MelangeConstants.HALF_WIDTH)
                                                                 * MelangeConstants.SCALING_FACTOR);
 
@@ -216,7 +217,7 @@ public class MelangeFrame extends JFrame {
         } else if (x < 0.01) {
             return String.format(Locale.ROOT, "%.2e", x);
         } else {
-            return String.valueOf(Math.round(x * 100) / 100D);
+            return String.valueOf(FastMath.round(x * 100) / 100D);
         }
     }
 

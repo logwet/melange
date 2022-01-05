@@ -1,7 +1,9 @@
 package me.logwet.melange;
 
+import org.apache.commons.math3.util.FastMath;
+
 public class MelangeConstants {
-    public static final double PI = Math.PI;
+    public static final double PI = FastMath.PI;
     public static final double TWO_PI = 2 * PI;
     public static final double TWO_PI_ON_THREE = TWO_PI / 3;
     public static final double PI_ON_TWO = PI / 2;
@@ -9,10 +11,9 @@ public class MelangeConstants {
     public static final double LOWER_BOUND = 1280;
     public static final double UPPER_BOUND = 2816;
 
-    public static final int WIDTH_BITS = 9;
-    public static final int WIDTH = 1 << WIDTH_BITS;
-    public static final int HALF_WIDTH = WIDTH / 2;
-    public static final int X_MASK = WIDTH - 1;
+    //    public static final int HALF_WIDTH = 168 + 7;
+    public static final int HALF_WIDTH = 255;
+    public static final int WIDTH = HALF_WIDTH * 2 + 1;
 
     public static final int BUFFER_SIZE = WIDTH * WIDTH;
 

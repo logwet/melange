@@ -14,6 +14,7 @@ import me.logwet.melange.MelangeConstants;
 import me.logwet.melange.config.Config;
 import me.logwet.melange.divine.provider.DivineProvider;
 import me.logwet.melange.kernel.SharedKernels;
+import me.logwet.melange.render.convolve.ConvolveHelper;
 import me.logwet.melange.render.kernel.PrepareBufferKernel;
 import me.logwet.melange.render.kernel.PrepareImageKernel;
 import me.logwet.melange.render.kernel.RenderDivineKernel;
@@ -66,11 +67,18 @@ public class Heatmap {
 
         assert strongholdData != null;
 
+        double[] buffer;
+
         synchronized (SharedKernels.PREPARE_BUFFER) {
             PrepareBufferKernel prepareKernel = SharedKernels.PREPARE_BUFFER.get();
-            prepareKernel.setup(strongholdData, range);
-            bufferHolder = new BufferHolder(prepareKernel.render(), true, false);
+            prepareKernel.setup(strongholdData);
+            buffer = prepareKernel.render();
         }
+
+        double[] rangeKernel = ConvolveHelper.genRangeKernel(range);
+        ConvolveHelper.convolve(buffer, rangeKernel, 2 * range + 1);
+
+        bufferHolder = new BufferHolder(buffer, true, false);
     }
 
     private BufferedImage genRender() {

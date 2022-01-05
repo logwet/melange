@@ -30,15 +30,27 @@ public class ArrayHelper {
         return max;
     }
 
+    public static int getX(int i, int w) {
+        return i - (w * (i / w));
+    }
+
     public static int getX(int i) {
-        return i & MelangeConstants.X_MASK;
+        return getX(i, MelangeConstants.WIDTH);
+    }
+
+    public static int getY(int i, int w) {
+        return i / w;
     }
 
     public static int getY(int i) {
-        return i >> MelangeConstants.WIDTH_BITS;
+        return getY(i, MelangeConstants.WIDTH);
+    }
+
+    public static int getIndex(int x, int y, int w) {
+        return y * w + x;
     }
 
     public static int getIndex(int x, int y) {
-        return (y << MelangeConstants.WIDTH_BITS) ^ x;
+        return getIndex(x, y, MelangeConstants.WIDTH);
     }
 }

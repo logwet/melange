@@ -50,6 +50,8 @@ dependencies {
 
     implementation('com.aparapi:aparapi:3.0.0')
 
+    implementation("com.github.wendykierp:JTransforms:3.1")
+
     implementation("com.mojang:brigadier:1.0.18")
 
     implementation("com.github.twitch4j:twitch4j:1.7.0")
