@@ -76,14 +76,20 @@ public class Heatmap {
 
             for (int i = 0; i < MelangeConstants.BUFFER_SIZE; i++) {
                 double sum = 0D;
+                int divisor = 0;
 
                 for (int j = 0; j < strongholdCount; j++) {
                     if (factors[j] > 0) {
                         sum += strongholdData.getData(j)[i] * factors[j];
+                        divisor++;
                     }
                 }
 
-                strongholdData.getData(0)[i] = sum;
+                if (divisor > 0) {
+                    strongholdData.getData(0)[i] = sum / divisor;
+                } else {
+                    strongholdData.getData(0)[i] = 0D;
+                }
             }
 
             buffer = strongholdData.getData(0);
