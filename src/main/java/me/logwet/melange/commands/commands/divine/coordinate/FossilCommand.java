@@ -5,14 +5,23 @@ import me.logwet.melange.commands.arguments.coordinate.Coordinate;
 import me.logwet.melange.commands.source.CommandSource;
 import me.logwet.melange.divine.provider.feature.FossilFeatureProvider;
 
-public class FossilCommand extends AbstractXCoordinateCommand<FossilFeatureProvider> {
+public class FossilCommand extends AbstractMultiCoordinateCommand<FossilFeatureProvider> {
     public FossilCommand() {
-        super(FossilFeatureProvider.class, "fossil", "boner", "bone", "fsl");
+        super(
+                new Coordinate.Type[] {Coordinate.Type.X, Coordinate.Type.XZ},
+                FossilFeatureProvider.class,
+                "fossil",
+                "boner",
+                "bone",
+                "fsl");
     }
 
     @Override
-    public int add(CommandContext<CommandSource> context) {
-        Coordinate coordinate = context.getArgument("x", Coordinate.class);
+    protected int addWithCoordinateType(
+            Coordinate.Type coordinateType, CommandContext<CommandSource> context) {
+        Coordinate coordinate = context.getArgument(coordinateType.toString(), Coordinate.class);
+        addAndWait(new FossilFeatureProvider(coordinate));
+
         return 0;
     }
 }
