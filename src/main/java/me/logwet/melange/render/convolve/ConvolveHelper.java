@@ -128,8 +128,9 @@ public class ConvolveHelper {
 
         double[] output;
 
-        if (KernelManager.instance().bestDevice() instanceof OpenCLDevice
-                && kernel.length < THRESHOLD) {
+        double fac = KernelManager.instance().bestDevice() instanceof OpenCLDevice ? 2 : 1;
+
+        if (kernel.length < (THRESHOLD / fac)) {
             output = convolveWithRecursion(data, kernel);
             algo = "Recursion";
         } else {
