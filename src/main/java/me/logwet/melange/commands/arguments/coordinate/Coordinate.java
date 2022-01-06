@@ -8,18 +8,20 @@ import java.util.List;
 import java.util.Objects;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import lombok.Value;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Value
+@ToString()
 @RequiredArgsConstructor
 public class Coordinate {
     @Nullable Integer x;
     @Nullable Integer y;
     @Nullable Integer z;
 
-    @NotNull Type type;
+    @ToString.Exclude @NotNull Type type;
 
     private Coordinate(@Nullable Integer x, @Nullable Integer y, @Nullable Integer z) {
         this(x, y, z, Type.from(x, y, z));

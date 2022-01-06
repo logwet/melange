@@ -68,46 +68,49 @@ public class TwitchCommandProvider extends AbstractCommandProvider {
     }
 
     protected void onMessage(ChannelMessageEvent event) {
-        LOGGER.info(
-                "["
-                        + event.getChannel().getName()
-                        + "] "
-                        + event.getUser().getName()
-                        + ": "
-                        + event.getMessage());
+        if (event.getMessage().startsWith(getPrefix())) {
+            LOGGER.info(
+                    "["
+                            + event.getChannel().getName()
+                            + "] "
+                            + event.getUser().getName()
+                            + ": "
+                            + event.getMessage());
 
-        StringReader stringReader =
-                new StringReader(StringUtils.removeStart(event.getMessage(), getPrefix()));
+            StringReader stringReader =
+                    new StringReader(StringUtils.removeStart(event.getMessage(), getPrefix()));
 
-        if (stringReader.canRead()) {
-            Role role = null;
-            int currentPriority = Integer.MAX_VALUE;
-            for (CommandPermission commandPermission : event.getPermissions()) {
-                Role tempRole = Role.fromCommandPermission(commandPermission);
-                if (Objects.nonNull(tempRole)) {
-                    if (tempRole.getPriority() < currentPriority) {
-                        role = tempRole;
+            if (stringReader.canRead()) {
+                Role role = null;
+                int currentPriority = Integer.MAX_VALUE;
+                for (CommandPermission commandPermission : event.getPermissions()) {
+                    Role tempRole = Role.fromCommandPermission(commandPermission);
+                    if (Objects.nonNull(tempRole)) {
+                        if (tempRole.getPriority() < currentPriority) {
+                            role = tempRole;
+                        }
                     }
                 }
-            }
-            if (Objects.isNull(role)) {
-                role = Role.EVERYONE;
-            }
+                if (Objects.isNull(role)) {
+                    role = Role.EVERYONE;
+                }
 
-            Role minRole = Role.getMinRole();
+                Role minRole = Role.getMinRole();
 
-            CommandSource source = new TwitchCommandSource(event.getUser().getName(), role, this);
+                CommandSource source =
+                        new TwitchCommandSource(event.getUser().getName(), role, this);
 
-            if (role.getPriority() <= minRole.getPriority()) {
-                LOGGER.info("Processing stringReader " + stringReader.getString());
-                commandManager.execute(stringReader, source);
-            } else {
-                source.sendError(
-                        "@"
-                                + source.getUser()
-                                + " you don't have minimum role "
-                                + minRole.name().toLowerCase(Locale.ROOT)
-                                + " to perform this command");
+                if (role.getPriority() <= minRole.getPriority()) {
+                    LOGGER.info("Processing stringReader " + stringReader.getString());
+                    commandManager.execute(stringReader, source);
+                } else {
+                    source.sendError(
+                            "@"
+                                    + source.getUser()
+                                    + " you don't have minimum role "
+                                    + minRole.name().toLowerCase(Locale.ROOT)
+                                    + " to perform this command");
+                }
             }
         }
     }

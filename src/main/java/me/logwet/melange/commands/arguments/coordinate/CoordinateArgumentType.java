@@ -35,23 +35,25 @@ public class CoordinateArgumentType implements ArgumentType<Coordinate> {
     }
 
     @Override
-    public Coordinate parse(StringReader reader) throws CommandSyntaxException {
+    public Coordinate parse(StringReader stringReader) throws CommandSyntaxException {
         List<Integer> values = new ArrayList<>();
 
-        int k = reader.getCursor();
+        int k = stringReader.getCursor();
         for (int i = 0; i < type.getNumValues(); i++) {
-            values.add(reader.readInt());
-            if (!reader.canRead() || reader.peek() != ' ') {
-                reader.setCursor(k);
-                throw NOT_COMPLETE.createWithContext(reader);
-            }
+            values.add(stringReader.readInt());
+
             if (i < type.getNumValues() - 1) {
-                reader.skip();
+                if (stringReader.canRead() && stringReader.peek() == ' ') {
+                    stringReader.skip();
+                } else {
+                    stringReader.setCursor(k);
+                    throw NOT_COMPLETE.createWithContext(stringReader);
+                }
             }
         }
 
         if (values.size() < type.getNumValues()) {
-            throw NOT_COMPLETE.createWithContext(reader);
+            throw NOT_COMPLETE.createWithContext(stringReader);
         }
 
         int[] components = new int[3];
