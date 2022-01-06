@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableList;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferUShort;
 import java.util.List;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +18,10 @@ import me.logwet.melange.kernel.SharedKernels;
 import me.logwet.melange.render.convolve.ConvolveHelper;
 import me.logwet.melange.render.divine.RenderDivineKernel;
 import me.logwet.melange.util.ArrayHelper;
+import me.logwet.melange.util.ArrayHelper.SearchResult;
 import me.logwet.melange.util.StrongholdData;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.LoggerFactory;
 
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -30,7 +33,7 @@ public class Heatmap {
     @EqualsAndHashCode.Include private final int range;
     @EqualsAndHashCode.Include @NotNull private final List<DivineProvider> divineProviders;
 
-    @Getter private double[] dataBuffer;
+    @Nullable @Getter private DataBuffer dataBuffer;
 
     @NotNull
     @Getter(lazy = true)
@@ -104,7 +107,7 @@ public class Heatmap {
             buffer = ConvolveHelper.convolve(buffer, ConvolveHelper.genRangeKernel(range));
         }
 
-        dataBuffer = buffer;
+        dataBuffer = new DataBuffer(buffer);
     }
 
     private BufferedImage genRender() {
@@ -118,15 +121,21 @@ public class Heatmap {
 
         {
             short[] imgBuffer = ((DataBufferUShort) image.getRaster().getDataBuffer()).getData();
-            double max = ArrayHelper.maxArray(dataBuffer);
+
+            dataBuffer.setMaxResult(ArrayHelper.maxAndIndexArray(dataBuffer.getBuffer()));
+
+            double max = dataBuffer.getMaxResult().getValue();
             double factor = max > 0 ? MelangeConstants.COLOR_DEPTH / max : 0D;
+            double[] buffer = dataBuffer.getBuffer();
 
             for (int i = 0; i < MelangeConstants.BUFFER_SIZE; i++) {
-                imgBuffer[i] = (short) (((int) (dataBuffer[i] * factor)) & 0xffff);
+                imgBuffer[i] = (short) (((int) (buffer[i] * factor)) & 0xffff);
             }
         }
 
         long endTime = System.currentTimeMillis();
+
+        dataBuffer.setRenderTime(endTime - startTime);
 
         LOGGER.info("Generated render in " + (endTime - startTime) + "ms");
 
@@ -138,5 +147,12 @@ public class Heatmap {
         int strongholdCount;
         int range;
         List<DivineProvider> divineProviders;
+    }
+
+    @Data
+    public static class DataBuffer {
+        final double[] buffer;
+        SearchResult maxResult;
+        Long renderTime;
     }
 }

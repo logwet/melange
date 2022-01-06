@@ -47,7 +47,9 @@ import me.logwet.melange.config.Config;
 import me.logwet.melange.config.Metadata;
 import me.logwet.melange.config.Metadata.Update;
 import me.logwet.melange.render.Heatmap;
+import me.logwet.melange.render.Heatmap.DataBuffer;
 import me.logwet.melange.util.ArrayHelper;
+import me.logwet.melange.util.ArrayHelper.SearchResult;
 import org.apache.commons.math3.util.FastMath;
 import org.slf4j.LoggerFactory;
 
@@ -166,31 +168,39 @@ public class MelangeFrame extends JFrame {
                     @Override
                     public void mouseMoved(MouseEvent e) {
                         if (Objects.nonNull(Melange.getHeatmap())) {
-                            double[] dataBuffer = Melange.getHeatmap().getDataBuffer();
+                            DataBuffer dataBuffer = Melange.getHeatmap().getDataBuffer();
                             if (Objects.nonNull(dataBuffer)) {
                                 Point location = e.getLocationOnScreen();
                                 Point offset = e.getComponent().getLocationOnScreen();
                                 int x = (location.x - offset.x);
                                 int y = (location.y - offset.y);
 
-                                int dx =
-                                        (int)
-                                                FastMath.round(
-                                                        (x - MelangeConstants.HALF_WIDTH)
-                                                                * MelangeConstants.SCALING_FACTOR);
-                                int dy =
-                                        (int)
-                                                FastMath.round(
-                                                        (y - MelangeConstants.HALF_WIDTH)
-                                                                * MelangeConstants.SCALING_FACTOR);
+                                double kx =
+                                        (x - MelangeConstants.HALF_WIDTH)
+                                                * MelangeConstants.SCALING_FACTOR;
+                                double ky =
+                                        (y - MelangeConstants.HALF_WIDTH)
+                                                * MelangeConstants.SCALING_FACTOR;
 
-                                double p = dataBuffer[ArrayHelper.getIndex(x, y)] * 100D;
+                                int ox = (int) FastMath.round(kx);
+                                int oy = (int) FastMath.round(ky);
+
+                                int nx = (int) FastMath.round(kx / 8);
+                                int ny = (int) FastMath.round(ky / 8);
+
+                                double p =
+                                        dataBuffer.getBuffer()[ArrayHelper.getIndex(x, y)] * 100D;
 
                                 heatmapRendererLabel.setToolTipText(
-                                        dx
+                                        "OW: "
+                                                + ox
                                                 + " "
-                                                + dy
+                                                + oy
+                                                + " N: "
+                                                + nx
                                                 + " "
+                                                + ny
+                                                + "\n"
                                                 + formatDoubleToTwoDecimalPlaces(p)
                                                 + "%");
                             }
@@ -333,6 +343,62 @@ public class MelangeFrame extends JFrame {
         LOGGER.info("Updated image object");
     }
 
+    private void updateMetaPanels() {
+        String msg1 = "Position\nProbability";
+        String msg2 = "Timing";
+
+        if (Objects.nonNull(Melange.getHeatmap())) {
+            DataBuffer dataBuffer = Melange.getHeatmap().getDataBuffer();
+            if (Objects.nonNull(dataBuffer)) {
+                SearchResult maxResult = Melange.getHeatmap().getDataBuffer().getMaxResult();
+                if (Objects.nonNull(maxResult)) {
+                    int i = maxResult.getIndex();
+
+                    double x =
+                            (ArrayHelper.getX(i) - MelangeConstants.HALF_WIDTH)
+                                    * MelangeConstants.SCALING_FACTOR;
+                    double y =
+                            (ArrayHelper.getY(i) - MelangeConstants.HALF_WIDTH)
+                                    * MelangeConstants.SCALING_FACTOR;
+
+                    int ox = (int) FastMath.round(x);
+                    int oy = (int) FastMath.round(y);
+
+                    int nx = (int) FastMath.round(x / 8);
+                    int ny = (int) FastMath.round(y / 8);
+
+                    double p = maxResult.getValue() * 100D;
+
+                    msg1 =
+                            "OW: "
+                                    + ox
+                                    + " "
+                                    + oy
+                                    + " N: "
+                                    + nx
+                                    + " "
+                                    + ny
+                                    + "\n"
+                                    + formatDoubleToTwoDecimalPlaces(p)
+                                    + "%";
+                }
+
+                Long renderTime = dataBuffer.getRenderTime();
+                if (Objects.nonNull(renderTime)) {
+                    msg2 = "Rendered in " + renderTime + "ms";
+                }
+            }
+        }
+
+        if (Objects.nonNull(divineMetaLeftTextPane)) {
+            divineMetaLeftTextPane.setText(msg1);
+        }
+
+        if (Objects.nonNull(divineMetaRightTextPane)) {
+            divineMetaRightTextPane.setText(msg2);
+        }
+    }
+
     public void updateRender() {
         BufferedImage render;
 
@@ -352,7 +418,11 @@ public class MelangeFrame extends JFrame {
         }
 
         BufferedImage finalRender = render;
-        SwingUtilities.invokeLater(() -> addRender(finalRender));
+        SwingUtilities.invokeLater(
+                () -> {
+                    addRender(finalRender);
+                    updateMetaPanels();
+                });
 
         LOGGER.info("Updated render");
     }

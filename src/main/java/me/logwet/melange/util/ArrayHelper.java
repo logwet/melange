@@ -1,6 +1,7 @@
 package me.logwet.melange.util;
 
 import java.util.Arrays;
+import lombok.Value;
 import me.logwet.melange.MelangeConstants;
 
 public class ArrayHelper {
@@ -30,6 +31,20 @@ public class ArrayHelper {
         return max;
     }
 
+    public static SearchResult maxAndIndexArray(double[] buffer) {
+        int index = 0;
+        double max = buffer[0];
+
+        for (int i = 1; i < buffer.length; i++) {
+            if (buffer[i] > max) {
+                index = i;
+                max = buffer[i];
+            }
+        }
+
+        return new SearchResult(index, max);
+    }
+
     public static int getX(int i, int w) {
         return i - (w * (i / w));
     }
@@ -52,5 +67,11 @@ public class ArrayHelper {
 
     public static int getIndex(int x, int y) {
         return getIndex(x, y, MelangeConstants.WIDTH);
+    }
+
+    @Value
+    public static class SearchResult {
+        int index;
+        double value;
     }
 }
