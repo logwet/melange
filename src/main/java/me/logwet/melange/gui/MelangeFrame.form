@@ -100,7 +100,7 @@
                               <toolTipText value="Automatically refresh the Heatmap whenever&#10;a Divine Provider is added, removed or modified."/>
                             </properties>
                           </component>
-                          <component id="dcdb1" class="javax.swing.JCheckBox" binding="checkBox3" default-binding="true">
+                          <component id="dcdb1" class="javax.swing.JCheckBox" binding="autoRefreshRenderCheckBox">
                             <constraints border-constraint="East"/>
                             <properties>
                               <selected value="true"/>

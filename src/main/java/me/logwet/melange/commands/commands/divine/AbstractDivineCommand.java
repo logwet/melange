@@ -23,7 +23,11 @@ public abstract class AbstractDivineCommand<T extends DivineProvider> extends Ab
 
     protected Future<?> add(T provider) {
         LOGGER.info("Adding provider " + clazz.getSimpleName());
-        return Melange.addProviderAndUpdateRender(provider);
+        if (Melange.AUTO_REFRESH.get()) {
+            return Melange.addProviderAndUpdateRender(provider);
+        } else {
+            return Melange.addProvider(provider);
+        }
     }
 
     protected boolean addAndWait(T provider) {
@@ -55,7 +59,9 @@ public abstract class AbstractDivineCommand<T extends DivineProvider> extends Ab
             context.getSource().sendError("No instances of " + name + " to remove!");
         }
 
-        Melange.resetHeatmapAndRender();
+        if (Melange.AUTO_REFRESH.get()) {
+            Melange.resetHeatmapAndRender();
+        }
 
         return 1;
     }

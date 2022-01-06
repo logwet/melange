@@ -89,7 +89,7 @@ public class MelangeFrame extends JFrame {
     protected JTextPane divineMetaLeftTextPane;
     protected JTextPane divineMetaRightTextPane;
     protected JSpinner mainRangeSelectionSpinner;
-    protected JCheckBox checkBox3;
+    protected JCheckBox autoRefreshRenderCheckBox;
 
     protected boolean lightEditsPending = false;
     protected boolean heavyEditsPending = false;
@@ -196,6 +196,9 @@ public class MelangeFrame extends JFrame {
                         }
                     }
                 });
+
+        autoRefreshRenderCheckBox.addItemListener(
+                e -> Melange.AUTO_REFRESH.getAndSet(autoRefreshRenderCheckBox.isSelected()));
 
         ToolTipManager.sharedInstance().setDismissDelay(Integer.MAX_VALUE);
         ToolTipManager.sharedInstance().setInitialDelay(0);

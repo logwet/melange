@@ -32,9 +32,9 @@ public class Melange {
     public static final Logger LOGGER = LoggerFactory.getLogger("melange");
     public static final ExecutorService EXECUTOR =
             Executors.newSingleThreadExecutor(runnable -> new Thread(runnable, "melange"));
+    public static final AtomicBoolean AUTO_REFRESH = new AtomicBoolean(true);
     private static final AtomicBoolean HAS_SHUTDOWN = new AtomicBoolean(false);
     @Getter private static final List<DivineProvider> providerList = new ArrayList<>();
-
     @Getter @Setter @Nullable private static Heatmap heatmap;
 
     @Getter @Nullable private static MelangeFrame mainFrame;
@@ -117,8 +117,8 @@ public class Melange {
         return resetHeatmapAsync(Runnables.doNothing());
     }
 
-    public static void addProvider(DivineProvider provider) {
-        execute(() -> providerList.add(provider));
+    public static Future<Boolean> addProvider(DivineProvider provider) {
+        return submit(() -> providerList.add(provider));
     }
 
     public static Future<?> addProviderAndUpdateRender(DivineProvider provider) {
