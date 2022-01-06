@@ -33,6 +33,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.JTree;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import javax.swing.event.HyperlinkEvent.EventType;
@@ -200,6 +201,17 @@ public class MelangeFrame extends JFrame {
         autoRefreshRenderCheckBox.addItemListener(
                 e -> Melange.AUTO_REFRESH.getAndSet(autoRefreshRenderCheckBox.isSelected()));
 
+        mainRangeSelectionSpinner.addChangeListener(
+                e -> {
+                    Melange.execute(
+                            () ->
+                                    Config.setProperty(
+                                            "range", mainRangeSelectionSpinner.getValue()));
+                    if (Melange.AUTO_REFRESH.get()) {
+                        Melange.resetHeatmapAndRender();
+                    }
+                });
+
         ToolTipManager.sharedInstance().setDismissDelay(Integer.MAX_VALUE);
         ToolTipManager.sharedInstance().setInitialDelay(0);
 
@@ -309,6 +321,11 @@ public class MelangeFrame extends JFrame {
         } catch (InterruptedException | ExecutionException e) {
             LOGGER.error("Unable to perform initial heatmap initialization", e);
         }
+
+        SpinnerNumberModel spinnerNumberModel =
+                new SpinnerNumberModel(
+                        ((Integer) Config.getProperty("range")).intValue(), 0, 1500, 1);
+        mainRangeSelectionSpinner = new JSpinner(spinnerNumberModel);
     }
 
     private void addRender(BufferedImage render) {

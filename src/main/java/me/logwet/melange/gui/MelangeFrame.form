@@ -80,7 +80,7 @@
                               <toolTipText value="Configure the stronghold distance to generate&#10;a Heatmap for. eg. X% of stronghold Y blocks&#10;away or closer from this position."/>
                             </properties>
                           </component>
-                          <component id="18a71" class="javax.swing.JSpinner" binding="mainRangeSelectionSpinner">
+                          <component id="18a71" class="javax.swing.JSpinner" binding="mainRangeSelectionSpinner" custom-create="true">
                             <constraints border-constraint="East"/>
                             <properties>
                               <toolTipText value="Configure the stronghold distance to generate&#10;a Heatmap for. eg. X% of stronghold Y blocks&#10;away or closer from this position."/>
