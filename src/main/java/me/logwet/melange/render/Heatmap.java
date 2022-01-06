@@ -75,8 +75,11 @@ public class Heatmap {
             buffer = prepareKernel.render();
         }
 
-        double[] rangeKernel = ConvolveHelper.genRangeKernel(range);
-        ConvolveHelper.convolve(buffer, rangeKernel, 2 * range + 1);
+        ConvolveHelper.convolve(buffer, MelangeConstants.BIOME_PUSH_KERNEL);
+
+        if (range > 0) {
+            ConvolveHelper.convolve(buffer, ConvolveHelper.genRangeKernel(range));
+        }
 
         bufferHolder = new BufferHolder(buffer, true, false);
     }
