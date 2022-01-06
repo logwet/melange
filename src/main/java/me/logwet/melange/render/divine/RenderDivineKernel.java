@@ -1,4 +1,4 @@
-package me.logwet.melange.render.kernel;
+package me.logwet.melange.render.divine;
 
 import com.aparapi.Range;
 import java.util.ArrayList;
@@ -135,10 +135,7 @@ public class RenderDivineKernel extends AbstractRingKernel implements Stronghold
 
                     int ap = 0;
 
-                    double t = 0D;
-                    if (angleLBs.length > 0) {
-                        t = calcAngle(x, y);
-                    }
+                    double t = calcAngle(x, y);
 
                     for (int j = 0; j < angleLBs.length; j++) {
                         double shift = MelangeConstants.TWO_PI_ON_THREE * s;
@@ -206,6 +203,6 @@ public class RenderDivineKernel extends AbstractRingKernel implements Stronghold
             this.get(output3);
         }
 
-        return new StrongholdData(output1, output2, output3, count);
+        return new StrongholdData(output1, output2, output3);
     }
 }

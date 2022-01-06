@@ -1,4 +1,4 @@
-package me.logwet.melange.render.kernel;
+package me.logwet.melange.render.divine;
 
 import me.logwet.melange.MelangeConstants;
 import me.logwet.melange.kernel.api.AbstractSharedKernel;
@@ -45,7 +45,7 @@ public abstract class AbstractRingKernel extends AbstractSharedKernel {
     }
 
     protected double calcAngle(double x, double y) {
-        return normalizeAngle(MelangeConstants.PI_ON_TWO - atan2(x, y));
+        return normalizeAngle(atan2(y, x));
     }
 
     protected double calcMagnitude(int x, int y) {

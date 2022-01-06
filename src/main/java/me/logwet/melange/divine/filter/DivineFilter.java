@@ -5,6 +5,8 @@ public interface DivineFilter {
 
     double getUb();
 
+    boolean test(double x, int s);
+
     Type getType();
 
     enum Type {

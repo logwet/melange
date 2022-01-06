@@ -18,6 +18,8 @@ public class ConvolveHelper {
     protected static final Logger LOGGER = (Logger) LoggerFactory.getLogger(ConvolveHelper.class);
     private static final double EPSILON = 1e-10;
 
+    private ConvolveHelper() {}
+
     private static double[][] realToComplexArray(double[] realArray, int width) {
         double[][] output = new double[width][width * 2];
 

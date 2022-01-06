@@ -17,4 +17,13 @@ public class RangeDistanceFilter implements DistanceFilter {
                 ((MelangeConstants.UPPER_BOUND - MelangeConstants.LOWER_BOUND) / n) * (i + 1)
                         + MelangeConstants.LOWER_BOUND);
     }
+
+    @Override
+    public boolean test(double x, int s) {
+        if (s == 0) {
+            return x >= lb && x <= ub;
+        }
+
+        return true;
+    }
 }

@@ -4,7 +4,7 @@ import com.aparapi.Kernel;
 import com.aparapi.internal.kernel.KernelManager;
 import java.util.Objects;
 import me.logwet.melange.kernel.api.SharedKernel;
-import me.logwet.melange.render.kernel.RenderDivineKernel;
+import me.logwet.melange.render.divine.RenderDivineKernel;
 import org.apache.commons.lang3.concurrent.BackgroundInitializer;
 import org.apache.commons.lang3.concurrent.ConcurrentException;
 import org.jetbrains.annotations.NotNull;

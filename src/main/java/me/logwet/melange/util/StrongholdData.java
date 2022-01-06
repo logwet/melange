@@ -1,24 +1,19 @@
 package me.logwet.melange.util;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 
 @EqualsAndHashCode()
 public class StrongholdData {
     @EqualsAndHashCode.Include private final List<double[]> data;
 
-    @EqualsAndHashCode.Include @Getter private final int count;
+    public StrongholdData(double[]... data) {
+        this.data = Arrays.asList(data);
+    }
 
-    public StrongholdData(double[] data1, double[] data2, double[] data3, int count) {
-        data = new ArrayList<>();
-
-        data.add(data1);
-        data.add(data2);
-        data.add(data3);
-
-        this.count = count;
+    public StrongholdData(List<double[]> data) {
+        this.data = data;
     }
 
     public double[] getData(int index) {

@@ -15,7 +15,7 @@ import me.logwet.melange.config.Config;
 import me.logwet.melange.divine.provider.DivineProvider;
 import me.logwet.melange.kernel.SharedKernels;
 import me.logwet.melange.render.convolve.ConvolveHelper;
-import me.logwet.melange.render.kernel.RenderDivineKernel;
+import me.logwet.melange.render.divine.RenderDivineKernel;
 import me.logwet.melange.util.ArrayHelper;
 import me.logwet.melange.util.StrongholdData;
 import org.jetbrains.annotations.NotNull;
@@ -54,6 +54,8 @@ public class Heatmap {
     }
 
     private void genBuffer() {
+        long startTime = System.currentTimeMillis();
+
         StrongholdData strongholdData;
 
         synchronized (SharedKernels.RENDER) {
@@ -61,8 +63,6 @@ public class Heatmap {
             renderKernel.setup(divineProviders, strongholdCount);
             strongholdData = renderKernel.render();
         }
-
-        assert strongholdData != null;
 
         double[] buffer;
 
@@ -94,6 +94,9 @@ public class Heatmap {
 
             buffer = strongholdData.getData(0);
         }
+
+        long endTime = System.currentTimeMillis();
+        LOGGER.info("Buffer generation took " + (endTime - startTime) + "ms");
 
         ConvolveHelper.convolve(buffer, MelangeConstants.BIOME_PUSH_KERNEL);
 
