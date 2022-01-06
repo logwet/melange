@@ -16,9 +16,8 @@ import me.logwet.melange.divine.provider.DivineProvider;
 import me.logwet.melange.kernel.SharedKernels;
 import me.logwet.melange.render.convolve.ConvolveHelper;
 import me.logwet.melange.render.kernel.PrepareBufferKernel;
-import me.logwet.melange.render.kernel.PrepareImageKernel;
 import me.logwet.melange.render.kernel.RenderDivineKernel;
-import me.logwet.melange.util.BufferHolder;
+import me.logwet.melange.util.ArrayHelper;
 import me.logwet.melange.util.StrongholdData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -35,7 +34,7 @@ public class Heatmap {
 
     @Nullable @Getter private StrongholdData strongholdData;
 
-    @Nullable @Getter private BufferHolder bufferHolder;
+    @Getter private double[] dataBuffer;
 
     @NotNull
     @Getter(lazy = true)
@@ -81,7 +80,7 @@ public class Heatmap {
             ConvolveHelper.convolve(buffer, ConvolveHelper.genRangeKernel(range));
         }
 
-        bufferHolder = new BufferHolder(buffer, true, false);
+        dataBuffer = buffer;
     }
 
     private BufferedImage genRender() {
@@ -91,13 +90,16 @@ public class Heatmap {
 
         genBuffer();
 
-        assert bufferHolder != null;
+        assert dataBuffer != null;
 
-        synchronized (SharedKernels.PREPARE_IMAGE) {
-            PrepareImageKernel kernel = SharedKernels.PREPARE_IMAGE.get();
-            kernel.setup(
-                    bufferHolder, ((DataBufferUShort) image.getRaster().getDataBuffer()).getData());
-            kernel.render();
+        {
+            short[] imgBuffer = ((DataBufferUShort) image.getRaster().getDataBuffer()).getData();
+            double max = ArrayHelper.maxArray(dataBuffer);
+            double factor = max > 0 ? MelangeConstants.COLOR_DEPTH / max : 0D;
+
+            for (int i = 0; i < MelangeConstants.BUFFER_SIZE; i++) {
+                imgBuffer[i] = (short) (((int) (dataBuffer[i] * factor)) & 0xffff);
+            }
         }
 
         long endTime = System.currentTimeMillis();

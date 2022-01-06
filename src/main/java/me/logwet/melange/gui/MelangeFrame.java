@@ -47,7 +47,6 @@ import me.logwet.melange.config.Metadata;
 import me.logwet.melange.config.Metadata.Update;
 import me.logwet.melange.render.Heatmap;
 import me.logwet.melange.util.ArrayHelper;
-import me.logwet.melange.util.BufferHolder;
 import org.apache.commons.math3.util.FastMath;
 import org.slf4j.LoggerFactory;
 
@@ -166,8 +165,8 @@ public class MelangeFrame extends JFrame {
                     @Override
                     public void mouseMoved(MouseEvent e) {
                         if (Objects.nonNull(Melange.getHeatmap())) {
-                            BufferHolder bufferHolder = Melange.getHeatmap().getBufferHolder();
-                            if (Objects.nonNull(bufferHolder)) {
+                            double[] dataBuffer = Melange.getHeatmap().getDataBuffer();
+                            if (Objects.nonNull(dataBuffer)) {
                                 Point location = e.getLocationOnScreen();
                                 Point offset = e.getComponent().getLocationOnScreen();
                                 int x = (location.x - offset.x);
@@ -184,8 +183,7 @@ public class MelangeFrame extends JFrame {
                                                         (y - MelangeConstants.HALF_WIDTH)
                                                                 * MelangeConstants.SCALING_FACTOR);
 
-                                double p =
-                                        bufferHolder.getBuffer()[ArrayHelper.getIndex(x, y)] * 100D;
+                                double p = dataBuffer[ArrayHelper.getIndex(x, y)] * 100D;
 
                                 heatmapRendererLabel.setToolTipText(
                                         dx
