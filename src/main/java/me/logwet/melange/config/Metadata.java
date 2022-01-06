@@ -64,9 +64,11 @@ public class Metadata {
             conn.setReadTimeout(5000);
             conn.setInstanceFollowRedirects(false);
 
+            conn.setRequestProperty("User-Agent", "logwet/melange/" + VERSION);
+
             int status = conn.getResponseCode();
 
-            Reader streamReader = null;
+            Reader streamReader;
 
             if (status > 299) {
                 streamReader = new InputStreamReader(conn.getErrorStream());
