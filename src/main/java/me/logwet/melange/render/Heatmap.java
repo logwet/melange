@@ -15,12 +15,10 @@ import me.logwet.melange.config.Config;
 import me.logwet.melange.divine.provider.DivineProvider;
 import me.logwet.melange.kernel.SharedKernels;
 import me.logwet.melange.render.convolve.ConvolveHelper;
-import me.logwet.melange.render.kernel.PrepareBufferKernel;
 import me.logwet.melange.render.kernel.RenderDivineKernel;
 import me.logwet.melange.util.ArrayHelper;
 import me.logwet.melange.util.StrongholdData;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.slf4j.LoggerFactory;
 
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -31,8 +29,6 @@ public class Heatmap {
     @EqualsAndHashCode.Include private final int strongholdCount;
     @EqualsAndHashCode.Include private final int range;
     @EqualsAndHashCode.Include @NotNull private final List<DivineProvider> divineProviders;
-
-    @Nullable @Getter private StrongholdData strongholdData;
 
     @Getter private double[] dataBuffer;
 
@@ -58,6 +54,8 @@ public class Heatmap {
     }
 
     private void genBuffer() {
+        StrongholdData strongholdData;
+
         synchronized (SharedKernels.RENDER) {
             RenderDivineKernel renderKernel = SharedKernels.RENDER.get();
             renderKernel.setup(divineProviders, strongholdCount);
@@ -68,10 +66,27 @@ public class Heatmap {
 
         double[] buffer;
 
-        synchronized (SharedKernels.PREPARE_BUFFER) {
-            PrepareBufferKernel prepareKernel = SharedKernels.PREPARE_BUFFER.get();
-            prepareKernel.setup(strongholdData);
-            buffer = prepareKernel.render();
+        {
+            double[] factors =
+                    new double[] {
+                        strongholdData.getSumFactor(0),
+                        strongholdData.getSumFactor(1),
+                        strongholdData.getSumFactor(2)
+                    };
+
+            for (int i = 0; i < MelangeConstants.BUFFER_SIZE; i++) {
+                double sum = 0D;
+
+                for (int j = 0; j < strongholdCount; j++) {
+                    if (factors[j] > 0) {
+                        sum += strongholdData.getData(j)[i] * factors[j];
+                    }
+                }
+
+                strongholdData.getData(0)[i] = sum;
+            }
+
+            buffer = strongholdData.getData(0);
         }
 
         ConvolveHelper.convolve(buffer, MelangeConstants.BIOME_PUSH_KERNEL);
