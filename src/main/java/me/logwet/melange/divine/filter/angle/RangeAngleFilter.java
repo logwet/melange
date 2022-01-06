@@ -11,6 +11,11 @@ public class RangeAngleFilter implements AngleFilter {
     double lb;
     double ub;
 
+    public static RangeAngleFilter slice(int n, int i) {
+        double arc = MelangeConstants.TWO_PI / n;
+        return new RangeAngleFilter(arc * i, arc * (i + 1));
+    }
+
     @Override
     public boolean test(double x, int s) {
         double shift = MelangeConstants.TWO_PI_ON_THREE * s;

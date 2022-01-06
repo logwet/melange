@@ -20,7 +20,7 @@ public class FossilCommand extends AbstractMultiCoordinateCommand<FossilFeatureP
     protected int addWithCoordinateType(
             Coordinate.Type coordinateType, CommandContext<CommandSource> context) {
         Coordinate coordinate = context.getArgument(coordinateType.toString(), Coordinate.class);
-        addAndWait(new FossilFeatureProvider(coordinate));
+        addAndWait(FossilFeatureProvider.build(coordinate));
 
         return 0;
     }

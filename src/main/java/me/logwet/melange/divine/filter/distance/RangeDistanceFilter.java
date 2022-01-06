@@ -11,11 +11,10 @@ public class RangeDistanceFilter implements DistanceFilter {
     double ub;
 
     public static RangeDistanceFilter slice(int n, int i) {
+        double span = (MelangeConstants.UPPER_BOUND - MelangeConstants.LOWER_BOUND) / n;
         return new RangeDistanceFilter(
-                ((MelangeConstants.UPPER_BOUND - MelangeConstants.LOWER_BOUND) / n) * i
-                        + MelangeConstants.LOWER_BOUND,
-                ((MelangeConstants.UPPER_BOUND - MelangeConstants.LOWER_BOUND) / n) * (i + 1)
-                        + MelangeConstants.LOWER_BOUND);
+                span * i + MelangeConstants.LOWER_BOUND,
+                span * (i + 1) + MelangeConstants.LOWER_BOUND);
     }
 
     @Override
