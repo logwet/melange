@@ -11,6 +11,7 @@ import me.logwet.melange.divine.filter.DivineFilter.Type;
 import me.logwet.melange.divine.filter.angle.AngleFilter;
 import me.logwet.melange.divine.filter.distance.DistanceFilter;
 import me.logwet.melange.divine.provider.DivineProvider;
+import me.logwet.melange.kernel.api.AbstractRingKernel;
 import me.logwet.melange.kernel.api.StrongholdDataKernel;
 import me.logwet.melange.util.StrongholdData;
 

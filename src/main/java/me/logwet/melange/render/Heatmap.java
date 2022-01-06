@@ -98,10 +98,10 @@ public class Heatmap {
         long endTime = System.currentTimeMillis();
         LOGGER.info("Buffer generation took " + (endTime - startTime) + "ms");
 
-        ConvolveHelper.convolve(buffer, MelangeConstants.BIOME_PUSH_KERNEL);
+        buffer = ConvolveHelper.convolve(buffer, MelangeConstants.BIOME_PUSH_KERNEL);
 
         if (range > 0) {
-            ConvolveHelper.convolve(buffer, ConvolveHelper.genRangeKernel(range));
+            buffer = ConvolveHelper.convolve(buffer, ConvolveHelper.genRangeKernel(range));
         }
 
         dataBuffer = buffer;

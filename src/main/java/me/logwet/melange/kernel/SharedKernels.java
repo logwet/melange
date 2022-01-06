@@ -4,6 +4,7 @@ import com.aparapi.Kernel;
 import com.aparapi.internal.kernel.KernelManager;
 import java.util.Objects;
 import me.logwet.melange.kernel.api.SharedKernel;
+import me.logwet.melange.render.convolve.ConvolveKernel;
 import me.logwet.melange.render.divine.RenderDivineKernel;
 import org.apache.commons.lang3.concurrent.BackgroundInitializer;
 import org.apache.commons.lang3.concurrent.ConcurrentException;
@@ -13,7 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public enum SharedKernels implements AutoCloseable {
-    RENDER(RenderDivineKernel.class);
+    RENDER(RenderDivineKernel.class),
+    CONVOLVE(ConvolveKernel.class);
 
     public static final Logger LOGGER = LoggerFactory.getLogger(SharedKernels.class);
 

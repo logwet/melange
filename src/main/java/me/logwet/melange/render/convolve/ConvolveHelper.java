@@ -1,7 +1,12 @@
 package me.logwet.melange.render.convolve;
 
 import ch.qos.logback.classic.Logger;
+import com.aparapi.device.OpenCLDevice;
+import com.aparapi.internal.kernel.KernelManager;
+import java.util.Arrays;
+import java.util.stream.DoubleStream;
 import me.logwet.melange.MelangeConstants;
+import me.logwet.melange.kernel.SharedKernels;
 import me.logwet.melange.util.ArrayHelper;
 import org.apache.commons.math3.util.FastMath;
 import org.jtransforms.fft.DoubleFFT_2D;
@@ -17,6 +22,7 @@ import org.slf4j.LoggerFactory;
 public class ConvolveHelper {
     protected static final Logger LOGGER = (Logger) LoggerFactory.getLogger(ConvolveHelper.class);
     private static final double EPSILON = 1e-10;
+    private static final int THRESHOLD = 80;
 
     private ConvolveHelper() {}
 
@@ -55,9 +61,7 @@ public class ConvolveHelper {
         }
     }
 
-    public static void convolve(double[] data, double[][] kernel) {
-        long startTime = System.currentTimeMillis();
-
+    private static double[] convolveWithFFT(double[] data, double[][] kernel) {
         int kernelWidth = kernel.length;
         int paddedWidth = MelangeConstants.WIDTH + kernelWidth - 1;
 
@@ -98,9 +102,45 @@ public class ConvolveHelper {
             }
         }
 
-        long endTime = System.currentTimeMillis();
+        return data;
+    }
 
-        LOGGER.info("Convolution took " + (endTime - startTime) + "ms");
+    private static double[] flatten2DArray(double[][] input) {
+        return Arrays.stream(input).flatMapToDouble(DoubleStream::of).toArray();
+    }
+
+    public static double[] convolveWithRecursion(double[] data, double[][] kernel) {
+        synchronized (SharedKernels.CONVOLVE) {
+            ConvolveKernel convolveKernel = SharedKernels.CONVOLVE.get();
+            convolveKernel.setup(
+                    data,
+                    flatten2DArray(kernel),
+                    kernel.length / 2,
+                    new double[MelangeConstants.BUFFER_SIZE]);
+            return convolveKernel.render();
+        }
+    }
+
+    public static double[] convolve(double[] data, double[][] kernel) {
+        long startTime = System.currentTimeMillis();
+
+        String algo;
+
+        double[] output;
+
+        if (KernelManager.instance().bestDevice() instanceof OpenCLDevice
+                && kernel.length < THRESHOLD) {
+            output = convolveWithRecursion(data, kernel);
+            algo = "Recursion";
+        } else {
+            output = convolveWithFFT(data, kernel);
+            algo = "FFT";
+        }
+
+        long endTime = System.currentTimeMillis();
+        LOGGER.info("Convolution took " + (endTime - startTime) + "ms with " + algo + " Algorithm");
+
+        return output;
     }
 
     public static double[][] genRangeKernel(int r) {

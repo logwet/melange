@@ -1,7 +1,6 @@
-package me.logwet.melange.render.divine;
+package me.logwet.melange.kernel.api;
 
 import me.logwet.melange.MelangeConstants;
-import me.logwet.melange.kernel.api.AbstractSharedKernel;
 import org.apache.commons.math3.util.FastMath;
 
 /**
